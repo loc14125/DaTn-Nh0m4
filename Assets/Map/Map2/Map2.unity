@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 212947684}
   - component: {fileID: 212947683}
   m_Layer: 0
-  m_Name: 8bit-pixel-graphic-blue-sky-background-with-clouds-vector
+  m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -199,12 +199,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 212947682}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 143, y: 60, z: 0}
   m_LocalScale: {x: 40.811237, y: 40.811237, z: 40.811237}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1771189361}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &320053183
 GameObject:
@@ -28562,8 +28562,8 @@ Tilemap:
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Origin: {x: -13, y: -15, z: 0}
-  m_Size: {x: 303, y: 91, z: 1}
+  m_Origin: {x: -55, y: -15, z: 0}
+  m_Size: {x: 345, y: 91, z: 1}
   m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
   m_TileOrientation: 0
   m_TileOrientationMatrix:
@@ -34837,6 +34837,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 212947684}
   - {fileID: 621945351}
   - {fileID: 715137274}
   m_Father: {fileID: 0}
@@ -34847,4 +34848,3 @@ SceneRoots:
   m_Roots:
   - {fileID: 320053186}
   - {fileID: 1771189361}
-  - {fileID: 212947684}

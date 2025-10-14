@@ -43,12 +43,12 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 16
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -95,7 +95,238 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: 6. shoot effect_0
+      rect:
+        serializedVersion: 2
+        x: 932
+        y: 0
+        width: 121
+        height: 68
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 76e0b8a1296c998468dd5921a62fbadd
+      internalID: 1269202461
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 6. shoot effect_1
+      rect:
+        serializedVersion: 2
+        x: 1063
+        y: 0
+        width: 118
+        height: 69
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7b1581e156166ce4bb657423b379f5bb
+      internalID: 1558252082
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 6. shoot effect_2
+      rect:
+        serializedVersion: 2
+        x: 1196
+        y: 0
+        width: 124
+        height: 69
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 28e4e9cc0d194fd4d908b854def5a26b
+      internalID: 1753441470
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 6. shoot effect_3
+      rect:
+        serializedVersion: 2
+        x: 1328
+        y: 0
+        width: 124
+        height: 69
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c1b5d049001aae14d8b7b420e8568aa1
+      internalID: 813439795
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 6. shoot effect_4
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 0
+        width: 127
+        height: 69
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 30bbada7fc0130e4e96ea307cf6cb03b
+      internalID: 1967781666
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 6. shoot effect_5
+      rect:
+        serializedVersion: 2
+        x: 1596
+        y: 0
+        width: 135
+        height: 69
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7b2ea1bad1c6bf74d8283fe0af8f2e7f
+      internalID: 1733767757
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 6. shoot effect_6
+      rect:
+        serializedVersion: 2
+        x: 1731
+        y: 0
+        width: 132
+        height: 69
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3bd0551877b28d64cb77e1598a20cbd7
+      internalID: -1001736572
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 6. shoot effect_8
+      rect:
+        serializedVersion: 2
+        x: 1867
+        y: 0
+        width: 126
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8bb5bc0c60c27054097b204fd6837193
+      internalID: -1317643469
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 6. shoot effect_13
+      rect:
+        serializedVersion: 2
+        x: 1999
+        y: 0
+        width: 131
+        height: 65
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3d9b402704ae4974ea54869afe4ff302
+      internalID: 2115343502
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 6. shoot effect_23
+      rect:
+        serializedVersion: 2
+        x: 2138
+        y: 0
+        width: 124
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1c29f628cdcedb34484d2ab7eb2f8420
+      internalID: -234105413
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 6. shoot effect_34
+      rect:
+        serializedVersion: 2
+        x: 2276
+        y: 0
+        width: 117
+        height: 69
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b9a893aa7b363e3409e704331963c1fc
+      internalID: -1137685271
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -106,7 +337,42 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      6. shoot effect_0: 1269202461
+      6. shoot effect_1: 1558252082
+      6. shoot effect_10: 1435097230
+      6. shoot effect_11: -390685988
+      6. shoot effect_12: -1535228358
+      6. shoot effect_13: 2115343502
+      6. shoot effect_14: 132890503
+      6. shoot effect_15: -1100797069
+      6. shoot effect_16: 1531322561
+      6. shoot effect_17: -1894630317
+      6. shoot effect_18: -1586415328
+      6. shoot effect_19: -1904032767
+      6. shoot effect_2: 1753441470
+      6. shoot effect_20: 1100373226
+      6. shoot effect_21: 309229697
+      6. shoot effect_22: 2019538529
+      6. shoot effect_23: -234105413
+      6. shoot effect_24: 636134645
+      6. shoot effect_25: -1736823082
+      6. shoot effect_26: -1523499958
+      6. shoot effect_27: -522735497
+      6. shoot effect_28: -1694521517
+      6. shoot effect_29: 599730182
+      6. shoot effect_3: 813439795
+      6. shoot effect_30: -895039547
+      6. shoot effect_31: -481585738
+      6. shoot effect_32: 412737840
+      6. shoot effect_33: 1305656891
+      6. shoot effect_34: -1137685271
+      6. shoot effect_4: 1967781666
+      6. shoot effect_5: 1733767757
+      6. shoot effect_6: -1001736572
+      6. shoot effect_7: 1519781686
+      6. shoot effect_8: -1317643469
+      6. shoot effect_9: -726216706
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

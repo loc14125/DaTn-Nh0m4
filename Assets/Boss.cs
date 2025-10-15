@@ -2,24 +2,24 @@ using UnityEngine;
 
 public class Boss : MonoBehaviour
 {
-    [Header("Settings")]
-    public Transform player;           // Tham chiếu tới player
-    public float detectRange = 10f;    // Phạm vi kích hoạt boss
-    public float moveSpeed = 3f;       // Tốc độ di chuyển khi đuổi player
-    public float attackRange = 2f;     // Phạm vi tấn công player
-    public float attackCooldown = 2f;  // Thời gian giữa các đòn tấn công
-
     [Header("References")]
-    public GameObject bossModel;       // Thân boss (ẩn/hiện)
-    public Animator animator;          // Animator nếu có
+    public Transform player;
+    public Animator animator;
+    public GameObject bossModel;
 
-    private bool isActivated = false;  // Đã spawn hay chưa
-    private bool isDead = false;       // Boss đã chết chưa
+    [Header("Settings")]
+    public float detectRange = 10f;
+    public float meleeRange = 2f;
+    public float eleckRange = 6f;
+    public float moveSpeed = 3f;
+    public float attackCooldown = 2f;
+
+    private bool isActivated = false;
+    private bool isDead = false;
     private float nextAttackTime = 0f;
 
     void Start()
     {
-        // Ẩn boss lúc đầu
         bossModel.SetActive(false);
     }
 
@@ -29,16 +29,14 @@ public class Boss : MonoBehaviour
 
         float distance = Vector3.Distance(transform.position, player.position);
 
-        // Nếu chưa kích hoạt và player vào phạm vi -> xuất hiện + spam
         if (!isActivated && distance <= detectRange)
         {
             ActivateBoss();
         }
 
-        // Khi boss đã kích hoạt -> đuổi và đánh
         if (isActivated)
         {
-            FollowAndAttackPlayer(distance);
+            HandleBehavior(distance);
         }
     }
 
@@ -46,50 +44,61 @@ public class Boss : MonoBehaviour
     {
         isActivated = true;
         bossModel.SetActive(true);
-        Debug.Log("🔥 Boss xuất hiện! Bắt đầu spam tấn công!");
-        SpamAttack();
+        animator.SetTrigger("Spam");
+        Debug.Log("🔥 Boss xuất hiện!");
     }
 
-    void FollowAndAttackPlayer(float distance)
+    void HandleBehavior(float distance)
     {
-        if (distance > attackRange)
+        if (distance > detectRange) return; // Nếu player chạy quá xa thì boss đứng im hoặc quay lại sau
+
+        if (distance > meleeRange && distance <= eleckRange && Time.time >= nextAttackTime)
+        {
+            // Player ở tầm trung -> bắn điện
+            nextAttackTime = Time.time + attackCooldown;
+            CastEleck();
+        }
+        else if (distance <= meleeRange && Time.time >= nextAttackTime)
+        {
+            // Player ở gần -> tấn công cận chiến
+            nextAttackTime = Time.time + attackCooldown;
+            MeleeAttack();
+        }
+        else if (distance > eleckRange)
         {
             // Đuổi theo player
-            transform.position = Vector3.MoveTowards(transform.position, player.position, moveSpeed * Time.deltaTime);
-            if (animator) animator.SetBool("isRunning", true);
-        }
-        else
-        {
-            // Trong phạm vi tấn công
-            if (Time.time >= nextAttackTime)
-            {
-                nextAttackTime = Time.time + attackCooldown;
-                Attack();
-            }
+            MoveToPlayer();
         }
     }
 
-    void SpamAttack()
+    void MoveToPlayer()
     {
-        if (animator) animator.SetTrigger("Spam");
-        Debug.Log("💥 Boss spam kỹ năng xuất hiện!");
-        // ví dụ: Instantiate(skillPrefab, transform.position, Quaternion.identity);
+        transform.position = Vector3.MoveTowards(transform.position, player.position, moveSpeed * Time.deltaTime);
+        animator.SetBool("isRunning", true);
     }
 
-    void Attack()
+    void MeleeAttack()
     {
-        if (animator) animator.SetTrigger("Attack");
-        Debug.Log("⚔️ Boss tấn công player!");
-        // Gọi animation hoặc gây sát thương cho player ở đây
+        animator.SetBool("isRunning", false);
+        animator.SetTrigger("Attack");
+        Debug.Log("⚔️ Boss tấn công cận chiến!");
+    }
+
+    void CastEleck()
+    {
+        animator.SetBool("isRunning", false);
+        animator.SetTrigger("Eleck");
+        Debug.Log("⚡ Boss phóng điện tầm xa!");
+        // ở đây m có thể spawn ra projectile hoặc hiệu ứng điện:
+        // Instantiate(eleckPrefab, castPoint.position, Quaternion.identity);
     }
 
     public void Die()
     {
         if (isDead) return;
         isDead = true;
-        if (animator) animator.SetTrigger("Die");
+        animator.SetTrigger("Die");
         Debug.Log("☠️ Boss đã chết!");
-        // Có thể thêm: Destroy(gameObject, 2f);
     }
 
     void OnDrawGizmosSelected()
@@ -97,6 +106,8 @@ public class Boss : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, detectRange);
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, attackRange);
+        Gizmos.DrawWireSphere(transform.position, eleckRange);
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, meleeRange);
     }
 }

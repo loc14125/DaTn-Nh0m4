@@ -27,6 +27,7 @@ public class EnemyAI : MonoBehaviour
 
     private Transform player;
     private Animator animator;
+    private Vector3 lastPosition;
 
     private enum State { Patrol, Chase, Attack, Die }
     private State currentState = State.Patrol;
@@ -34,6 +35,7 @@ public class EnemyAI : MonoBehaviour
     void Start()
     {
         startPos = transform.position;
+        lastPosition = startPos;
         animator = GetComponent<Animator>();
         currentHealth = maxHealth;
 
@@ -62,16 +64,28 @@ public class EnemyAI : MonoBehaviour
                 break;
 
             case State.Attack:
-                
+                if (distanceToPlayer > attackRange)
+                {
+                    SetAnim("isAttacking", false);
+                    ChangeState(State.Chase);
+                }
                 break;
 
             case State.Die:
                
                 break;
+
+            UpdateWalkAnimation();
         }
     }
 
-
+    void UpdateWalkAnimation()
+    {
+        float distanceMoved = Vector3.Distance(transform.position, lastPosition);
+        bool isMoving = distanceMoved > 0.001f && !isIdle && !isDead;
+        SetAnim("isWalking", isMoving);
+        lastPosition = transform.position;
+    }
     void Patrol()
     {
         if (isIdle) return;
@@ -181,7 +195,7 @@ public class EnemyAI : MonoBehaviour
     {
         if (currentState == newState) return;
         currentState = newState;
-
+        StopAllCoroutines();
         switch (newState)
         {
             case State.Patrol:
@@ -214,3 +228,4 @@ public class EnemyAI : MonoBehaviour
         transform.localScale = scale;
     }
 }
+

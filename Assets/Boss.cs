@@ -6,6 +6,7 @@ public class Boss : MonoBehaviour
     public Transform player;
     public Animator animator;
     public GameObject bossModel;
+    private Rigidbody2D rb;
 
     [Header("Settings")]
     public float detectRange = 10f;
@@ -20,29 +21,23 @@ public class Boss : MonoBehaviour
 
     void Start()
     {
+        rb = GetComponent<Rigidbody2D>();
         bossModel.SetActive(false);
     }
 
     void Update()
     {
-        if (isDead) return;
+        if (isDead || !isActivated) return;
 
-        float distance = Vector3.Distance(transform.position, player.position);
-
-        if (!isActivated && distance <= detectRange)
-        {
-            ActivateBoss();
-        }
-
-        if (isActivated)
-        {
-            HandleBehavior(distance);
-        }
+        float distance = Vector2.Distance(transform.position, player.position);
+        HandleBehavior(distance);
     }
 
     void ActivateBoss()
     {
+        if (isActivated) return;
         isActivated = true;
+
         bossModel.SetActive(true);
         animator.SetTrigger("Spam");
         Debug.Log("🔥 Boss xuất hiện!");
@@ -50,35 +45,41 @@ public class Boss : MonoBehaviour
 
     void HandleBehavior(float distance)
     {
-        if (distance > detectRange) return; // Nếu player chạy quá xa thì boss đứng im hoặc quay lại sau
+        if (distance > detectRange) return;
 
         if (distance > meleeRange && distance <= eleckRange && Time.time >= nextAttackTime)
         {
-            // Player ở tầm trung -> bắn điện
             nextAttackTime = Time.time + attackCooldown;
             CastEleck();
         }
         else if (distance <= meleeRange && Time.time >= nextAttackTime)
         {
-            // Player ở gần -> tấn công cận chiến
             nextAttackTime = Time.time + attackCooldown;
             MeleeAttack();
         }
         else if (distance > eleckRange)
         {
-            // Đuổi theo player
             MoveToPlayer();
         }
     }
 
     void MoveToPlayer()
     {
-        transform.position = Vector3.MoveTowards(transform.position, player.position, moveSpeed * Time.deltaTime);
+        Vector2 direction = (player.position - transform.position).normalized;
+        rb.velocity = new Vector2(direction.x * moveSpeed, rb.velocity.y);
+
+        // Lật mặt boss nếu cần
+        if (direction.x > 0)
+            transform.localScale = new Vector3(1, 1, 1);
+        else if (direction.x < 0)
+            transform.localScale = new Vector3(-1, 1, 1);
+
         animator.SetBool("isRunning", true);
     }
 
     void MeleeAttack()
     {
+        rb.velocity = Vector2.zero;
         animator.SetBool("isRunning", false);
         animator.SetTrigger("Attack");
         Debug.Log("⚔️ Boss tấn công cận chiến!");
@@ -86,19 +87,29 @@ public class Boss : MonoBehaviour
 
     void CastEleck()
     {
+        rb.velocity = Vector2.zero;
         animator.SetBool("isRunning", false);
         animator.SetTrigger("Eleck");
         Debug.Log("⚡ Boss phóng điện tầm xa!");
-        // ở đây m có thể spawn ra projectile hoặc hiệu ứng điện:
-        // Instantiate(eleckPrefab, castPoint.position, Quaternion.identity);
     }
 
     public void Die()
     {
         if (isDead) return;
         isDead = true;
+        rb.velocity = Vector2.zero;
         animator.SetTrigger("Die");
         Debug.Log("☠️ Boss đã chết!");
+    }
+
+    // 👇 Sử dụng Collider2D thay vì Collider
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            player = other.transform;
+            ActivateBoss();
+        }
     }
 
     void OnDrawGizmosSelected()

@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
-
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -28,13 +24,15 @@ public class PlayerMovement : MonoBehaviour
     private float inputX;
     private string currentAnim;
     private float lastDashTime;
-    private float originalGravity; // ✅ Lưu trọng lực gốc
+    private float originalGravity;
+
+    private int facingDirection = 1; // ✅ 1 = phải, -1 = trái
 
     void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
         _anim = GetComponent<Animator>();
-        originalGravity = _rb.gravityScale; // ✅ Ghi nhớ trọng lực ban đầu
+        originalGravity = _rb.gravityScale;
     }
 
     void Update()
@@ -68,8 +66,12 @@ public class PlayerMovement : MonoBehaviour
     {
         _rb.velocity = new Vector2(inputX * moveSpeed, _rb.velocity.y);
 
+        // 🔹 Xác định hướng mặt nhân vật
         if (Mathf.Abs(inputX) > 0.1f)
-            transform.rotation = Quaternion.Euler(0, inputX > 0 ? 0 : 180, 0);
+        {
+            facingDirection = inputX > 0 ? 1 : -1; // ✅ cập nhật hướng
+            transform.rotation = Quaternion.Euler(0, facingDirection == 1 ? 0 : 180, 0);
+        }
 
         if (isGrounded && !isAttacking)
         {
@@ -122,7 +124,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    // 🚀 DASH LOGIC (đã sửa)
+    // 🚀 Dash Logic (sửa hướng theo facingDirection)
     private void TryDash()
     {
         if (Time.time < lastDashTime + dashCooldown) return;
@@ -132,10 +134,9 @@ public class PlayerMovement : MonoBehaviour
 
         ChangeAnimation("Dash");
 
-        float direction = transform.rotation.y == 0 ? 1f : -1f;
-        _rb.velocity = new Vector2(direction * dashSpeed, 0f);
+        // ✅ Dash theo hướng đang nhìn
+        _rb.velocity = new Vector2(facingDirection * dashSpeed, 0f);
 
-        // ✅ Lưu trọng lực và tắt tạm
         originalGravity = _rb.gravityScale;
         _rb.gravityScale = 0f;
 
@@ -145,7 +146,7 @@ public class PlayerMovement : MonoBehaviour
     private void EndDash()
     {
         isDashing = false;
-        _rb.gravityScale = originalGravity; // ✅ Khôi phục chính xác
+        _rb.gravityScale = originalGravity;
     }
 
     private void ChangeAnimation(string animName)

@@ -9,21 +9,30 @@ public class Boss : MonoBehaviour
     public GameObject bossModel;
     private Rigidbody2D rb;
 
-    [Header("Settings")]
-    public float detectRange = 10f;  // vùng đỏ
-    public float meleeRange = 2f;    // vùng xanh (đánh)
-    public float moveSpeed = 2f;
-    public float attackCooldown = 5f;
+    [Header("Hitboxes")]
+    public GameObject hitboxNormal;
+    public GameObject comboHit1;
+    public GameObject comboHit2;
 
-    private bool isActivated = false;
-    private bool isDead = false;
-    private bool isAttacking = false;
-    private bool playerInMeleeRange = false;
+    [Header("Stats")]
+    public float detectRange = 10f;
+    public float meleeRange = 2f;
+    public float moveSpeed = 2f;
+    public float attackCooldown = 3f;
+    public int maxHealth = 200;
+    public int damage = 15;
+
+    private int currentHealth;
+    private bool isActivated;
+    private bool isDead;
+    private bool isAttacking;
+    private bool playerInMeleeRange;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        //bossModel.SetActive(false); // ban đầu ẩn boss
+        DisableAllHitboxes();
+        currentHealth = maxHealth;
     }
 
     void Update()
@@ -32,11 +41,8 @@ public class Boss : MonoBehaviour
 
         if (!isActivated)
         {
-            // kiểm tra player có trong vùng phát hiện (vùng đỏ) chưa
             if (player && Vector2.Distance(transform.position, player.position) <= detectRange)
-            {
                 ActivateBoss();
-            }
             return;
         }
 
@@ -44,43 +50,31 @@ public class Boss : MonoBehaviour
         HandleBehavior(distance);
     }
 
-    // 🔥 Kích hoạt boss khi player vào vùng đỏ
     void ActivateBoss()
     {
-        if (isActivated) return;
         isActivated = true;
         bossModel.SetActive(true);
         animator.SetTrigger("Spam");
-        Debug.Log("Boss xuất hiện và bắt đầu đuổi theo!");
+        Debug.Log("👹 Boss xuất hiện!");
     }
 
     void HandleBehavior(float distance)
     {
         if (distance <= meleeRange)
         {
-            // Trong vùng xanh
             if (!playerInMeleeRange)
             {
-                // Mới bước vào vùng xanh
                 playerInMeleeRange = true;
                 rb.velocity = Vector2.zero;
                 animator.SetBool("isRunning", false);
-                Debug.Log("Player vào vùng cận chiến.");
             }
 
-            // Tấn công nếu chưa tấn công
             if (!isAttacking)
                 StartCoroutine(AttackPlayer());
         }
         else
         {
-            // Player ra khỏi vùng xanh
-            if (playerInMeleeRange)
-            {
-                playerInMeleeRange = false;
-                Debug.Log("Player rời vùng cận chiến — Boss đuổi tiếp.");
-            }
-
+            playerInMeleeRange = false;
             MoveToPlayer();
         }
     }
@@ -88,45 +82,75 @@ public class Boss : MonoBehaviour
     IEnumerator AttackPlayer()
     {
         isAttacking = true;
-
         int rand = Random.Range(0, 2);
+
         if (rand == 0)
         {
             animator.SetTrigger("ATK1");
-            Debug.Log("Boss đánh ATK1!");
+            yield return new WaitForSeconds(0.3f);
+            ActivateHitbox(hitboxNormal, 0.25f);
         }
         else
         {
             animator.SetTrigger("ATK2");
-            Debug.Log("Boss đánh ATK2!");
+            yield return StartCoroutine(ComboAttack());
         }
 
-        // Chờ cooldown xong mới đánh lại
         yield return new WaitForSeconds(attackCooldown);
         isAttacking = false;
     }
 
+    IEnumerator ComboAttack()
+    {
+        yield return new WaitForSeconds(0.35f);
+        ActivateHitbox(comboHit1, 0.25f);
+
+        yield return new WaitForSeconds(0.55f);
+        ActivateHitbox(comboHit2, 0.25f);
+    }
+
+    void ActivateHitbox(GameObject hitbox, float time)
+    {
+        StartCoroutine(HitboxRoutine(hitbox, time));
+    }
+
+    IEnumerator HitboxRoutine(GameObject hitbox, float time)
+    {
+        hitbox.SetActive(true);
+        yield return new WaitForSeconds(time);
+        hitbox.SetActive(false);
+    }
+
+    void DisableAllHitboxes()
+    {
+        hitboxNormal?.SetActive(false);
+        comboHit1?.SetActive(false);
+        comboHit2?.SetActive(false);
+    }
+
     void MoveToPlayer()
     {
-        Vector2 direction = (player.position - transform.position).normalized;
-        rb.velocity = new Vector2(direction.x * moveSpeed, rb.velocity.y);
-
-        // Lật mặt boss theo hướng player
-        if (direction.x > 0)
-            transform.localScale = new Vector3(1, 1, 1);
-        else if (direction.x < 0)
-            transform.localScale = new Vector3(-1, 1, 1);
-
+        Vector2 dir = (player.position - transform.position).normalized;
+        rb.velocity = new Vector2(dir.x * moveSpeed, rb.velocity.y);
+        transform.localScale = new Vector3(dir.x > 0 ? 1 : -1, 1, 1);
         animator.SetBool("isRunning", true);
     }
 
-    public void Die()
+    public void TakeDamage(int dmg)
     {
-        if (isDead) return;
+        currentHealth -= dmg;
+        Debug.Log($"🔥 Boss trúng đòn! Còn {currentHealth} máu");
+
+        if (currentHealth <= 0)
+            Die();
+    }
+
+    void Die()
+    {
         isDead = true;
         rb.velocity = Vector2.zero;
         animator.SetTrigger("Die");
-        Debug.Log("Boss đã chết!");
+        Debug.Log("💀 Boss đã chết!");
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -134,6 +158,14 @@ public class Boss : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             player = other.transform;
+        }
+
+        // ✅ Boss gây damage cho Player nếu va chạm bằng hitbox
+        if (other.CompareTag("Player") && (hitboxNormal.activeSelf || comboHit1.activeSelf || comboHit2.activeSelf))
+        {
+            PlayerMovement p = other.GetComponent<PlayerMovement>();
+            if (p != null)
+                p.TakeDamage(damage);
         }
     }
 

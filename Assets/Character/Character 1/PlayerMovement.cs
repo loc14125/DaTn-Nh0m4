@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -15,8 +16,15 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float dashDuration = 0.2f;
     [SerializeField] private float dashCooldown = 1f;
 
-    private Rigidbody2D _rb;
-    private Animator _anim;
+    [Header("Health Settings")]
+    [SerializeField] private int maxHealth = 100;
+    private int currentHealth;
+
+    [Header("References")]
+    [SerializeField] private PlayerAttack playerAttack;
+
+    private Rigidbody2D rb;
+    private Animator anim;
     private bool isGrounded;
     private bool isAttacking;
     private bool isDashing;
@@ -25,14 +33,14 @@ public class PlayerMovement : MonoBehaviour
     private string currentAnim;
     private float lastDashTime;
     private float originalGravity;
-
-    private int facingDirection = 1; // ✅ 1 = phải, -1 = trái
+    private int facingDirection = 1; // 1 = phải, -1 = trái
 
     void Start()
     {
-        _rb = GetComponent<Rigidbody2D>();
-        _anim = GetComponent<Animator>();
-        originalGravity = _rb.gravityScale;
+        rb = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
+        originalGravity = rb.gravityScale;
+        currentHealth = maxHealth;
     }
 
     void Update()
@@ -42,9 +50,7 @@ public class PlayerMovement : MonoBehaviour
         isGrounded = CheckGround();
 
         if (isGrounded && !wasGrounded)
-        {
             jumpCount = 0;
-        }
 
         if (!isAttacking && !isDashing)
         {
@@ -64,12 +70,12 @@ public class PlayerMovement : MonoBehaviour
 
     private void Move()
     {
-        _rb.velocity = new Vector2(inputX * moveSpeed, _rb.velocity.y);
+        rb.velocity = new Vector2(inputX * moveSpeed, rb.velocity.y);
 
-        // 🔹 Xác định hướng mặt nhân vật
+        // Hướng mặt nhân vật
         if (Mathf.Abs(inputX) > 0.1f)
         {
-            facingDirection = inputX > 0 ? 1 : -1; // ✅ cập nhật hướng
+            facingDirection = inputX > 0 ? 1 : -1;
             transform.rotation = Quaternion.Euler(0, facingDirection == 1 ? 0 : 180, 0);
         }
 
@@ -86,7 +92,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (jumpCount < maxJumps)
         {
-            _rb.velocity = new Vector2(_rb.velocity.x, jumpForce);
+            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
             ChangeAnimation("Jump");
             jumpCount++;
         }
@@ -97,14 +103,20 @@ public class PlayerMovement : MonoBehaviour
         if (isAttacking) return;
 
         isAttacking = true;
-        _rb.velocity = Vector2.zero;
+        rb.velocity = Vector2.zero;
         ChangeAnimation("Attack1");
+
+        if (playerAttack != null)
+            playerAttack.EnableHitbox();
+
         Invoke(nameof(EndAttack), 0.4f);
     }
 
     private void EndAttack()
     {
         isAttacking = false;
+        if (playerAttack != null)
+            playerAttack.DisableHitbox();
     }
 
     private bool CheckGround()
@@ -117,14 +129,13 @@ public class PlayerMovement : MonoBehaviour
     {
         if (!isGrounded && !isAttacking && !isDashing)
         {
-            if (_rb.velocity.y > 0.1f)
+            if (rb.velocity.y > 0.1f)
                 ChangeAnimation("Jump");
-            else if (_rb.velocity.y < -0.1f)
+            else if (rb.velocity.y < -0.1f)
                 ChangeAnimation("Fall");
         }
     }
 
-    // 🚀 Dash Logic (sửa hướng theo facingDirection)
     private void TryDash()
     {
         if (Time.time < lastDashTime + dashCooldown) return;
@@ -133,12 +144,8 @@ public class PlayerMovement : MonoBehaviour
         lastDashTime = Time.time;
 
         ChangeAnimation("Dash");
-
-        // ✅ Dash theo hướng đang nhìn
-        _rb.velocity = new Vector2(facingDirection * dashSpeed, 0f);
-
-        originalGravity = _rb.gravityScale;
-        _rb.gravityScale = 0f;
+        rb.velocity = new Vector2(facingDirection * dashSpeed, 0f);
+        rb.gravityScale = 0f;
 
         Invoke(nameof(EndDash), dashDuration);
     }
@@ -146,13 +153,32 @@ public class PlayerMovement : MonoBehaviour
     private void EndDash()
     {
         isDashing = false;
-        _rb.gravityScale = originalGravity;
+        rb.gravityScale = originalGravity;
+    }
+
+    public void TakeDamage(int dmg)
+    {
+        currentHealth -= dmg;
+        Debug.Log($"⚠️ Player trúng đòn! Còn {currentHealth} máu");
+
+        if (currentHealth <= 0)
+        {
+            currentHealth = 0;
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+        ChangeAnimation("Die");
+        rb.velocity = Vector2.zero;
+        Debug.Log("💀 Player đã chết!");
     }
 
     private void ChangeAnimation(string animName)
     {
         if (currentAnim == animName) return;
-        _anim.Play(animName);
+        anim.Play(animName);
         currentAnim = animName;
     }
 

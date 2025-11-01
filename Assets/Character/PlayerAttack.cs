@@ -1,22 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class PlayerAttack : MonoBehaviour
 {
     [SerializeField] private GameObject attackHitbox;
     [SerializeField] private int damage = 20;
 
-    private HashSet<Collider2D> damagedEnemies = new HashSet<Collider2D>();
+    private HashSet<GameObject> damagedEnemies = new HashSet<GameObject>(); // ⚡ đổi từ Collider sang GameObject
     private Collider2D hitboxCollider;
 
     void Start()
     {
         hitboxCollider = attackHitbox.GetComponent<Collider2D>();
         if (hitboxCollider == null)
-        {
-            Debug.LogError("❌ AttackHitBox is missing a Collider2D!");
-        }
+            Debug.LogError("❌ AttackHitbox missing Collider2D!");
+        else
+            hitboxCollider.isTrigger = true;
 
         attackHitbox.SetActive(false);
     }
@@ -24,7 +23,7 @@ public class PlayerAttack : MonoBehaviour
     public void EnableHitbox()
     {
         attackHitbox.SetActive(true);
-        damagedEnemies.Clear();
+        damagedEnemies.Clear(); // reset danh sách kẻ địch đã trúng đòn
     }
 
     public void DisableHitbox()
@@ -32,38 +31,23 @@ public class PlayerAttack : MonoBehaviour
         attackHitbox.SetActive(false);
     }
 
-    private void Update()
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        if (attackHitbox.activeSelf)
+        if (!attackHitbox.activeSelf) return;
+        if (!other.CompareTag("Enemy")) return;
+
+        // ⚡ chỉ xử lý 1 lần cho mỗi con boss (theo GameObject cha)
+        GameObject enemyRoot = other.transform.root.gameObject;
+        if (damagedEnemies.Contains(enemyRoot)) return;
+
+        Boss boss = enemyRoot.GetComponent<Boss>();
+        if (boss != null)
         {
-            CheckHitEnemies();
+            boss.TakeDamage(damage);
+            damagedEnemies.Add(enemyRoot);
         }
     }
 
-    private void CheckHitEnemies()
-    {
-        // ✅ Quét collider trong vùng hitbox
-        Collider2D[] hits = Physics2D.OverlapBoxAll(
-            hitboxCollider.bounds.center,
-            hitboxCollider.bounds.size,
-            0f
-        );
-
-        foreach (var enemyCollider in hits)
-        {
-            if (!enemyCollider.CompareTag("Enemy")) continue;
-            if (damagedEnemies.Contains(enemyCollider)) continue;
-
-            Enemy enemy = enemyCollider.GetComponent<Enemy>();
-            if (enemy != null)
-            {
-                enemy.TakeDamage(damage);
-                damagedEnemies.Add(enemyCollider);
-            }
-        }
-    }
-
-    // 🔹 Vẽ hitbox ra Scene để dễ debug
     private void OnDrawGizmos()
     {
         if (attackHitbox == null) return;

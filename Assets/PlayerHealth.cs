@@ -1,18 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class PlayerHealth : MonoBehaviour
+public class PlayerHealthUI : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public Slider playerSlider;
+
+    public void Init(int maxHP)
     {
-        
+        playerSlider.maxValue = maxHP;
+        playerSlider.value = maxHP;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void UpdateHealth(int currentHP)
     {
-        
+        playerSlider.value = currentHP;
     }
 }

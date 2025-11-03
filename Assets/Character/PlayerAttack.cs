@@ -5,26 +5,33 @@ public class PlayerAttack : MonoBehaviour
 {
     [SerializeField] private GameObject attackHitbox;
     [SerializeField] private int damage = 20;
+    public int Damage => damage;
 
-    private HashSet<GameObject> damagedEnemies = new HashSet<GameObject>(); // ⚡ đổi từ Collider sang GameObject
+
+    private HashSet<GameObject> damagedEnemies = new HashSet<GameObject>();
     private Collider2D hitboxCollider;
+    private PlayerMovement player;
 
     void Start()
     {
+        player = GetComponentInParent<PlayerMovement>();
         hitboxCollider = attackHitbox.GetComponent<Collider2D>();
-        if (hitboxCollider == null)
-            Debug.LogError("❌ AttackHitbox missing Collider2D!");
-        else
-            hitboxCollider.isTrigger = true;
-
+        hitboxCollider.isTrigger = true;
         attackHitbox.SetActive(false);
     }
 
     public void EnableHitbox()
     {
         attackHitbox.SetActive(true);
-        damagedEnemies.Clear(); // reset danh sách kẻ địch đã trúng đòn
+        damagedEnemies.Clear();
+        player.hasDealtDamage = false; // ✅ reset khi bật hitbox
     }
+
+    public int GetDamage()
+    {
+        return damage;
+    }
+
 
     public void DisableHitbox()
     {
@@ -35,8 +42,8 @@ public class PlayerAttack : MonoBehaviour
     {
         if (!attackHitbox.activeSelf) return;
         if (!other.CompareTag("Enemy")) return;
+        if (player.hasDealtDamage) return; // ✅ chặn spam frame hit
 
-        // ⚡ chỉ xử lý 1 lần cho mỗi con boss (theo GameObject cha)
         GameObject enemyRoot = other.transform.root.gameObject;
         if (damagedEnemies.Contains(enemyRoot)) return;
 
@@ -45,16 +52,7 @@ public class PlayerAttack : MonoBehaviour
         {
             boss.TakeDamage(damage);
             damagedEnemies.Add(enemyRoot);
+            player.hasDealtDamage = true; // ✅ chỉ 1 hit / swing
         }
-    }
-
-    private void OnDrawGizmos()
-    {
-        if (attackHitbox == null) return;
-        Collider2D box = attackHitbox.GetComponent<Collider2D>();
-        if (box == null) return;
-
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(box.bounds.center, box.bounds.size);
     }
 }

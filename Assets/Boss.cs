@@ -8,6 +8,7 @@ public class Boss : MonoBehaviour
     public Animator animator;
     public GameObject bossModel;
     private Rigidbody2D rb;
+    private BossHealthUI bossUI;
 
     [Header("Hitboxes")]
     public GameObject hitboxNormal;
@@ -28,11 +29,16 @@ public class Boss : MonoBehaviour
     private bool isAttacking;
     private bool playerInMeleeRange;
 
+    // ✅ chỉ cho gây damage 1 lần mỗi hit
+    private bool hasDealtDamage = false;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         DisableAllHitboxes();
         currentHealth = maxHealth;
+        bossUI = GetComponent<BossHealthUI>();
+        bossUI.InitHealth(maxHealth);
     }
 
     void Update()
@@ -55,6 +61,7 @@ public class Boss : MonoBehaviour
         isActivated = true;
         bossModel.SetActive(true);
         animator.SetTrigger("Spam");
+        bossUI.ActivateBossHealth();
         Debug.Log("👹 Boss xuất hiện!");
     }
 
@@ -82,6 +89,8 @@ public class Boss : MonoBehaviour
     IEnumerator AttackPlayer()
     {
         isAttacking = true;
+        hasDealtDamage = false; // ✅ reset hit cho đòn mới
+
         int rand = Random.Range(0, 2);
 
         if (rand == 0)
@@ -116,6 +125,7 @@ public class Boss : MonoBehaviour
 
     IEnumerator HitboxRoutine(GameObject hitbox, float time)
     {
+        hasDealtDamage = false; // ✅ reset tại thời điểm hit bật
         hitbox.SetActive(true);
         yield return new WaitForSeconds(time);
         hitbox.SetActive(false);
@@ -139,6 +149,8 @@ public class Boss : MonoBehaviour
     public void TakeDamage(int dmg)
     {
         currentHealth -= dmg;
+        bossUI.UpdateHealth(currentHealth);
+
         Debug.Log($"🔥 Boss trúng đòn! Còn {currentHealth} máu");
 
         if (currentHealth <= 0)
@@ -150,6 +162,7 @@ public class Boss : MonoBehaviour
         isDead = true;
         rb.velocity = Vector2.zero;
         animator.SetTrigger("Die");
+        bossUI.HideUI();
         Debug.Log("💀 Boss đã chết!");
     }
 
@@ -160,12 +173,29 @@ public class Boss : MonoBehaviour
             player = other.transform;
         }
 
-        // ✅ Boss gây damage cho Player nếu va chạm bằng hitbox
+        // ✅ Player chém Boss
+        if (other.CompareTag("PlayerHitbox"))
+        {
+            PlayerAttack attack = other.GetComponent<PlayerAttack>();
+            if (attack != null)
+            {
+                TakeDamage(attack.GetDamage()); // ✅ gọi trực tiếp
+            }
+        }
+
+
+        // ✅ Boss tấn công Player chỉ 1 lần mỗi hit
         if (other.CompareTag("Player") && (hitboxNormal.activeSelf || comboHit1.activeSelf || comboHit2.activeSelf))
         {
-            PlayerMovement p = other.GetComponent<PlayerMovement>();
-            if (p != null)
-                p.TakeDamage(damage);
+            if (!hasDealtDamage)
+            {
+                PlayerMovement p = other.GetComponent<PlayerMovement>();
+                if (p != null)
+                {
+                    p.TakeDamage(damage);
+                    hasDealtDamage = true;
+                }
+            }
         }
     }
 

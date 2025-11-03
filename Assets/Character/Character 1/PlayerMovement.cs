@@ -19,9 +19,14 @@ public class PlayerMovement : MonoBehaviour
     [Header("Health Settings")]
     [SerializeField] private int maxHealth = 100;
     private int currentHealth;
+    private bool isInvincible = false;
+
+    [Header("Combat Flags")]
+    public bool hasDealtDamage = false; // ✅ để khóa damage mỗi swing
 
     [Header("References")]
     [SerializeField] private PlayerAttack playerAttack;
+    public PlayerHealthUI healthUI;
 
     private Rigidbody2D rb;
     private Animator anim;
@@ -33,14 +38,16 @@ public class PlayerMovement : MonoBehaviour
     private string currentAnim;
     private float lastDashTime;
     private float originalGravity;
-    private int facingDirection = 1; // 1 = phải, -1 = trái
+    private int facingDirection = 1;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         originalGravity = rb.gravityScale;
+
         currentHealth = maxHealth;
+        if (healthUI != null) healthUI.Init(maxHealth);
     }
 
     void Update()
@@ -49,21 +56,17 @@ public class PlayerMovement : MonoBehaviour
         bool wasGrounded = isGrounded;
         isGrounded = CheckGround();
 
-        if (isGrounded && !wasGrounded)
-            jumpCount = 0;
+        if (isGrounded && !wasGrounded) jumpCount = 0;
 
         if (!isAttacking && !isDashing)
         {
             Move();
-            if (Input.GetKeyDown(KeyCode.Space))
-                Jump();
+            if (Input.GetKeyDown(KeyCode.Space)) Jump();
         }
 
-        if (Input.GetKeyDown(KeyCode.J) && !isDashing)
-            Attack();
+        if (Input.GetKeyDown(KeyCode.J) && !isDashing) Attack();
 
-        if (Input.GetKeyDown(KeyCode.L))
-            TryDash();
+        if (Input.GetKeyDown(KeyCode.L)) TryDash();
 
         HandleAirAnimations();
     }
@@ -72,7 +75,6 @@ public class PlayerMovement : MonoBehaviour
     {
         rb.velocity = new Vector2(inputX * moveSpeed, rb.velocity.y);
 
-        // Hướng mặt nhân vật
         if (Mathf.Abs(inputX) > 0.1f)
         {
             facingDirection = inputX > 0 ? 1 : -1;
@@ -81,10 +83,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (isGrounded && !isAttacking)
         {
-            if (Mathf.Abs(inputX) > 0.1f)
-                ChangeAnimation("Run");
-            else
-                ChangeAnimation("Idle");
+            ChangeAnimation(Mathf.Abs(inputX) > 0.1f ? "Run" : "Idle");
         }
     }
 
@@ -103,11 +102,12 @@ public class PlayerMovement : MonoBehaviour
         if (isAttacking) return;
 
         isAttacking = true;
+        hasDealtDamage = false; // ✅ reset tại lúc bắt đầu vung kiếm
+
         rb.velocity = Vector2.zero;
         ChangeAnimation("Attack1");
 
-        if (playerAttack != null)
-            playerAttack.EnableHitbox();
+        if (playerAttack != null) playerAttack.EnableHitbox();
 
         Invoke(nameof(EndAttack), 0.4f);
     }
@@ -115,24 +115,25 @@ public class PlayerMovement : MonoBehaviour
     private void EndAttack()
     {
         isAttacking = false;
-        if (playerAttack != null)
-            playerAttack.DisableHitbox();
+        if (playerAttack != null) playerAttack.DisableHitbox();
+    }
+
+    // ✅ được animation event gọi cuối animation
+    public void ResetAttackDamage()
+    {
+        hasDealtDamage = false;
     }
 
     private bool CheckGround()
     {
-        Collider2D hit = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
-        return hit != null;
+        return Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
     }
 
     private void HandleAirAnimations()
     {
         if (!isGrounded && !isAttacking && !isDashing)
         {
-            if (rb.velocity.y > 0.1f)
-                ChangeAnimation("Jump");
-            else if (rb.velocity.y < -0.1f)
-                ChangeAnimation("Fall");
+            ChangeAnimation(rb.velocity.y > 0.1f ? "Jump" : "Fall");
         }
     }
 
@@ -144,8 +145,8 @@ public class PlayerMovement : MonoBehaviour
         lastDashTime = Time.time;
 
         ChangeAnimation("Dash");
-        rb.velocity = new Vector2(facingDirection * dashSpeed, 0f);
         rb.gravityScale = 0f;
+        rb.velocity = new Vector2(facingDirection * dashSpeed, 0);
 
         Invoke(nameof(EndDash), dashDuration);
     }
@@ -158,21 +159,28 @@ public class PlayerMovement : MonoBehaviour
 
     public void TakeDamage(int dmg)
     {
-        currentHealth -= dmg;
-        Debug.Log($"⚠️ Player trúng đòn! Còn {currentHealth} máu");
+        if (isInvincible) return;
 
-        if (currentHealth <= 0)
-        {
-            currentHealth = 0;
-            Die();
-        }
+        currentHealth -= dmg;
+        if (healthUI != null) healthUI.UpdateHealth(currentHealth);
+        ChangeAnimation("Hurt");
+
+        if (currentHealth <= 0) { Die(); return; }
+
+        StartCoroutine(InvincibleTime());
+    }
+
+    private IEnumerator InvincibleTime()
+    {
+        isInvincible = true;
+        yield return new WaitForSeconds(0.5f);
+        isInvincible = false;
     }
 
     private void Die()
     {
         ChangeAnimation("Die");
         rb.velocity = Vector2.zero;
-        Debug.Log("💀 Player đã chết!");
     }
 
     private void ChangeAnimation(string animName)
@@ -180,14 +188,5 @@ public class PlayerMovement : MonoBehaviour
         if (currentAnim == animName) return;
         anim.Play(animName);
         currentAnim = animName;
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        if (groundCheck != null)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
-        }
     }
 }

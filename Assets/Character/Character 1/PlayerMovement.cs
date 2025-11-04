@@ -140,7 +140,6 @@ public class PlayerMovement : MonoBehaviour
     private void TryDash()
     {
         if (Time.time < lastDashTime + dashCooldown) return;
-
         isDashing = true;
         lastDashTime = Time.time;
 
@@ -163,9 +162,18 @@ public class PlayerMovement : MonoBehaviour
 
         currentHealth -= dmg;
         if (healthUI != null) healthUI.UpdateHealth(currentHealth);
-        ChangeAnimation("Hurt");
 
-        if (currentHealth <= 0) { Die(); return; }
+        // Nếu máu > 0 thì phát animation Hurt
+        if (currentHealth > 0)
+        {
+            ChangeAnimation("Hurt");
+            Knockback();
+        }
+        else
+        {
+            Die();
+            return;
+        }
 
         StartCoroutine(InvincibleTime());
     }
@@ -179,14 +187,52 @@ public class PlayerMovement : MonoBehaviour
 
     private void Die()
     {
-        ChangeAnimation("Die");
+        // Dừng di chuyển và gọi animation Die
         rb.velocity = Vector2.zero;
+        ChangeAnimation("Die");
+
+        // Ngăn input hoặc di chuyển khi đã chết
+        this.enabled = false;
+
+        // Ẩn nhân vật sau khi animation chạy xong
+        StartCoroutine(DisappearAfterDeath());
+    }
+
+    private IEnumerator DisappearAfterDeath()
+    {
+        // ⏳ Chờ đúng thời gian bằng độ dài animation Die (hoặc tầm 1 giây)
+        yield return new WaitForSeconds(1.0f);
+
+        // 🫥 Ẩn hoặc xóa nhân vật khỏi màn hình
+        gameObject.SetActive(false);
     }
 
     private void ChangeAnimation(string animName)
     {
+        if (anim == null || anim.layerCount == 0) return;
+
+    // Luôn cho phép "Hurt" chạy lại kể cả khi đang Hurt
+    if (currentAnim == animName && animName != "Hurt") return;
+
+    anim.Play(animName, 0, 0f); // phát từ frame đầu
+    currentAnim = animName;if (anim == null || anim.layerCount == 0) return; // tránh lỗi layer -1
         if (currentAnim == animName) return;
-        anim.Play(animName);
+
+        anim.Play(animName, 0, 0f); // luôn phát ở Base Layer
         currentAnim = animName;
     }
+
+    private void Knockback()
+{
+    // Hướng ngược lại hướng đang quay
+    int knockDir = -facingDirection;
+
+    // Tạo lực bật lùi nhẹ
+    float knockForceX = 9f;  // điều chỉnh độ bật lùi ngang
+    float knockForceY = 3f;  // độ nảy lên nhẹ (tùy thích)
+
+    rb.velocity = new Vector2(knockDir * knockForceX, knockForceY);
 }
+}
+
+

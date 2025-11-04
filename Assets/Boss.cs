@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Boss : MonoBehaviour
 {
@@ -29,8 +30,8 @@ public class Boss : MonoBehaviour
     private bool isAttacking;
     private bool playerInMeleeRange;
 
-    // ✅ chỉ cho gây damage 1 lần mỗi hit
-    private bool hasDealtDamage = false;
+    // ✅ tracking player bị hit mỗi hitbox
+    private HashSet<GameObject> damagedPlayersThisHit = new HashSet<GameObject>();
 
     void Start()
     {
@@ -89,7 +90,6 @@ public class Boss : MonoBehaviour
     IEnumerator AttackPlayer()
     {
         isAttacking = true;
-        hasDealtDamage = false; // ✅ reset hit cho đòn mới
 
         int rand = Random.Range(0, 2);
 
@@ -97,7 +97,7 @@ public class Boss : MonoBehaviour
         {
             animator.SetTrigger("ATK1");
             yield return new WaitForSeconds(0.3f);
-            ActivateHitbox(hitboxNormal, 0.25f);
+            StartCoroutine(HitboxRoutine(hitboxNormal, 0.25f));
         }
         else
         {
@@ -112,22 +112,42 @@ public class Boss : MonoBehaviour
     IEnumerator ComboAttack()
     {
         yield return new WaitForSeconds(0.35f);
-        ActivateHitbox(comboHit1, 0.25f);
+        StartCoroutine(HitboxRoutine(comboHit1, 0.25f));
 
         yield return new WaitForSeconds(0.55f);
-        ActivateHitbox(comboHit2, 0.25f);
-    }
-
-    void ActivateHitbox(GameObject hitbox, float time)
-    {
-        StartCoroutine(HitboxRoutine(hitbox, time));
+        StartCoroutine(HitboxRoutine(comboHit2, 0.25f));
     }
 
     IEnumerator HitboxRoutine(GameObject hitbox, float time)
     {
-        hasDealtDamage = false; // ✅ reset tại thời điểm hit bật
+        damagedPlayersThisHit.Clear(); // ✅ reset cho hitbox mới
         hitbox.SetActive(true);
-        yield return new WaitForSeconds(time);
+
+        float elapsed = 0f;
+        Collider2D hitboxCollider = hitbox.GetComponent<Collider2D>();
+
+        while (elapsed < time)
+        {
+            Collider2D[] hits = Physics2D.OverlapBoxAll(hitboxCollider.bounds.center, hitboxCollider.bounds.size, 0f);
+            foreach (Collider2D hit in hits)
+            {
+                if (!hit.CompareTag("Player")) continue;
+
+                GameObject playerRoot = hit.transform.root.gameObject;
+                if (damagedPlayersThisHit.Contains(playerRoot)) continue;
+
+                PlayerMovement p = playerRoot.GetComponent<PlayerMovement>();
+                if (p != null)
+                {
+                    p.TakeDamage(damage);
+                    damagedPlayersThisHit.Add(playerRoot); // ✅ 1 hit / player / hitbox
+                }
+            }
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
         hitbox.SetActive(false);
     }
 
@@ -148,14 +168,20 @@ public class Boss : MonoBehaviour
 
     public void TakeDamage(int dmg)
     {
+        // ✅ nếu player ở xa hơn meleeRange thì không nhận damage
+        if (Vector2.Distance(transform.position, player.position) > meleeRange)
+        {
+            return;
+        }
+
         currentHealth -= dmg;
         bossUI.UpdateHealth(currentHealth);
-
         Debug.Log($"🔥 Boss trúng đòn! Còn {currentHealth} máu");
 
         if (currentHealth <= 0)
             Die();
     }
+
 
     void Die()
     {
@@ -164,39 +190,6 @@ public class Boss : MonoBehaviour
         animator.SetTrigger("Die");
         bossUI.HideUI();
         Debug.Log("💀 Boss đã chết!");
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            player = other.transform;
-        }
-
-        // ✅ Player chém Boss
-        if (other.CompareTag("PlayerHitbox"))
-        {
-            PlayerAttack attack = other.GetComponent<PlayerAttack>();
-            if (attack != null)
-            {
-                TakeDamage(attack.GetDamage()); // ✅ gọi trực tiếp
-            }
-        }
-
-
-        // ✅ Boss tấn công Player chỉ 1 lần mỗi hit
-        if (other.CompareTag("Player") && (hitboxNormal.activeSelf || comboHit1.activeSelf || comboHit2.activeSelf))
-        {
-            if (!hasDealtDamage)
-            {
-                PlayerMovement p = other.GetComponent<PlayerMovement>();
-                if (p != null)
-                {
-                    p.TakeDamage(damage);
-                    hasDealtDamage = true;
-                }
-            }
-        }
     }
 
     void OnDrawGizmosSelected()

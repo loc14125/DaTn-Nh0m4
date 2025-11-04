@@ -183,14 +183,15 @@ public class Boss : MonoBehaviour
     }
 
 
-    void Die()
-    {
-        isDead = true;
-        rb.velocity = Vector2.zero;
-        animator.SetTrigger("Die");
-        bossUI.HideUI();
-        Debug.Log("💀 Boss đã chết!");
-    }
+ void Die()
+{
+    isDead = true;
+    rb.velocity = Vector2.zero;
+    animator.SetTrigger("Die");
+    bossUI.HideUI();
+    Debug.Log("💀 Boss đã chết!");
+    Destroy(gameObject, 2f); // Xoá sau 2 giây
+}
 
     void OnDrawGizmosSelected()
     {

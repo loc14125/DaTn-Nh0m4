@@ -159,6 +159,7 @@ GameObject:
   - component: {fileID: 302083005}
   - component: {fileID: 302083004}
   - component: {fileID: 302083006}
+  - component: {fileID: 302083007}
   m_Layer: 0
   m_Name: Tilemap
   m_TagString: Untagged
@@ -219,8 +220,8 @@ TilemapRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1060004317
+  m_SortingLayer: 1
   m_SortingOrder: 1
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -39937,6 +39938,42 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 302, y: 48}
   m_EdgeRadius: 0
+--- !u!19719996 &302083007
+TilemapCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 302083002}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_MaximumTileChangeCount: 1000
+  m_ExtrusionFactor: 0
+  m_UseDelaunayMesh: 0
 --- !u!1001 &357335048
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -40269,9 +40306,13 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5530002318092582394, guid: 9c2480057aca7714993660e52ccf0c6e, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7470192324634710226, guid: 9c2480057aca7714993660e52ccf0c6e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -245.85
+      value: -244.3
       objectReference: {fileID: 0}
     - target: {fileID: 7470192324634710226, guid: 9c2480057aca7714993660e52ccf0c6e, type: 3}
       propertyPath: m_LocalPosition.y
@@ -40322,6 +40363,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2414055164192737401, guid: fd4a2006e56c50a4fb144fd955b0c621, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8403735898511526957, guid: fd4a2006e56c50a4fb144fd955b0c621, type: 3}
       propertyPath: m_LocalPosition.x
       value: -228.66

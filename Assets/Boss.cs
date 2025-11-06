@@ -29,6 +29,8 @@ public class Boss : MonoBehaviour
     private bool isDead;
     private bool isAttacking;
     private bool playerInMeleeRange;
+    [Header("Popup Damage")]
+[SerializeField] private GameObject damagePopupPrefab;
 
     // ✅ tracking player bị hit mỗi hitbox
     private HashSet<GameObject> damagedPlayersThisHit = new HashSet<GameObject>();
@@ -174,12 +176,20 @@ public class Boss : MonoBehaviour
             return;
         }
 
-        currentHealth -= dmg;
-        bossUI.UpdateHealth(currentHealth);
-        Debug.Log($"🔥 Boss trúng đòn! Còn {currentHealth} máu");
+         currentHealth -= dmg;
+    bossUI.UpdateHealth(currentHealth);
+    Debug.Log($"🔥 Boss trúng đòn! Còn {currentHealth} máu");
 
-        if (currentHealth <= 0)
-            Die();
+    // 🧠 Hiển thị damage popup
+    if (damagePopupPrefab != null)
+    {
+        Vector3 popupPos = transform.position + Vector3.up * 1f;
+        GameObject popup = Instantiate(damagePopupPrefab, popupPos, Quaternion.identity);
+        popup.GetComponent<DamagePopUp>()?.Setup(dmg);
+    }
+
+    if (currentHealth <= 0)
+        Die();
     }
 
 

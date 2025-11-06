@@ -72,20 +72,22 @@ public class PlayerMovement : MonoBehaviour
     }
 
     private void Move()
+{
+    if (isAttacking || isDashing) return; // ✅ không cho quay hoặc di chuyển khi đang dash/attack
+
+    rb.velocity = new Vector2(inputX * moveSpeed, rb.velocity.y);
+
+    if (Mathf.Abs(inputX) > 0.1f)
     {
-        rb.velocity = new Vector2(inputX * moveSpeed, rb.velocity.y);
-
-        if (Mathf.Abs(inputX) > 0.1f)
-        {
-            facingDirection = inputX > 0 ? 1 : -1;
-            transform.rotation = Quaternion.Euler(0, facingDirection == 1 ? 0 : 180, 0);
-        }
-
-        if (isGrounded && !isAttacking)
-        {
-            ChangeAnimation(Mathf.Abs(inputX) > 0.1f ? "Run" : "Idle");
-        }
+        facingDirection = inputX > 0 ? 1 : -1;
+        transform.rotation = Quaternion.Euler(0, facingDirection == 1 ? 0 : 180, 0);
     }
+
+    if (isGrounded)
+    {
+        ChangeAnimation(Mathf.Abs(inputX) > 0.1f ? "Run" : "Idle");
+    }
+}
 
     private void Jump()
     {
@@ -138,23 +140,45 @@ public class PlayerMovement : MonoBehaviour
     }
 
     private void TryDash()
-    {
-        if (Time.time < lastDashTime + dashCooldown) return;
-        isDashing = true;
-        lastDashTime = Time.time;
+{
+    if (Time.time < lastDashTime + dashCooldown) return;
+    lastDashTime = Time.time;
 
-        ChangeAnimation("Dash");
-        rb.gravityScale = 0f;
-        rb.velocity = new Vector2(facingDirection * dashSpeed, 0);
+    // ✅ Ưu tiên hướng đang nhấn phím
+    float inputDir = Input.GetAxisRaw("Horizontal");
 
-        Invoke(nameof(EndDash), dashDuration);
-    }
+    // Nếu người chơi không nhấn phím thì dash theo hướng đang quay mặt
+    if (Mathf.Abs(inputDir) > 0.1f)
+        facingDirection = inputDir > 0 ? 1 : -1;
 
-    private void EndDash()
-    {
-        isDashing = false;
-        rb.gravityScale = originalGravity;
-    }
+    // Bắt đầu dash
+    isDashing = true;
+
+    // ✅ Tạm thời bỏ qua va chạm giữa Player và Enemy
+    Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Enemy"), true);
+
+    ChangeAnimation("Dash");
+    rb.gravityScale = 0f;
+    rb.velocity = new Vector2(facingDirection * dashSpeed, 0);
+
+    Invoke(nameof(EndDash), dashDuration);
+}
+
+private void EndDash()
+{
+    isDashing = false;
+    rb.gravityScale = originalGravity;
+
+    // ✅ Bật lại va chạm giữa Player và Enemy
+    Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Enemy"), false);
+
+    // ✅ Nếu người chơi đang giữ phím di chuyển, tiếp tục hướng đó
+    if (Mathf.Abs(Input.GetAxisRaw("Horizontal")) > 0.1f)
+        ChangeAnimation("Run");
+    else
+        ChangeAnimation("Idle");
+}
+
 
     public void TakeDamage(int dmg)
     {
@@ -223,16 +247,18 @@ public class PlayerMovement : MonoBehaviour
     }
 
     private void Knockback()
-{
-    // Hướng ngược lại hướng đang quay
-    int knockDir = -facingDirection;
+    {
+        // Hướng ngược lại hướng đang quay
+        int knockDir = -facingDirection;
 
-    // Tạo lực bật lùi nhẹ
-    float knockForceX = 9f;  // điều chỉnh độ bật lùi ngang
-    float knockForceY = 3f;  // độ nảy lên nhẹ (tùy thích)
+        // Tạo lực bật lùi nhẹ
+        float knockForceX = 9f;  // điều chỉnh độ bật lùi ngang
+        float knockForceY = 3f;  // độ nảy lên nhẹ (tùy thích)
 
-    rb.velocity = new Vector2(knockDir * knockForceX, knockForceY);
-}
+        rb.velocity = new Vector2(knockDir * knockForceX, knockForceY);
+    }
+    
+
 }
 
 

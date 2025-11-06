@@ -50,4 +50,8 @@ public class PlayerAttack : MonoBehaviour
         attackHitbox.SetActive(false);
         hitboxActiveThisSwing = false;
     }
+    public int GetDamage()
+{
+    return damage;
+}
 }

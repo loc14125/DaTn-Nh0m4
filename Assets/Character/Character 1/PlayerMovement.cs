@@ -25,7 +25,7 @@ public class PlayerMovement : MonoBehaviour
     public bool hasDealtDamage = false; // ✅ để khóa damage mỗi swing
 
     [Header("References")]
-    [SerializeField] private PlayerAttack playerAttack;
+    [SerializeField] public PlayerAttack playerAttack;
     public PlayerHealthUI healthUI;
 
     private Rigidbody2D rb;
@@ -257,6 +257,10 @@ private void EndDash()
 
         rb.velocity = new Vector2(knockDir * knockForceX, knockForceY);
     }
+    public int GetCurrentHealth()
+{
+    return currentHealth;
+}
     
 
 }

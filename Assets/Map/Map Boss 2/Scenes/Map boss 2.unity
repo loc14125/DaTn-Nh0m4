@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 72073421}
   - component: {fileID: 72073420}
   - component: {fileID: 72073419}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: BossHitBox3
   m_TagString: BossHit2_2
   m_Icon: {fileID: 0}
@@ -3543,7 +3543,7 @@ GameObject:
   - component: {fileID: 286736976}
   - component: {fileID: 286736975}
   - component: {fileID: 286736974}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: BossHitBox2
   m_TagString: BossHit2_1
   m_Icon: {fileID: 0}
@@ -3673,7 +3673,7 @@ GameObject:
   - component: {fileID: 356730773}
   - component: {fileID: 356730772}
   - component: {fileID: 356730771}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: BossHitBox1
   m_TagString: BossHit1
   m_Icon: {fileID: 0}
@@ -4094,7 +4094,7 @@ GameObject:
   - component: {fileID: 937261835}
   - component: {fileID: 937261837}
   - component: {fileID: 937261836}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4170,7 +4170,7 @@ GameObject:
   - component: {fileID: 946415753}
   - component: {fileID: 946415752}
   - component: {fileID: 946415751}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: HealthBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4255,7 +4255,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
@@ -4302,7 +4302,7 @@ GameObject:
   m_Component:
   - component: {fileID: 951265554}
   - component: {fileID: 951265555}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Slider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4677,7 +4677,7 @@ GameObject:
   - component: {fileID: 1247011274}
   - component: {fileID: 1247011273}
   - component: {fileID: 1247011272}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Name Boss
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4956,7 +4956,7 @@ GameObject:
   - component: {fileID: 1331893764}
   - component: {fileID: 1331893766}
   - component: {fileID: 1331893765}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5184,7 +5184,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1407375033}
   - component: {fileID: 1407375034}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: AttackHitBox
   m_TagString: PlayerHitbox
   m_Icon: {fileID: 0}
@@ -5262,7 +5262,7 @@ GameObject:
   - component: {fileID: 1437533609}
   - component: {fileID: 1437533611}
   - component: {fileID: 1437533610}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Border
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5335,7 +5335,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1460346198}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Handle Slide Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5406,6 +5406,10 @@ PrefabInstance:
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 1887697472300489737, guid: a8617a5117106604b95283cab1133cbe, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1887697472300489737, guid: a8617a5117106604b95283cab1133cbe, type: 3}
       propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
@@ -5453,6 +5457,10 @@ PrefabInstance:
       propertyPath: m_IsTrigger
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9028400420263887133, guid: a8617a5117106604b95283cab1133cbe, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -5482,7 +5490,7 @@ GameObject:
   - component: {fileID: 1579003871}
   - component: {fileID: 1579003870}
   - component: {fileID: 1579003869}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5739,7 +5747,7 @@ GameObject:
   - component: {fileID: 1639726287}
   - component: {fileID: 1639726289}
   - component: {fileID: 1639726288}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5851,6 +5859,10 @@ PrefabInstance:
       propertyPath: hitboxNormal
       value: 
       objectReference: {fileID: 356730770}
+    - target: {fileID: 2516680787436760735, guid: 49c25aaf653bd5346aebb0e27fb01d0e, type: 3}
+      propertyPath: damagePopupPrefab
+      value: 
+      objectReference: {fileID: 764722398817924463, guid: adc423bcc0a3f734eadd85d6fc02cab3, type: 3}
     - target: {fileID: 4814681901212825462, guid: 49c25aaf653bd5346aebb0e27fb01d0e, type: 3}
       propertyPath: m_LocalScale.y
       value: 0.9875
@@ -5898,6 +5910,10 @@ PrefabInstance:
     - target: {fileID: 7700202151775776657, guid: 49c25aaf653bd5346aebb0e27fb01d0e, type: 3}
       propertyPath: m_Name
       value: Boss
+      objectReference: {fileID: 0}
+    - target: {fileID: 7700202151775776657, guid: 49c25aaf653bd5346aebb0e27fb01d0e, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 7700202151775776657, guid: 49c25aaf653bd5346aebb0e27fb01d0e, type: 3}
       propertyPath: m_TagString
@@ -6171,6 +6187,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 50
+  damagePopupPrefab: {fileID: 0}
 --- !u!1 &1826129509
 GameObject:
   m_ObjectHideFlags: 0
@@ -7558,7 +7575,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1890950028}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Fill Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7595,7 +7612,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1896191410}
   - component: {fileID: 1896191412}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: HearthBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}

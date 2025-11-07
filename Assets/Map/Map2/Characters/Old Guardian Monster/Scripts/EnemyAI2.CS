@@ -139,9 +139,11 @@ public class EnemyAI2 : MonoBehaviour
 
         currentHealth -= damage;
         animator.SetTrigger("Hurt");
+         Debug.Log($"🔥 quasi! Còn {currentHealth} máu");
 
         if (currentHealth <= 0)
             Die();
+           
     }
 
     void Die()

@@ -28946,6 +28946,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 2721fe7b4ace7be47a6d9dce3a88223c, type: 2}
+    - target: {fileID: 184027345767087445, guid: 64b756ca0b0e6d849a31a9e55e286e5a, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1546379374776219504, guid: 64b756ca0b0e6d849a31a9e55e286e5a, type: 3}
       propertyPath: pointA
       value: 

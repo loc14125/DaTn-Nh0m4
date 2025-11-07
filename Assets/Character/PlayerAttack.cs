@@ -41,6 +41,13 @@ public class PlayerAttack : MonoBehaviour
                 boss.TakeDamage(damage);
                 damagedEnemies.Add(enemyRoot);
             }
+            EnemyAI2 enemy = enemyRoot.GetComponent<EnemyAI2>();
+            if (enemy != null)
+            {
+                enemy.TakeDamage(damage);
+                damagedEnemies.Add(enemyRoot);
+            }
+
         }
     }
 

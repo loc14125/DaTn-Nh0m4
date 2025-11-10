@@ -16,7 +16,7 @@ public class BatEnemy2D : MonoBehaviour
     public float fireballSpeed = 5f;
 
     [Header("Health")]
-    public int maxHP = 3;
+    public int maxHP = 60;
     private int currentHP;
 
     [Header("Animation")]

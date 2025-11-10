@@ -9,6 +9,7 @@ public class Fireball : MonoBehaviour
     private Vector2 direction = Vector2.right;
     private Animator animator;
     private bool exploded = false;
+    private int damage = 30;
 
     void Awake()
     {
@@ -44,7 +45,18 @@ public class Fireball : MonoBehaviour
     {
         if (exploded) return;
 
-        if (other.CompareTag("Player") || other.CompareTag("Ground"))
+        if (other.CompareTag("Player"))
+        {
+            // Gây dmg nếu player có script nhận sát thương
+            PlayerMovement health = other.GetComponent<PlayerMovement>();
+            if (health != null)
+            {
+                health.TakeDamage(damage); // <= đổi số dmg tùy bạn
+            }
+
+            Explode();
+        }
+        else if (other.CompareTag("Ground"))
         {
             Explode();
         }

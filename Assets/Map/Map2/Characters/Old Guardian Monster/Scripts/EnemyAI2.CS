@@ -29,7 +29,7 @@ public class EnemyAI2 : MonoBehaviour
     private Animator animator;
     private Collider2D col;
     private bool isIdle = false;
-    private bool isChasing = false; // ✅ thêm trạng thái chase
+    private bool isChasing = false;
 
     void Start()
     {
@@ -46,9 +46,16 @@ public class EnemyAI2 : MonoBehaviour
     {
         if (isDead) return;
 
-        float distanceToPlayer = Vector2.Distance(transform.position, player.position);
+        float distanceToPlayer = Vector2.Distance(attackPoint.position, player.position);
 
-        // ✅ Player trong phạm vi → chuyển chase
+        // ✅ Player trong phạm vi tấn công → tấn công
+        if (distanceToPlayer <= attackRange)
+        {
+            Attack();
+            return;
+        }
+
+        // ✅ Player trong phạm vi phát hiện → Chase
         if (distanceToPlayer <= 5.0f)
         {
             isChasing = true;
@@ -56,7 +63,7 @@ public class EnemyAI2 : MonoBehaviour
         }
         else
         {
-            // ✅ Thoát chase → quay hướng lại theo patrol
+            // ✅ Thoát trạng thái chase → quay lại patrol
             if (isChasing)
             {
                 isChasing = false;
@@ -99,39 +106,46 @@ public class EnemyAI2 : MonoBehaviour
 
     void ChasePlayer()
     {
-        // ✅ Quay theo player
         if (player.position.x < transform.position.x)
             spriteRenderer.flipX = true;
         else
             spriteRenderer.flipX = false;
 
-        // Nếu đủ gần thì attack
-        if (Vector2.Distance(transform.position, player.position) <= attackRange + 0.2f)
-        {
-            //TryAttack();
-            animator.SetBool("isWalking", false);
-            return;
-        }
-
         animator.SetBool("isWalking", true);
         transform.position = Vector2.MoveTowards(transform.position, player.position, speed * Time.deltaTime);
     }
 
-    //void TryAttack()
-    //{
-    //    if (Time.time < lastAttackTime + attackCooldown) return;
-
-    //    animator.SetTrigger("Attack");
-    //    lastAttackTime = Time.time;
-    //}
-
-    // ✅ Animation Event
-    public void DealDamage()
+    // ✅ Attack
+    void Attack()
     {
-        Collider2D hit = Physics2D.OverlapCircle(attackPoint.position, attackRange, LayerMask.GetMask("Player"));
-        if (hit != null)
-            hit.GetComponent<PlayerMovement>()?.TakeDamage(damage);
+        animator.SetBool("isWalking", false);
+
+        // Debug xem quái có bước vào hàm attack không
+        Debug.Log("Enemy attempting to attack!");
+
+        if (Time.time - lastAttackTime >= attackCooldown)
+        {
+            animator.SetTrigger("Attack");
+            lastAttackTime = Time.time;
+
+            StartCoroutine(DealDamageAfterDelay(0.8f));
+        }
     }
+
+    IEnumerator DealDamageAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        // ✅ Kiểm tra xem lúc gây damage có còn player trong phạm vi không
+        Collider2D hitPlayer = Physics2D.OverlapCircle(attackPoint.position, attackRange, LayerMask.GetMask("Player"));
+
+        if (hitPlayer != null)
+        {
+            hitPlayer.GetComponent<PlayerMovement>().TakeDamage(damage);
+            Debug.Log("Enemy dealt damage!");
+        }
+    }
+
 
     public void TakeDamage(int damage)
     {
@@ -139,11 +153,9 @@ public class EnemyAI2 : MonoBehaviour
 
         currentHealth -= damage;
         animator.SetTrigger("Hurt");
-         Debug.Log($"🔥 quasi! Còn {currentHealth} máu");
 
         if (currentHealth <= 0)
             Die();
-           
     }
 
     void Die()

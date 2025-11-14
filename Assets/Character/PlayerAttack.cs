@@ -53,6 +53,18 @@ public class PlayerAttack : MonoBehaviour
                 bat.TakeDamage(damage);
                 damagedEnemies.Add(enemyRoot);
             }
+            EnemyAI Golem = enemyRoot.GetComponent<EnemyAI>();
+            if (Golem != null)
+            {
+                Golem.TakeDamage(damage);
+                damagedEnemies.Add(enemyRoot);
+            }
+            BatEnemy Bat = enemyRoot.GetComponent<BatEnemy>();
+            if (Bat != null)
+            {
+                Bat.TakeDamage(damage);
+                damagedEnemies.Add(enemyRoot);
+            }
         }
     }
 

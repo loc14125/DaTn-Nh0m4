@@ -1,231 +1,160 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
+using UnityEngine;
 
 public class EnemyAI : MonoBehaviour
 {
-    [Header("Patrol Settings")]
-    public float moveSpeed = 2f;
-    public float moveDistance = 2f;
-    public float idleTime = 1f;
+    [Header("Movement Settings")]
+    public float speed = 2f;
+    public float moveDistance = 2f;   // quãng đường đi tới/lui
+    public float idleTime = 1f;       // thời gian đứng chờ
 
-    [Header("Chase & Attack Settings")]
-    public float detectRange = 2f;      
-    public float attackRange = 1f;      
-    public float attackCooldown = 1.5f; 
+    [Header("Attack Settings")]
+    public Transform attackPoint;
+    public float attackRange = 0.6f;
     public int damage = 10;
+    public float attackCooldown = 1f;
+    private float lastAttackTime;
 
-    [Header("Health")]
-    public int maxHealth = 100;
-
+    [Header("Health Settings")]
+    public int maxHealth = 3;
     private int currentHealth;
-    private Vector3 startPos;
-    private bool movingRight = true;
-    private bool isIdle = false;
     private bool isDead = false;
-    private bool canAttack = true;
 
     private Transform player;
+    private SpriteRenderer spriteRenderer;
     private Animator animator;
-    private Vector3 lastPosition;
+    private Collider2D col;
 
-    private enum State { Patrol, Chase, Attack, Die }
-    private State currentState = State.Patrol;
+    private bool isIdle = false;
+    private bool isChasing = false;
+    private Vector2 startPos;
+    private int moveDir = 1; // 1 = phải, -1 = trái
 
     void Start()
     {
-        startPos = transform.position;
-        lastPosition = startPos;
+        spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
+        col = GetComponent<Collider2D>();
         currentHealth = maxHealth;
 
-        GameObject p = GameObject.FindGameObjectWithTag("Player");
-        if (p != null) player = p.transform;
-
-        SetAnim("isWalking", true);
+        player = GameObject.FindGameObjectWithTag("Player").transform;
+        startPos = transform.position;
     }
 
     void Update()
     {
-        if (isDead || player == null) return;
+        if (isDead) return;
 
-        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+        float distanceToPlayer = Vector2.Distance(attackPoint.position, player.position);
 
-        switch (currentState)
+        // ✅ Attack
+        if (distanceToPlayer <= attackRange)
         {
-            case State.Patrol:
+            Attack();
+            return;
+        }
+
+        // ✅ Chase
+        if (distanceToPlayer <= 5.0f)
+        {
+            isChasing = true;
+            ChasePlayer();
+        }
+        else
+        {
+            isChasing = false;
+
+            if (!isIdle)
                 Patrol();
-                if (distanceToPlayer <= detectRange)
-                    ChangeState(State.Chase);
-                break;
-
-            case State.Chase:
-                ChasePlayer(distanceToPlayer);
-                break;
-
-            case State.Attack:
-                if (distanceToPlayer > attackRange)
-                {
-                    SetAnim("isAttacking", false);
-                    ChangeState(State.Chase);
-                }
-                break;
-
-            case State.Die:
-               
-                break;
-
-            UpdateWalkAnimation();
         }
     }
 
-    void UpdateWalkAnimation()
-    {
-        float distanceMoved = Vector3.Distance(transform.position, lastPosition);
-        bool isMoving = distanceMoved > 0.001f && !isIdle && !isDead;
-        SetAnim("isWalking", isMoving);
-        lastPosition = transform.position;
-    }
     void Patrol()
     {
-        if (isIdle) return;
+        animator.SetBool("isWalking", true);
+        transform.Translate(Vector2.right * moveDir * speed * Time.deltaTime);
 
-        float targetX = startPos.x + (movingRight ? moveDistance : -moveDistance);
-        transform.position = Vector3.MoveTowards(transform.position,
-            new Vector3(targetX, transform.position.y, transform.position.z),
-            moveSpeed * Time.deltaTime);
-
-        if (Mathf.Abs(transform.position.x - targetX) < 0.01f)
-        {
+        float traveled = Mathf.Abs(transform.position.x - startPos.x);
+        if (traveled >= moveDistance)
             StartCoroutine(IdleAndTurn());
-        }
-
-        FlipSprite(movingRight);
     }
 
     IEnumerator IdleAndTurn()
     {
         isIdle = true;
-        SetAnim("isWalking", false);
+        animator.SetBool("isWalking", false);
         yield return new WaitForSeconds(idleTime);
-        movingRight = !movingRight;
+
+        moveDir *= -1;
+        spriteRenderer.flipX = !spriteRenderer.flipX;
+
+        // reset vị trí gốc để đo lại quãng đường
+        startPos = transform.position;
+
         isIdle = false;
-        SetAnim("isWalking", true);
     }
 
-    
-    void ChasePlayer(float distance)
+    void ChasePlayer()
     {
-        if (distance > detectRange + 1f)
-        {
-            
-            ChangeState(State.Patrol);
-            return;
-        }
+        if (player == null) return;
 
-        if (distance <= attackRange)
-        {
-            ChangeState(State.Attack);
-            return;
-        }
+        if (player.position.x < transform.position.x)
+            spriteRenderer.flipX = true;
+        else
+            spriteRenderer.flipX = false;
 
-        
-        Vector3 dir = (player.position - transform.position).normalized;
-        transform.position += dir * moveSpeed * 1.5f * Time.deltaTime;
-        FlipSprite(player.position.x > transform.position.x);
-
-        SetAnim("isWalking", true);
+        animator.SetBool("isWalking", true);
+        transform.position = Vector2.MoveTowards(transform.position, player.position, speed * Time.deltaTime);
     }
 
-
-    IEnumerator AttackPlayer()
+    void Attack()
     {
-        SetAnim("isWalking", false);
-        SetAnim("isAttacking", true);
+        animator.SetBool("isWalking", false);
 
-        while (currentState == State.Attack && !isDead)
+        if (Time.time - lastAttackTime >= attackCooldown)
         {
-            if (player == null) yield break;
-
-            float distance = Vector3.Distance(transform.position, player.position);
-            if (distance > attackRange)
-            {
-                SetAnim("isAttacking", false);
-                ChangeState(State.Chase);
-                yield break;
-            }
-
-            if (canAttack)
-            {
-             
-                Debug.Log("Enemy attacks player!");
-                canAttack = false;
-                yield return new WaitForSeconds(attackCooldown);
-                canAttack = true;
-            }
-
-            yield return null;
+            animator.SetTrigger("Attack");
+            lastAttackTime = Time.time;
+            StartCoroutine(DealDamageAfterDelay(0.8f));
         }
     }
 
-    public void TakeDamage(int dmg)
+    IEnumerator DealDamageAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        Collider2D hitPlayer = Physics2D.OverlapCircle(attackPoint.position, attackRange, LayerMask.GetMask("Player"));
+        if (hitPlayer != null)
+        {
+            hitPlayer.GetComponent<PlayerMovement>().TakeDamage(damage);
+        }
+    }
+
+    public void TakeDamage(int damage)
     {
         if (isDead) return;
 
-        currentHealth -= dmg;
+        currentHealth -= damage;
+        animator.SetTrigger("Hurt");
+
         if (currentHealth <= 0)
-        {
-            ChangeState(State.Die);
-        }
+            Die();
     }
 
     void Die()
     {
         isDead = true;
-        SetAnim("isWalking", false);
-        SetAnim("isAttacking", false);
-        SetAnim("isDead", true);
-
-     
-        GetComponent<Collider>().enabled = false;
-        Destroy(gameObject, 3f); 
+        animator.SetBool("isWalking", false);
+        animator.SetTrigger("Die");
+        Destroy(gameObject, 2f);
     }
 
-    void ChangeState(State newState)
+    private void OnDrawGizmosSelected()
     {
-        if (currentState == newState) return;
-        currentState = newState;
-        StopAllCoroutines();
-        switch (newState)
+        if (attackPoint != null)
         {
-            case State.Patrol:
-                SetAnim("isAttacking", false);
-                SetAnim("isWalking", true);
-                break;
-            case State.Chase:
-                SetAnim("isAttacking", false);
-                SetAnim("isWalking", true);
-                break;
-            case State.Attack:
-                StartCoroutine(AttackPlayer());
-                break;
-            case State.Die:
-                Die();
-                break;
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(attackPoint.position, attackRange);
         }
     }
-
-    void SetAnim(string param, bool value)
-    {
-        if (animator != null)
-            animator.SetBool(param, value);
-    }
-
-    void FlipSprite(bool faceRight)
-    {
-        Vector3 scale = transform.localScale;
-        scale.x = faceRight ? Mathf.Abs(scale.x) : -Mathf.Abs(scale.x);
-        transform.localScale = scale;
-    }
 }
-

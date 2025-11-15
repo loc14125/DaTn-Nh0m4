@@ -5,8 +5,11 @@ public class EnemyAI : MonoBehaviour
 {
     [Header("Movement Settings")]
     public float speed = 2f;
-    public float moveDistance = 2f;   // quãng đường đi tới/lui
-    public float idleTime = 1f;       // thời gian đứng chờ
+    public float moveDistance = 2f;
+    public float idleTime = 1f;
+    public LayerMask groundLayer;
+    public Transform groundCheck;
+    public float groundCheckRadius = 0.2f;
 
     [Header("Attack Settings")]
     public Transform attackPoint;
@@ -15,26 +18,28 @@ public class EnemyAI : MonoBehaviour
     public float attackCooldown = 1f;
     private float lastAttackTime;
 
-    [Header("Health Settings")]
+    [Header("Health")]
     public int maxHealth = 3;
     private int currentHealth;
     private bool isDead = false;
 
-    private Transform player;
+    private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
     private Animator animator;
-    private Collider2D col;
+    private Transform player;
 
     private bool isIdle = false;
-    private bool isChasing = false;
+    private int moveDir = 1; // 1=right, -1=left
     private Vector2 startPos;
-    private int moveDir = 1; // 1 = phải, -1 = trái
 
     void Start()
     {
+        rb = GetComponent<Rigidbody2D>();
+        rb.gravityScale = 1;
+        rb.freezeRotation = true;
+
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
-        col = GetComponent<Collider2D>();
         currentHealth = maxHealth;
 
         player = GameObject.FindGameObjectWithTag("Player").transform;
@@ -45,25 +50,20 @@ public class EnemyAI : MonoBehaviour
     {
         if (isDead) return;
 
-        float distanceToPlayer = Vector2.Distance(attackPoint.position, player.position);
+        float distanceToPlayer = Vector2.Distance(transform.position, player.position);
 
-        // ✅ Attack
         if (distanceToPlayer <= attackRange)
         {
             Attack();
             return;
         }
 
-        // ✅ Chase
-        if (distanceToPlayer <= 5.0f)
+        if (distanceToPlayer <= 5f)
         {
-            isChasing = true;
             ChasePlayer();
         }
         else
         {
-            isChasing = false;
-
             if (!isIdle)
                 Patrol();
         }
@@ -72,23 +72,36 @@ public class EnemyAI : MonoBehaviour
     void Patrol()
     {
         animator.SetBool("isWalking", true);
-        transform.Translate(Vector2.right * moveDir * speed * Time.deltaTime);
 
-        float traveled = Mathf.Abs(transform.position.x - startPos.x);
-        if (traveled >= moveDistance)
+        // Kiểm tra ground phía trước
+        Vector2 checkPos = groundCheck.position + Vector3.right * moveDir * 0.2f;
+        bool isGroundAhead = Physics2D.OverlapCircle(checkPos, groundCheckRadius, groundLayer);
+
+        if (isGroundAhead)
+        {
+            rb.velocity = new Vector2(moveDir * speed, rb.velocity.y);
+
+            float traveled = Mathf.Abs(transform.position.x - startPos.x);
+            if (traveled >= moveDistance)
+                StartCoroutine(IdleAndTurn());
+        }
+        else
+        {
+            rb.velocity = new Vector2(0, rb.velocity.y);
             StartCoroutine(IdleAndTurn());
+        }
     }
 
     IEnumerator IdleAndTurn()
     {
         isIdle = true;
         animator.SetBool("isWalking", false);
+        rb.velocity = Vector2.zero;
+
         yield return new WaitForSeconds(idleTime);
 
         moveDir *= -1;
-        spriteRenderer.flipX = !spriteRenderer.flipX;
-
-        // reset vị trí gốc để đo lại quãng đường
+        spriteRenderer.flipX = moveDir == -1;
         startPos = transform.position;
 
         isIdle = false;
@@ -96,26 +109,34 @@ public class EnemyAI : MonoBehaviour
 
     void ChasePlayer()
     {
-        if (player == null) return;
-
-        if (player.position.x < transform.position.x)
-            spriteRenderer.flipX = true;
-        else
-            spriteRenderer.flipX = false;
-
         animator.SetBool("isWalking", true);
-        transform.position = Vector2.MoveTowards(transform.position, player.position, speed * Time.deltaTime);
+
+        moveDir = player.position.x < transform.position.x ? -1 : 1;
+        spriteRenderer.flipX = moveDir == -1;
+
+        Vector2 checkPos = groundCheck.position + Vector3.right * moveDir * 0.2f;
+        bool isGroundAhead = Physics2D.OverlapCircle(checkPos, groundCheckRadius, groundLayer);
+
+        if (isGroundAhead)
+        {
+            rb.velocity = new Vector2(moveDir * speed, rb.velocity.y);
+        }
+        else
+        {
+            rb.velocity = new Vector2(0, rb.velocity.y);
+        }
     }
 
     void Attack()
     {
         animator.SetBool("isWalking", false);
+        rb.velocity = new Vector2(0, rb.velocity.y);
 
         if (Time.time - lastAttackTime >= attackCooldown)
         {
             animator.SetTrigger("Attack");
             lastAttackTime = Time.time;
-            StartCoroutine(DealDamageAfterDelay(0.8f));
+            StartCoroutine(DealDamageAfterDelay(0.5f));
         }
     }
 
@@ -126,15 +147,15 @@ public class EnemyAI : MonoBehaviour
         Collider2D hitPlayer = Physics2D.OverlapCircle(attackPoint.position, attackRange, LayerMask.GetMask("Player"));
         if (hitPlayer != null)
         {
-            hitPlayer.GetComponent<PlayerMovement>().TakeDamage(damage);
+            hitPlayer.GetComponent<PlayerMovement>()?.TakeDamage(damage);
         }
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(int dmg)
     {
         if (isDead) return;
 
-        currentHealth -= damage;
+        currentHealth -= dmg;
         animator.SetTrigger("Hurt");
 
         if (currentHealth <= 0)
@@ -146,6 +167,7 @@ public class EnemyAI : MonoBehaviour
         isDead = true;
         animator.SetBool("isWalking", false);
         animator.SetTrigger("Die");
+        rb.velocity = Vector2.zero;
         Destroy(gameObject, 2f);
     }
 
@@ -155,6 +177,12 @@ public class EnemyAI : MonoBehaviour
         {
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(attackPoint.position, attackRange);
+        }
+
+        if (groundCheck != null)
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireSphere(groundCheck.position + Vector3.right * moveDir * 0.2f, groundCheckRadius);
         }
     }
 }

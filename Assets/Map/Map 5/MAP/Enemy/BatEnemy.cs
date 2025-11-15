@@ -70,8 +70,19 @@ public class BatEnemy : MonoBehaviour
                 StartCoroutine(ChargeAttack());
             }
         }
+        if (!isDead && player != null)
+            LookAtPlayer();
     }
+    void LookAtPlayer()
+    {
+        if (player == null) return;
 
+        // ĐẢO NGƯỢC: nếu player bên phải thì enemy quay sang TRÁI (tuỳ sprite của bạn)
+        if (player.position.x > transform.position.x)
+            transform.localScale = new Vector3(-1, 1, 1);   // quay sang phải (sprite của bạn đang ngược)
+        else
+            transform.localScale = new Vector3(1, 1, 1);    // quay sang trái
+    }
     void HoverEffect()
     {
         float newY = startPos.y + Mathf.Sin(Time.time * hoverFrequency) * hoverAmplitude;

@@ -282,6 +282,7 @@ Transform:
   - {fileID: 7448019835259375147}
   - {fileID: 3423958059397473854}
   - {fileID: 7717474321707689054}
+  - {fileID: 1533613041438469997}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &5910332373881935463
@@ -442,6 +443,8 @@ MonoBehaviour:
   dashSpeed: 20
   dashDuration: 0.2
   dashCooldown: 1
+  boltPrefab: {fileID: 1909612724582071789, guid: d04e1e6f66bf66742ae6ad9fe8ae1dd9, type: 3}
+  boltSpawnPoint: {fileID: 1533613041438469997}
   maxHealth: 100
   hasDealtDamage: 0
   playerAttack: {fileID: 4731274454840541571}
@@ -473,6 +476,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerSlider: {fileID: 6974734910144535405}
+--- !u!1 &3401451333715866940
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1533613041438469997}
+  m_Layer: 6
+  m_Name: ShootBolt
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1533613041438469997
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3401451333715866940}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.05, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4558007237371015932}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4468339295154013948
 GameObject:
   m_ObjectHideFlags: 0

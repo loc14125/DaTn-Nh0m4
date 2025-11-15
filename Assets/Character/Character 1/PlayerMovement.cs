@@ -16,6 +16,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float dashDuration = 0.2f;
     [SerializeField] private float dashCooldown = 1f;
 
+     //skill bolt
+    [SerializeField] private GameObject boltPrefab;
+    [SerializeField] private Transform boltSpawnPoint;
+
     [Header("Health Settings")]
     [SerializeField] private int maxHealth = 100;
     private int currentHealth;
@@ -67,6 +71,10 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.J) && !isDashing) Attack();
 
         if (Input.GetKeyDown(KeyCode.L)) TryDash();
+        if (Input.GetKeyDown(KeyCode.U))
+{
+    ShootBolt();
+}
 
         HandleAirAnimations();
     }
@@ -235,16 +243,25 @@ private void EndDash()
     {
         if (anim == null || anim.layerCount == 0) return;
 
-    // Luôn cho phép "Hurt" chạy lại kể cả khi đang Hurt
-    if (currentAnim == animName && animName != "Hurt") return;
+        // Luôn cho phép "Hurt" chạy lại kể cả khi đang Hurt
+        if (currentAnim == animName && animName != "Hurt") return;
 
-    anim.Play(animName, 0, 0f); // phát từ frame đầu
-    currentAnim = animName;if (anim == null || anim.layerCount == 0) return; // tránh lỗi layer -1
+        anim.Play(animName, 0, 0f); // phát từ frame đầu
+        currentAnim = animName; if (anim == null || anim.layerCount == 0) return; // tránh lỗi layer -1
         if (currentAnim == animName) return;
 
         anim.Play(animName, 0, 0f); // luôn phát ở Base Layer
         currentAnim = animName;
     }
+    
+    private void ShootBolt()
+{
+    GameObject bolt = Instantiate(boltPrefab, boltSpawnPoint.position, Quaternion.identity);
+
+    // Lấy script projectile và truyền hướng bắn
+    BoltScript bp = bolt.GetComponent<BoltScript>();
+    bp.SetDirection(facingDirection);
+}
 
     private void Knockback()
     {

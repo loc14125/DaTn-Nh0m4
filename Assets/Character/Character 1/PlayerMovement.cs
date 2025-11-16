@@ -32,6 +32,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] public PlayerAttack playerAttack;
     public PlayerHealthUI healthUI;
 
+    [Header("Bolt Skill")]
+public float boltCooldown = 1.5f;   // thời gian hồi chiêu
+private float lastBoltTime = -999f;
+
     private Rigidbody2D rb;
     private Animator anim;
     private bool isGrounded;
@@ -71,11 +75,10 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.J) && !isDashing) Attack();
 
         if (Input.GetKeyDown(KeyCode.L)) TryDash();
-        if (Input.GetKeyDown(KeyCode.U))
+      if (Input.GetKeyDown(KeyCode.U))
 {
-    ShootBolt();
+    TryShootBolt();
 }
-
         HandleAirAnimations();
     }
 
@@ -147,23 +150,24 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void TryDash()
+private void TryDash()
 {
     if (Time.time < lastDashTime + dashCooldown) return;
     lastDashTime = Time.time;
 
-    // ✅ Ưu tiên hướng đang nhấn phím
     float inputDir = Input.GetAxisRaw("Horizontal");
 
-    // Nếu người chơi không nhấn phím thì dash theo hướng đang quay mặt
     if (Mathf.Abs(inputDir) > 0.1f)
         facingDirection = inputDir > 0 ? 1 : -1;
 
-    // Bắt đầu dash
     isDashing = true;
+    isInvincible = true; // 🛡️ BẬT BẤT TỬ
 
-    // ✅ Tạm thời bỏ qua va chạm giữa Player và Enemy
-    Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Enemy"), true);
+Physics2D.IgnoreLayerCollision(
+    LayerMask.NameToLayer("Player"),
+    LayerMask.NameToLayer("Enemy"),
+    true
+);
 
     ChangeAnimation("Dash");
     rb.gravityScale = 0f;
@@ -175,12 +179,16 @@ public class PlayerMovement : MonoBehaviour
 private void EndDash()
 {
     isDashing = false;
+    isInvincible = false; // ❌ TẮT BẤT TỬ khi dash kết thúc
+
     rb.gravityScale = originalGravity;
 
-    // ✅ Bật lại va chạm giữa Player và Enemy
-    Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Enemy"), false);
+    Physics2D.IgnoreLayerCollision(
+    LayerMask.NameToLayer("Player"),
+    LayerMask.NameToLayer("Enemy"),
+    false
+);
 
-    // ✅ Nếu người chơi đang giữ phím di chuyển, tiếp tục hướng đó
     if (Mathf.Abs(Input.GetAxisRaw("Horizontal")) > 0.1f)
         ChangeAnimation("Run");
     else
@@ -261,6 +269,19 @@ private void EndDash()
     // Lấy script projectile và truyền hướng bắn
     BoltScript bp = bolt.GetComponent<BoltScript>();
     bp.SetDirection(facingDirection);
+}
+
+private void TryShootBolt()
+{
+    // kiểm tra cooldown
+    if (Time.time < lastBoltTime + boltCooldown)
+    {
+        Debug.Log("⚠ Bolt chưa hồi!");
+        return;
+    }
+
+    ShootBolt();            // bắn đạn
+    lastBoltTime = Time.time; // bắt đầu tính hồi chiêu
 }
 
     private void Knockback()

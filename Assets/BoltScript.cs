@@ -34,7 +34,7 @@ public class BoltScript : MonoBehaviour
         Boss boss = collision.transform.root.GetComponent<Boss>();
         if (boss != null)
         {
-            boss.TakeDamage(damage);
+            boss.TakeDamage(damage, true); 
             Destroy(gameObject);
             return;
         }

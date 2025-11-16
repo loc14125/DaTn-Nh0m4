@@ -168,15 +168,15 @@ public class Boss : MonoBehaviour
         animator.SetBool("isRunning", true);
     }
 
-    public void TakeDamage(int dmg)
+    public void TakeDamage(int dmg, bool isProjectile = false)
+{
+    // ❗ Nếu là đòn cận chiến mà player đứng quá xa → KHÔNG nhận damage
+    if (!isProjectile && Vector2.Distance(transform.position, player.position) > meleeRange)
     {
-        // ✅ nếu player ở xa hơn meleeRange thì không nhận damage
-        if (Vector2.Distance(transform.position, player.position) > meleeRange)
-        {
-            return;
-        }
+        return;
+    }
 
-         currentHealth -= dmg;
+    currentHealth -= dmg;
     bossUI.UpdateHealth(currentHealth);
     Debug.Log($"🔥 Boss trúng đòn! Còn {currentHealth} máu");
 
@@ -190,7 +190,7 @@ public class Boss : MonoBehaviour
 
     if (currentHealth <= 0)
         Die();
-    }
+}
 
 
  void Die()

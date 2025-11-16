@@ -164,13 +164,22 @@ public class EnemyAI : MonoBehaviour
 
     void Die()
     {
+        if (isDead) return;
         isDead = true;
-        animator.SetBool("isWalking", false);
-        animator.SetTrigger("Die");
-        rb.velocity = Vector2.zero;
-        Destroy(gameObject, 2f);
-    }
 
+        rb.velocity = Vector2.zero;
+        rb.bodyType = RigidbodyType2D.Kinematic;
+        GetComponent<Collider2D>().enabled = false;
+
+        // Reset các trigger/bool để không state nào đè lên Die
+        animator.ResetTrigger("Hurt");
+        animator.SetBool("isWalking", false);
+
+        animator.SetTrigger("Die");
+
+        // destroy sau 1.1s — dư 0.1 giây để ensure animation play đủ
+        Destroy(gameObject, 1.1f);
+    }
     private void OnDrawGizmosSelected()
     {
         if (attackPoint != null)

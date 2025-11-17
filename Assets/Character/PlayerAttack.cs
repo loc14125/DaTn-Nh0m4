@@ -41,6 +41,30 @@ public class PlayerAttack : MonoBehaviour
                 boss.TakeDamage(damage);
                 damagedEnemies.Add(enemyRoot);
             }
+            EnemyAI2 enemy = enemyRoot.GetComponent<EnemyAI2>();
+            if (enemy != null)
+            {
+                enemy.TakeDamage(damage);
+                damagedEnemies.Add(enemyRoot);
+            }
+            BatEnemy2D bat = enemyRoot.GetComponent<BatEnemy2D>();
+            if (bat != null)
+            {
+                bat.TakeDamage(damage);
+                damagedEnemies.Add(enemyRoot);
+            }
+            EnemyAI Golem = enemyRoot.GetComponent<EnemyAI>();
+            if (Golem != null)
+            {
+                Golem.TakeDamage(damage);
+                damagedEnemies.Add(enemyRoot);
+            }
+            BatEnemy Bat = enemyRoot.GetComponent<BatEnemy>();
+            if (Bat != null)
+            {
+                Bat.TakeDamage(damage);
+                damagedEnemies.Add(enemyRoot);
+            }
         }
     }
 
@@ -50,4 +74,8 @@ public class PlayerAttack : MonoBehaviour
         attackHitbox.SetActive(false);
         hitboxActiveThisSwing = false;
     }
+    public int GetDamage()
+{
+    return damage;
+}
 }

@@ -1,170 +1,153 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
+using UnityEngine;
 
 public class EnemyAI : MonoBehaviour
 {
-    [Header("Patrol Settings")]
-    public float moveSpeed = 2f;
+    [Header("Movement Settings")]
+    public float speed = 2f;
     public float moveDistance = 2f;
     public float idleTime = 1f;
+    public LayerMask groundLayer;
+    public Transform groundCheck;
+    public float groundCheckRadius = 0.2f;
 
-    [Header("Chase & Attack Settings")]
-    public float detectRange = 2f;      
-    public float attackRange = 1f;      
-    public float attackCooldown = 1.5f; 
+    [Header("Attack Settings")]
+    public Transform attackPoint;
+    public float attackRange = 0.6f;
     public int damage = 10;
+    public float attackCooldown = 1f;
+    private float lastAttackTime;
 
     [Header("Health")]
-    public int maxHealth = 100;
-
+    public int maxHealth = 3;
     private int currentHealth;
-    private Vector3 startPos;
-    private bool movingRight = true;
-    private bool isIdle = false;
     private bool isDead = false;
-    private bool canAttack = true;
 
-    private Transform player;
+    private Rigidbody2D rb;
+    private SpriteRenderer spriteRenderer;
     private Animator animator;
-    private Vector3 lastPosition;
+    private Transform player;
 
-    private enum State { Patrol, Chase, Attack, Die }
-    private State currentState = State.Patrol;
+    private bool isIdle = false;
+    private int moveDir = 1; // 1=right, -1=left
+    private Vector2 startPos;
 
     void Start()
     {
-        startPos = transform.position;
-        lastPosition = startPos;
+        rb = GetComponent<Rigidbody2D>();
+        rb.gravityScale = 1;
+        rb.freezeRotation = true;
+
+        spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
         currentHealth = maxHealth;
 
-        GameObject p = GameObject.FindGameObjectWithTag("Player");
-        if (p != null) player = p.transform;
-
-        SetAnim("isWalking", true);
+        player = GameObject.FindGameObjectWithTag("Player").transform;
+        startPos = transform.position;
     }
 
     void Update()
     {
-        if (isDead || player == null) return;
+        if (isDead) return;
 
-        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+        float distanceToPlayer = Vector2.Distance(transform.position, player.position);
 
-        switch (currentState)
+        if (distanceToPlayer <= attackRange)
         {
-            case State.Patrol:
+            Attack();
+            return;
+        }
+
+        if (distanceToPlayer <= 5f)
+        {
+            ChasePlayer();
+        }
+        else
+        {
+            if (!isIdle)
                 Patrol();
-                if (distanceToPlayer <= detectRange)
-                    ChangeState(State.Chase);
-                break;
-
-            case State.Chase:
-                ChasePlayer(distanceToPlayer);
-                break;
-
-            case State.Attack:
-                if (distanceToPlayer > attackRange)
-                {
-                    SetAnim("isAttacking", false);
-                    ChangeState(State.Chase);
-                }
-                break;
-
-            case State.Die:
-               
-                break;
-
-            UpdateWalkAnimation();
         }
     }
 
-    void UpdateWalkAnimation()
-    {
-        float distanceMoved = Vector3.Distance(transform.position, lastPosition);
-        bool isMoving = distanceMoved > 0.001f && !isIdle && !isDead;
-        SetAnim("isWalking", isMoving);
-        lastPosition = transform.position;
-    }
     void Patrol()
     {
-        if (isIdle) return;
+        animator.SetBool("isWalking", true);
 
-        float targetX = startPos.x + (movingRight ? moveDistance : -moveDistance);
-        transform.position = Vector3.MoveTowards(transform.position,
-            new Vector3(targetX, transform.position.y, transform.position.z),
-            moveSpeed * Time.deltaTime);
+        // Kiểm tra ground phía trước
+        Vector2 checkPos = groundCheck.position + Vector3.right * moveDir * 0.2f;
+        bool isGroundAhead = Physics2D.OverlapCircle(checkPos, groundCheckRadius, groundLayer);
 
-        if (Mathf.Abs(transform.position.x - targetX) < 0.01f)
+        if (isGroundAhead)
         {
+            rb.velocity = new Vector2(moveDir * speed, rb.velocity.y);
+
+            float traveled = Mathf.Abs(transform.position.x - startPos.x);
+            if (traveled >= moveDistance)
+                StartCoroutine(IdleAndTurn());
+        }
+        else
+        {
+            rb.velocity = new Vector2(0, rb.velocity.y);
             StartCoroutine(IdleAndTurn());
         }
-
-        FlipSprite(movingRight);
     }
 
     IEnumerator IdleAndTurn()
     {
         isIdle = true;
-        SetAnim("isWalking", false);
+        animator.SetBool("isWalking", false);
+        rb.velocity = Vector2.zero;
+
         yield return new WaitForSeconds(idleTime);
-        movingRight = !movingRight;
+
+        moveDir *= -1;
+        spriteRenderer.flipX = moveDir == -1;
+        startPos = transform.position;
+
         isIdle = false;
-        SetAnim("isWalking", true);
     }
 
-    
-    void ChasePlayer(float distance)
+    void ChasePlayer()
     {
-        if (distance > detectRange + 1f)
+        animator.SetBool("isWalking", true);
+
+        moveDir = player.position.x < transform.position.x ? -1 : 1;
+        spriteRenderer.flipX = moveDir == -1;
+
+        Vector2 checkPos = groundCheck.position + Vector3.right * moveDir * 0.2f;
+        bool isGroundAhead = Physics2D.OverlapCircle(checkPos, groundCheckRadius, groundLayer);
+
+        if (isGroundAhead)
         {
-            
-            ChangeState(State.Patrol);
-            return;
+            rb.velocity = new Vector2(moveDir * speed, rb.velocity.y);
         }
-
-        if (distance <= attackRange)
+        else
         {
-            ChangeState(State.Attack);
-            return;
+            rb.velocity = new Vector2(0, rb.velocity.y);
         }
-
-        
-        Vector3 dir = (player.position - transform.position).normalized;
-        transform.position += dir * moveSpeed * 1.5f * Time.deltaTime;
-        FlipSprite(player.position.x > transform.position.x);
-
-        SetAnim("isWalking", true);
     }
 
-
-    IEnumerator AttackPlayer()
+    void Attack()
     {
-        SetAnim("isWalking", false);
-        SetAnim("isAttacking", true);
+        animator.SetBool("isWalking", false);
+        rb.velocity = new Vector2(0, rb.velocity.y);
 
-        while (currentState == State.Attack && !isDead)
+        if (Time.time - lastAttackTime >= attackCooldown)
         {
-            if (player == null) yield break;
+            animator.SetTrigger("Attack");
+            lastAttackTime = Time.time;
+            StartCoroutine(DealDamageAfterDelay(0.5f));
+        }
+    }
 
-            float distance = Vector3.Distance(transform.position, player.position);
-            if (distance > attackRange)
-            {
-                SetAnim("isAttacking", false);
-                ChangeState(State.Chase);
-                yield break;
-            }
+    IEnumerator DealDamageAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
 
-            if (canAttack)
-            {
-             
-                Debug.Log("Enemy attacks player!");
-                canAttack = false;
-                yield return new WaitForSeconds(attackCooldown);
-                canAttack = true;
-            }
-
-            yield return null;
+        Collider2D hitPlayer = Physics2D.OverlapCircle(attackPoint.position, attackRange, LayerMask.GetMask("Player"));
+        if (hitPlayer != null)
+        {
+            hitPlayer.GetComponent<PlayerMovement>()?.TakeDamage(damage);
         }
     }
 
@@ -173,59 +156,42 @@ public class EnemyAI : MonoBehaviour
         if (isDead) return;
 
         currentHealth -= dmg;
+        animator.SetTrigger("Hurt");
+
         if (currentHealth <= 0)
-        {
-            ChangeState(State.Die);
-        }
+            Die();
     }
 
     void Die()
     {
+        if (isDead) return;
         isDead = true;
-        SetAnim("isWalking", false);
-        SetAnim("isAttacking", false);
-        SetAnim("isDead", true);
 
-     
-        GetComponent<Collider>().enabled = false;
-        Destroy(gameObject, 3f); 
+        rb.velocity = Vector2.zero;
+        rb.bodyType = RigidbodyType2D.Kinematic;
+        GetComponent<Collider2D>().enabled = false;
+
+        // Reset các trigger/bool để không state nào đè lên Die
+        animator.ResetTrigger("Hurt");
+        animator.SetBool("isWalking", false);
+
+        animator.SetTrigger("Die");
+
+        // destroy sau 1.1s — dư 0.1 giây để ensure animation play đủ
+        Destroy(gameObject, 1.1f);
     }
-
-    void ChangeState(State newState)
+    private void OnDrawGizmosSelected()
     {
-        if (currentState == newState) return;
-        currentState = newState;
-        StopAllCoroutines();
-        switch (newState)
+        if (attackPoint != null)
         {
-            case State.Patrol:
-                SetAnim("isAttacking", false);
-                SetAnim("isWalking", true);
-                break;
-            case State.Chase:
-                SetAnim("isAttacking", false);
-                SetAnim("isWalking", true);
-                break;
-            case State.Attack:
-                StartCoroutine(AttackPlayer());
-                break;
-            case State.Die:
-                Die();
-                break;
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(attackPoint.position, attackRange);
+        }
+
+        if (groundCheck != null)
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireSphere(groundCheck.position + Vector3.right * moveDir * 0.2f, groundCheckRadius);
         }
     }
-
-    void SetAnim(string param, bool value)
-    {
-        if (animator != null)
-            animator.SetBool(param, value);
-    }
-
-    void FlipSprite(bool faceRight)
-    {
-        Vector3 scale = transform.localScale;
-        scale.x = faceRight ? Mathf.Abs(scale.x) : -Mathf.Abs(scale.x);
-        transform.localScale = scale;
-    }
 }
-

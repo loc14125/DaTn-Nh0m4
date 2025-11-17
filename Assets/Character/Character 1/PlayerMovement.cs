@@ -16,6 +16,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float dashDuration = 0.2f;
     [SerializeField] private float dashCooldown = 1f;
 
+     //skill bolt
+    [SerializeField] private GameObject boltPrefab;
+    [SerializeField] private Transform boltSpawnPoint;
+
     [Header("Health Settings")]
     [SerializeField] private int maxHealth = 100;
     private int currentHealth;
@@ -25,8 +29,12 @@ public class PlayerMovement : MonoBehaviour
     public bool hasDealtDamage = false; // ✅ để khóa damage mỗi swing
 
     [Header("References")]
-    [SerializeField] private PlayerAttack playerAttack;
+    [SerializeField] public PlayerAttack playerAttack;
     public PlayerHealthUI healthUI;
+
+    [Header("Bolt Skill")]
+public float boltCooldown = 1.5f;   // thời gian hồi chiêu
+private float lastBoltTime = -999f;
 
     private Rigidbody2D rb;
     private Animator anim;
@@ -67,25 +75,30 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.J) && !isDashing) Attack();
 
         if (Input.GetKeyDown(KeyCode.L)) TryDash();
-
+      if (Input.GetKeyDown(KeyCode.U))
+{
+    TryShootBolt();
+}
         HandleAirAnimations();
     }
 
     private void Move()
+{
+    if (isAttacking || isDashing) return; // ✅ không cho quay hoặc di chuyển khi đang dash/attack
+
+    rb.velocity = new Vector2(inputX * moveSpeed, rb.velocity.y);
+
+    if (Mathf.Abs(inputX) > 0.1f)
     {
-        rb.velocity = new Vector2(inputX * moveSpeed, rb.velocity.y);
-
-        if (Mathf.Abs(inputX) > 0.1f)
-        {
-            facingDirection = inputX > 0 ? 1 : -1;
-            transform.rotation = Quaternion.Euler(0, facingDirection == 1 ? 0 : 180, 0);
-        }
-
-        if (isGrounded && !isAttacking)
-        {
-            ChangeAnimation(Mathf.Abs(inputX) > 0.1f ? "Run" : "Idle");
-        }
+        facingDirection = inputX > 0 ? 1 : -1;
+        transform.rotation = Quaternion.Euler(0, facingDirection == 1 ? 0 : 180, 0);
     }
+
+    if (isGrounded)
+    {
+        ChangeAnimation(Mathf.Abs(inputX) > 0.1f ? "Run" : "Idle");
+    }
+}
 
     private void Jump()
     {
@@ -137,24 +150,51 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void TryDash()
-    {
-        if (Time.time < lastDashTime + dashCooldown) return;
-        isDashing = true;
-        lastDashTime = Time.time;
+private void TryDash()
+{
+    if (Time.time < lastDashTime + dashCooldown) return;
+    lastDashTime = Time.time;
 
-        ChangeAnimation("Dash");
-        rb.gravityScale = 0f;
-        rb.velocity = new Vector2(facingDirection * dashSpeed, 0);
+    float inputDir = Input.GetAxisRaw("Horizontal");
 
-        Invoke(nameof(EndDash), dashDuration);
-    }
+    if (Mathf.Abs(inputDir) > 0.1f)
+        facingDirection = inputDir > 0 ? 1 : -1;
 
-    private void EndDash()
-    {
-        isDashing = false;
-        rb.gravityScale = originalGravity;
-    }
+    isDashing = true;
+    isInvincible = true; // 🛡️ BẬT BẤT TỬ
+
+Physics2D.IgnoreLayerCollision(
+    LayerMask.NameToLayer("Player"),
+    LayerMask.NameToLayer("Enemy"),
+    true
+);
+
+    ChangeAnimation("Dash");
+    rb.gravityScale = 0f;
+    rb.velocity = new Vector2(facingDirection * dashSpeed, 0);
+
+    Invoke(nameof(EndDash), dashDuration);
+}
+
+private void EndDash()
+{
+    isDashing = false;
+    isInvincible = false; // ❌ TẮT BẤT TỬ khi dash kết thúc
+
+    rb.gravityScale = originalGravity;
+
+    Physics2D.IgnoreLayerCollision(
+    LayerMask.NameToLayer("Player"),
+    LayerMask.NameToLayer("Enemy"),
+    false
+);
+
+    if (Mathf.Abs(Input.GetAxisRaw("Horizontal")) > 0.1f)
+        ChangeAnimation("Run");
+    else
+        ChangeAnimation("Idle");
+}
+
 
     public void TakeDamage(int dmg)
     {
@@ -211,28 +251,56 @@ public class PlayerMovement : MonoBehaviour
     {
         if (anim == null || anim.layerCount == 0) return;
 
-    // Luôn cho phép "Hurt" chạy lại kể cả khi đang Hurt
-    if (currentAnim == animName && animName != "Hurt") return;
+        // Luôn cho phép "Hurt" chạy lại kể cả khi đang Hurt
+        if (currentAnim == animName && animName != "Hurt") return;
 
-    anim.Play(animName, 0, 0f); // phát từ frame đầu
-    currentAnim = animName;if (anim == null || anim.layerCount == 0) return; // tránh lỗi layer -1
+        anim.Play(animName, 0, 0f); // phát từ frame đầu
+        currentAnim = animName; if (anim == null || anim.layerCount == 0) return; // tránh lỗi layer -1
         if (currentAnim == animName) return;
 
         anim.Play(animName, 0, 0f); // luôn phát ở Base Layer
         currentAnim = animName;
     }
+    
+    private void ShootBolt()
+{
+    GameObject bolt = Instantiate(boltPrefab, boltSpawnPoint.position, Quaternion.identity);
+
+    // Lấy script projectile và truyền hướng bắn
+    BoltScript bp = bolt.GetComponent<BoltScript>();
+    bp.SetDirection(facingDirection);
+}
+
+private void TryShootBolt()
+{
+    // kiểm tra cooldown
+    if (Time.time < lastBoltTime + boltCooldown)
+    {
+        Debug.Log("⚠ Bolt chưa hồi!");
+        return;
+    }
+
+    ShootBolt();            // bắn đạn
+    lastBoltTime = Time.time; // bắt đầu tính hồi chiêu
+}
 
     private void Knockback()
+    {
+        // Hướng ngược lại hướng đang quay
+        int knockDir = -facingDirection;
+
+        // Tạo lực bật lùi nhẹ
+        float knockForceX = 9f;  // điều chỉnh độ bật lùi ngang
+        float knockForceY = 3f;  // độ nảy lên nhẹ (tùy thích)
+
+        rb.velocity = new Vector2(knockDir * knockForceX, knockForceY);
+    }
+    public int GetCurrentHealth()
 {
-    // Hướng ngược lại hướng đang quay
-    int knockDir = -facingDirection;
-
-    // Tạo lực bật lùi nhẹ
-    float knockForceX = 9f;  // điều chỉnh độ bật lùi ngang
-    float knockForceY = 3f;  // độ nảy lên nhẹ (tùy thích)
-
-    rb.velocity = new Vector2(knockDir * knockForceX, knockForceY);
+    return currentHealth;
 }
+    
+
 }
 
 

@@ -5,6 +5,7 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     public int health = 100;
+    [SerializeField] private GameObject damagePopupPrefab;
 
     public void TakeDamage(int dmg)
     {

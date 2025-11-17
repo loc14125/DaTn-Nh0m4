@@ -1,159 +1,201 @@
+﻿using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 public class BatEnemy : MonoBehaviour
 {
-    public float detectRange = 10f;       
-    public float attackRange = 1f;       
-    public float speed = 2f;             
-    public float attackSpeed = 5f;       
-    public float health = 100f;          
-    private Transform player;
-    private Animator anim;
-    private Vector3 startPos;
-    private bool isDead = false;
-    private bool isAttacking = false;
+    [Header("Detection")]
+    public float detectRange = 5f;
+    public LayerMask playerLayer;
 
-    private enum State { Idle, Run, Attack, Die }
-    private State currentState = State.Idle;
+    [Header("Movement")]
+    public float hoverAmplitude = 0.25f;
+    public float hoverFrequency = 2f;
+    public float chargeSpeed = 6f;
+    public float returnSpeed = 3f;
+    public float stopDistance = 0.5f;
+
+    [Header("Charge Effect")]
+    public float preChargeShakeTime = 0.3f;
+    public float shakeIntensity = 0.05f;
+
+    [Header("Attack Settings")]
+    public GameObject attackTrigger;       // child trigger collider
+    public float attackDuration = 0.30f;   // thời gian bật collider
+
+    [Header("Health")]
+    public int maxHealth = 50;
+    private int currentHealth;
+
+    private Animator anim;
+    private Rigidbody2D rb;
+    private Transform player;
+    private Vector2 startPos;
+
+    private bool isCharging = false;
+    private bool isReturning = false;
+    private bool isDead = false;
+
 
     void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player").transform;
         anim = GetComponent<Animator>();
-        startPos = transform.position;
-        ChangeState(State.Idle);
+        rb = GetComponent<Rigidbody2D>();
+
+        currentHealth = maxHealth;
+        startPos = rb.position;
+
+        rb.gravityScale = 0;
+
+        // tắt collider tấn công
+        if (attackTrigger != null)
+            attackTrigger.SetActive(false);
+
+        // chạy hover idle
+        SetRun(true);
     }
 
     void Update()
     {
         if (isDead) return;
 
-        float distance = Vector2.Distance(transform.position, player.position);
+        if (!isCharging && !isReturning)
+            HoverEffect();
 
-        switch (currentState)
+        if (!isCharging && !isReturning)
         {
-            case State.Idle:
-                IdleState(distance);
-                break;
-
-            case State.Run:
-                RunState(distance);
-                break;
-
-            case State.Attack:
-                AttackState(distance);
-                break;
+            Collider2D hit = Physics2D.OverlapCircle(transform.position, detectRange, playerLayer);
+            if (hit)
+            {
+                player = hit.transform;
+                StartCoroutine(ChargeAttack());
+            }
         }
+        if (!isDead && player != null)
+            LookAtPlayer();
     }
-
-   
-
-    void IdleState(float distance)
+    void LookAtPlayer()
     {
-       
-        transform.position = startPos + new Vector3(0, Mathf.Sin(Time.time * 2f) * 0.1f, 0);
+        if (player == null) return;
 
-        if (distance <= detectRange)
-        {
-            ChangeState(State.Run);
-        }
-    }
-
-    void RunState(float distance)
-    {
-        
-        Vector2 direction = (player.position - transform.position).normalized;
-        transform.position += (Vector3)direction * speed * Time.deltaTime;
-
-        
-        if (direction.x > 0)
-            transform.localScale = new Vector3(1, 1, 1);
+        // ĐẢO NGƯỢC: nếu player bên phải thì enemy quay sang TRÁI (tuỳ sprite của bạn)
+        if (player.position.x > transform.position.x)
+            transform.localScale = new Vector3(-1, 1, 1);   // quay sang phải (sprite của bạn đang ngược)
         else
-            transform.localScale = new Vector3(-1, 1, 1);
-
-        if (distance <= attackRange)
-        {
-            ChangeState(State.Attack);
-        }
-        else if (distance > detectRange + 1f)
-        {
-            
-            ChangeState(State.Idle);
-        }
+            transform.localScale = new Vector3(1, 1, 1);    // quay sang trái
+    }
+    void HoverEffect()
+    {
+        float newY = startPos.y + Mathf.Sin(Time.time * hoverFrequency) * hoverAmplitude;
+        rb.MovePosition(new Vector2(transform.position.x, newY));
     }
 
-    void AttackState(float distance)
+    IEnumerator ChargeAttack()
     {
-        if (!isAttacking)
-        {
-            isAttacking = true;
-            anim.SetTrigger("Attack");
-            StartCoroutine(AttackRoutine());
-        }
+        isCharging = true;
 
-        if (distance > attackRange + 1f && !isAttacking)
-        {
-            ChangeState(State.Run);
-        }
-    }
+        SetRun(false);
+        yield return StartCoroutine(PreChargeShake());
 
-    System.Collections.IEnumerator AttackRoutine()
-    {
-        
-        float timer = 0.5f;
-        while (timer > 0)
+        // CHARGE
+        SetRun(true);
+        while (Vector2.Distance(rb.position, player.position) > stopDistance)
         {
-            timer -= Time.deltaTime;
-            Vector2 direction = (player.position - transform.position).normalized;
-            transform.position += (Vector3)direction * attackSpeed * Time.deltaTime;
+            Vector2 dir = ((Vector2)player.position - rb.position).normalized;
+            rb.MovePosition(rb.position + dir * chargeSpeed * Time.deltaTime);
             yield return null;
         }
 
-        isAttacking = false;
-        ChangeState(State.Run);
+        rb.velocity = Vector2.zero;
+
+        // ATTACK
+        SetRun(false);
+        PlayAttack();
+        yield return StartCoroutine(AttackRoutine());
+
+        isCharging = false;
+        isReturning = true;
+
+        StartCoroutine(ReturnToStart());
     }
 
-   
-
-    void ChangeState(State newState)
+    IEnumerator PreChargeShake()
     {
-        if (currentState == newState) return;
-        currentState = newState;
+        Vector2 originalPos = rb.position;
+        float t = 0f;
 
-        
-        anim.SetBool("Idle", false);
-        anim.SetBool("Run", false);
-
-        switch (newState)
+        while (t < preChargeShakeTime)
         {
-            case State.Idle:
-                anim.SetBool("Idle", true);
-                break;
-            case State.Run:
-                anim.SetBool("Run", true);
-                break;
-            case State.Attack:
-                
-                break;
-            case State.Die:
-                anim.SetTrigger("Die");
-                break;
+            float ox = Random.Range(-shakeIntensity, shakeIntensity);
+            float oy = Random.Range(-shakeIntensity, shakeIntensity);
+
+            rb.MovePosition(originalPos + new Vector2(ox, oy));
+
+            t += Time.deltaTime;
+            yield return null;
         }
+
+        rb.MovePosition(originalPos);
     }
 
+    IEnumerator AttackRoutine()
+    {
+        attackTrigger.SetActive(true);
+        yield return new WaitForSeconds(attackDuration);
+        attackTrigger.SetActive(false);
+    }
 
-    public void TakeDamage(float damage)
+    IEnumerator ReturnToStart()
+    {
+        SetRun(true);
+
+        while (Vector2.Distance(rb.position, startPos) > 0.05f)
+        {
+            rb.MovePosition(Vector2.MoveTowards(rb.position, startPos, returnSpeed * Time.deltaTime));
+            yield return null;
+        }
+
+        rb.MovePosition(startPos);
+
+        SetRun(true);
+        isReturning = false;
+    }
+
+    // ----------- Animation helpers ----------------
+
+    void SetRun(bool value) => anim.SetBool("isRun", value);
+    void PlayAttack() => anim.SetTrigger("Attack");
+    void PlayHurt() => anim.SetTrigger("Hurt");
+    void PlayDie() => anim.SetTrigger("Die");
+
+
+    // ------------- Damage / HP ---------------------
+
+    public void TakeDamage(int amount)
     {
         if (isDead) return;
 
-        health -= damage;
-        if (health <= 0)
-        {
-            isDead = true;
-            ChangeState(State.Die);
-            Destroy(gameObject, 1.5f);
-        }
+        currentHealth -= amount;
+        PlayHurt();
+
+        if (currentHealth <= 0)
+            Die();
+    }
+
+    void Die()
+    {
+        if (isDead) return;
+
+        isDead = true;
+        rb.velocity = Vector2.zero;
+
+        PlayDie();
+        Destroy(gameObject, 1.2f);
+    }
+
+    // -------- Gizmo --------
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, detectRange);
     }
 }

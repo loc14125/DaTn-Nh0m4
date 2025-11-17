@@ -6381,6 +6381,10 @@ PrefabInstance:
       propertyPath: speed
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 3574822743455654127, guid: d04e1e6f66bf66742ae6ad9fe8ae1dd9, type: 3}
+      propertyPath: hitEffectPrefab
+      value: 
+      objectReference: {fileID: 4879478382898429273, guid: aa4ea89209d738040b2dbcaefb57e1cb, type: 3}
     - target: {fileID: 6096141886846316220, guid: d04e1e6f66bf66742ae6ad9fe8ae1dd9, type: 3}
       propertyPath: m_LocalScale.x
       value: 1

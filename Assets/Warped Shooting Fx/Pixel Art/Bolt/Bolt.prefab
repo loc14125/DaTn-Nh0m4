@@ -196,3 +196,5 @@ MonoBehaviour:
   speed: 8
   damage: 40
   lifeTime: 3
+  hitEffectPrefab: {fileID: 4879478382898429273, guid: aa4ea89209d738040b2dbcaefb57e1cb, type: 3}
+  hitAnimDuration: 0.25

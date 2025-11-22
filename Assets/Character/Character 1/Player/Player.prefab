@@ -449,6 +449,7 @@ MonoBehaviour:
   hasDealtDamage: 0
   playerAttack: {fileID: 4731274454840541571}
   healthUI: {fileID: 6029258043287788929}
+  boltCooldown: 1.5
 --- !u!114 &4731274454840541571
 MonoBehaviour:
   m_ObjectHideFlags: 0

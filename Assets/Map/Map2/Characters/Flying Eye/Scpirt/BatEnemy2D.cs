@@ -38,10 +38,10 @@ public class BatEnemy2D : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.X))
-        {
-            FindObjectOfType<BatEnemy2D>().TakeDamage(1);
-        }
+        //if (Input.GetKeyDown(KeyCode.X))
+        //{
+        //    FindObjectOfType<BatEnemy2D>().TakeDamage(1);
+        //}
 
         if (isDead) return;
 

@@ -12,7 +12,10 @@ public class BatAttackTrigger : MonoBehaviour
 
             PlayerMovement pm = collision.GetComponent<PlayerMovement>();
             if (pm != null)
-                pm.TakeDamage(damage);
+            {
+                // ⭐ TRUYỀN VỊ TRÍ CỦA DƠI
+                pm.TakeDamage(damage, transform.position);
+            }
         }
     }
 }

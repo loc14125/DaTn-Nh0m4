@@ -33,8 +33,12 @@ public class PlayerMovement : MonoBehaviour
     public PlayerHealthUI healthUI;
 
     [Header("Bolt Skill")]
-public float boltCooldown = 1.5f;   // thời gian hồi chiêu
-private float lastBoltTime = -999f;
+    public float boltCooldown = 1.5f;   // thời gian hồi chiêu
+    float lastBoltTime = -999f;
+
+    [Header("Hit Effect Settings")]
+    [SerializeField] private GameObject bloodEffectPrefab;
+    [SerializeField] private Vector2 bloodOffset = new Vector2(0.3f, 0.5f);
 
     private Rigidbody2D rb;
     private Animator anim;
@@ -196,27 +200,32 @@ private void EndDash()
 }
 
 
-    public void TakeDamage(int dmg)
+    public void TakeDamage(int dmg, Vector3 attackerPos)
+{
+    if (isInvincible) return;
+
+    // xác định hướng bị đánh
+    int hitDir = transform.position.x < attackerPos.x ? -1 : 1;
+
+    // spawn hiệu ứng máu đúng hướng
+    SpawnBloodEffect(hitDir);
+
+    currentHealth -= dmg;
+    if (healthUI != null) healthUI.UpdateHealth(currentHealth);
+
+    if (currentHealth > 0)
     {
-        if (isInvincible) return;
-
-        currentHealth -= dmg;
-        if (healthUI != null) healthUI.UpdateHealth(currentHealth);
-
-        // Nếu máu > 0 thì phát animation Hurt
-        if (currentHealth > 0)
-        {
-            ChangeAnimation("Hurt");
-            Knockback();
-        }
-        else
-        {
-            Die();
-            return;
-        }
-
-        StartCoroutine(InvincibleTime());
+        ChangeAnimation("Hurt");
+        Knockback();
     }
+    else
+    {
+        Die();
+        return;
+    }
+
+    StartCoroutine(InvincibleTime());
+}
 
     private IEnumerator InvincibleTime()
     {
@@ -298,6 +307,24 @@ private void TryShootBolt()
     public int GetCurrentHealth()
 {
     return currentHealth;
+}
+
+private void SpawnBloodEffect(int dir)
+{
+    if (bloodEffectPrefab == null) return;
+
+    // tính vị trí xuất hiện
+    Vector3 pos = transform.position + new Vector3(1f * dir, 0.5f, 0);
+
+    GameObject fx = Instantiate(bloodEffectPrefab, pos, Quaternion.identity);
+
+    // xoay theo hướng bị đánh
+    fx.transform.localScale = new Vector3(dir, 1, 1);
+
+    // cho effect đi theo Player vài frame
+    fx.transform.SetParent(transform);
+
+    Destroy(fx, 0.35f);
 }
     
 

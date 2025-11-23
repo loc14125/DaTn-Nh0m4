@@ -141,7 +141,7 @@ public class Boss : MonoBehaviour
                 PlayerMovement p = playerRoot.GetComponent<PlayerMovement>();
                 if (p != null)
                 {
-                    p.TakeDamage(damage);
+                    p.TakeDamage(damage, transform.position);
                     damagedPlayersThisHit.Add(playerRoot); // ✅ 1 hit / player / hitbox
                 }
             }

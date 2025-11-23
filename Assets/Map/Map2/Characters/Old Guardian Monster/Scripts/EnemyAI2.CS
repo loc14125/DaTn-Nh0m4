@@ -132,20 +132,24 @@ public class EnemyAI2 : MonoBehaviour
         }
     }
 
-    IEnumerator DealDamageAfterDelay(float delay)
+   IEnumerator DealDamageAfterDelay(float delay)
+{
+    yield return new WaitForSeconds(delay);
+
+    Collider2D hitPlayer = Physics2D.OverlapCircle(attackPoint.position, attackRange, LayerMask.GetMask("Player"));
+
+    if (hitPlayer != null)
     {
-        yield return new WaitForSeconds(delay);
+        PlayerMovement player = hitPlayer.GetComponent<PlayerMovement>();
 
-        // ✅ Kiểm tra xem lúc gây damage có còn player trong phạm vi không
-        Collider2D hitPlayer = Physics2D.OverlapCircle(attackPoint.position, attackRange, LayerMask.GetMask("Player"));
-
-        if (hitPlayer != null)
+        if (player != null)
         {
-            hitPlayer.GetComponent<PlayerMovement>().TakeDamage(damage);
+            // ⭐ TRUYỀN VỊ TRÍ CỦA ENEMY VÀO
+            player.TakeDamage(damage, transform.position);
             Debug.Log("Enemy dealt damage!");
         }
     }
-
+}
 
     public void TakeDamage(int damage)
     {

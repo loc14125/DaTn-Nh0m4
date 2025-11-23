@@ -141,15 +141,23 @@ public class EnemyAI : MonoBehaviour
     }
 
     IEnumerator DealDamageAfterDelay(float delay)
-    {
-        yield return new WaitForSeconds(delay);
+{
+    yield return new WaitForSeconds(delay);
 
-        Collider2D hitPlayer = Physics2D.OverlapCircle(attackPoint.position, attackRange, LayerMask.GetMask("Player"));
-        if (hitPlayer != null)
+    Collider2D hitPlayer = Physics2D.OverlapCircle(attackPoint.position, attackRange, LayerMask.GetMask("Player"));
+
+    if (hitPlayer != null)
+    {
+        PlayerMovement player = hitPlayer.GetComponent<PlayerMovement>();
+
+        if (player != null)
         {
-            hitPlayer.GetComponent<PlayerMovement>()?.TakeDamage(damage);
+            // ⭐ TRUYỀN VỊ TRÍ CỦA ENEMY LÀM attackerPos
+            player.TakeDamage(damage, transform.position);
         }
     }
+}
+
 
     public void TakeDamage(int dmg)
     {

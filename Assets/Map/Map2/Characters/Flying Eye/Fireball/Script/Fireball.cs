@@ -42,25 +42,25 @@ public class Fireball : MonoBehaviour
     }
 
     void OnTriggerEnter2D(Collider2D other)
+{
+    if (exploded) return;
+
+    if (other.CompareTag("Player"))
     {
-        if (exploded) return;
-
-        if (other.CompareTag("Player"))
+        PlayerMovement player = other.GetComponent<PlayerMovement>();
+        if (player != null)
         {
-            // Gây dmg nếu player có script nhận sát thương
-            PlayerMovement health = other.GetComponent<PlayerMovement>();
-            if (health != null)
-            {
-                health.TakeDamage(damage); // <= đổi số dmg tùy bạn
-            }
+            // ⭐ TRUYỀN VỊ TRÍ CỦA BOMB CHO TakeDamage
+            player.TakeDamage(damage, transform.position);
+        }
 
-            Explode();
-        }
-        else if (other.CompareTag("Ground"))
-        {
-            Explode();
-        }
+        Explode();
     }
+    else if (other.CompareTag("Ground"))
+    {
+        Explode();
+    }
+}
 
     void Explode()
     {

@@ -187,6 +187,7 @@ public class EnemyAI : MonoBehaviour
 
         // destroy sau 1.1s — dư 0.1 giây để ensure animation play đủ
         Destroy(gameObject, 1.1f);
+        ScoreManager.Instance.AddScore(100);
     }
     private void OnDrawGizmosSelected()
     {

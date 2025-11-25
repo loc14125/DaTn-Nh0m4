@@ -168,6 +168,7 @@ public class EnemyAI2 : MonoBehaviour
         animator.SetBool("isWalking", false);
         animator.SetTrigger("Die");
         Destroy(gameObject, 2f);
+        ScoreManager.Instance.AddScore(100);
     }
 
     private void OnDrawGizmosSelected()

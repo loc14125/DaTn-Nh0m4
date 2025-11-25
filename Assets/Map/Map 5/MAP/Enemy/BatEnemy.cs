@@ -190,6 +190,7 @@ public class BatEnemy : MonoBehaviour
 
         PlayDie();
         Destroy(gameObject, 1.2f);
+        ScoreManager.Instance.AddScore(100);
     }
 
     // -------- Gizmo --------

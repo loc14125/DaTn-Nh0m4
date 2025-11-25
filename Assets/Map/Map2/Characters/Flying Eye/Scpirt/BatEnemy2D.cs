@@ -114,6 +114,7 @@ public class BatEnemy2D : MonoBehaviour
         GetComponent<Collider2D>().enabled = false; // ngừng va chạm
         StopAllCoroutines();
         Destroy(gameObject, 1.5f); // chờ animation chết
+        ScoreManager.Instance.AddScore(100);
     }
 
     // Khi bị chém (ví dụ weapon có tag "Weapon" và collider trigger)

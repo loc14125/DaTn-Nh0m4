@@ -314,7 +314,7 @@ private void SpawnBloodEffect(int dir)
     if (bloodEffectPrefab == null) return;
 
     // tính vị trí xuất hiện
-    Vector3 pos = transform.position + new Vector3(1f * dir, 0.5f, 0);
+    Vector3 pos = transform.position + new Vector3(1.2f * dir, 0.5f, 0);
 
     GameObject fx = Instantiate(bloodEffectPrefab, pos, Quaternion.identity);
 
@@ -325,6 +325,15 @@ private void SpawnBloodEffect(int dir)
     fx.transform.SetParent(transform);
 
     Destroy(fx, 0.35f);
+}
+public void Heal(int amount)
+{
+    currentHealth += amount;
+    if (currentHealth > maxHealth)
+        currentHealth = maxHealth;
+
+    if (healthUI != null)
+        healthUI.UpdateHealth(currentHealth);
 }
     
 

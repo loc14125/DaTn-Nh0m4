@@ -201,6 +201,7 @@ public class Boss : MonoBehaviour
     bossUI.HideUI();
     Debug.Log("💀 Boss đã chết!");
     Destroy(gameObject, 2f); // Xoá sau 2 giây
+    ScoreManager.Instance.AddScore(500);
 }
 
     void OnDrawGizmosSelected()

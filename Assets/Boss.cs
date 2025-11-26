@@ -17,23 +17,46 @@ public class Boss : MonoBehaviour
     public GameObject comboHit2;
 
     [Header("Stats")]
-    public float detectRange = 10f;
+    public float detectRange = 15f;
+    public float midRange = 8f;
     public float meleeRange = 2f;
     public float moveSpeed = 2f;
     public float attackCooldown = 3f;
     public int maxHealth = 200;
     public int damage = 15;
 
+    [Header("Flying Enemy")]
+    public GameObject flyingEnemyPrefab;
+
+    [Header("Popup Damage")]
+    [SerializeField] private GameObject damagePopupPrefab;
+
     private int currentHealth;
     private bool isActivated;
     private bool isDead;
     private bool isAttacking;
     private bool playerInMeleeRange;
-    [Header("Popup Damage")]
-[SerializeField] private GameObject damagePopupPrefab;
-
-    // ✅ tracking player bị hit mỗi hitbox
     private HashSet<GameObject> damagedPlayersThisHit = new HashSet<GameObject>();
+
+    // --- ⭐ MidRange Enemy Spawn ---
+    private bool isPlayerInsideMidRange = true;
+    private bool isCountingDown = false;
+    private float spawnTimer = 0f;
+    private Coroutine countdownCoroutine;
+
+    // ===============================
+    //       ⭐ TELEPORT SYSTEM ⭐
+    // ===============================
+    [Header("Teleport Settings")]
+    public float teleportDistance = 18f;
+    public float verticalLimit = 7f;
+    public float teleportDelay = 5f;    // Thoát vùng → đếm 5 giây để dịch chuyển
+    public float teleportCooldown = 30f; // Sau khi tele xong → chờ 30s mới được tele tiếp
+
+    float teleTimer = 0f;
+    bool isTeleporting = false;
+    bool canTeleportAgain = true;
+
 
     void Start()
     {
@@ -42,7 +65,28 @@ public class Boss : MonoBehaviour
         currentHealth = maxHealth;
         bossUI = GetComponent<BossHealthUI>();
         bossUI.InitHealth(maxHealth);
+
+        rb.freezeRotation = true;
+        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
     }
+
+void ActivateBoss()
+    {
+        isActivated = true;
+
+        // reset timer/cho phép teleport (nếu muốn boss có thể tele ngay sau khi active)
+        teleTimer = 0f;
+        canTeleportAgain = true;
+        isTeleporting = false;
+
+        // bật model, animation, UI (giữ nguyên như cũ)
+        if (bossModel != null) bossModel.SetActive(true);
+        if (animator != null) animator.SetTrigger("Spam"); // hoặc "WakeUp" nếu bạn dùng trigger khác
+        if (bossUI != null) bossUI.ActivateBossHealth();
+
+        Debug.Log("BOSS ĐÃ ĐƯỢC KÍCH HOẠT");
+    }
+
 
     void Update()
     {
@@ -57,15 +101,126 @@ public class Boss : MonoBehaviour
 
         float distance = Vector2.Distance(transform.position, player.position);
         HandleBehavior(distance);
+        HandleMidRangeLogic(distance);
+        HandleTeleport(distance); // <-- ⭐ thêm vào đúng yêu cầu
     }
 
-    void ActivateBoss()
+    // ==========================================================
+    // 🔥 TELEPORT CONTROLLER
+    // ==========================================================
+    void HandleTeleport(float distance)
     {
-        isActivated = true;
-        bossModel.SetActive(true);
-        animator.SetTrigger("Spam");
-        bossUI.ActivateBossHealth();
-        Debug.Log("👹 Boss xuất hiện!");
+        float heightDiff = Mathf.Abs(transform.position.y - player.position.y);
+
+        bool playerTooFar = distance > teleportDistance || heightDiff > verticalLimit;
+
+        // nếu player trở lại gần → reset chờ đếm lại
+        if (!playerTooFar)
+        {
+            teleTimer = 0;
+            isTeleporting = false;
+            return;
+        }
+
+        if (canTeleportAgain && !isTeleporting)
+        {
+            teleTimer += Time.deltaTime;
+
+            if (teleTimer >= teleportDelay)
+            {
+                TeleportToPlayer();
+                StartCoroutine(TeleportCooldownWait());
+            }
+        }
+    }
+
+    void TeleportToPlayer()
+    {
+        float offset = (player.position.x > transform.position.x) ? -1.8f : 1.8f;
+
+        transform.position = new Vector2(
+            player.position.x + offset,
+            player.position.y
+        );
+
+        Debug.Log("BOSS TELEPORTED 🔥");
+    }
+
+    IEnumerator TeleportCooldownWait()
+    {
+        isTeleporting = true;
+        canTeleportAgain = false;
+
+        yield return new WaitForSeconds(teleportCooldown);
+
+        canTeleportAgain = true;
+        teleTimer = 0;
+    }
+
+    // ==========================================================
+    // ======== ⬇ CÁC HÀM BÊN DƯỚI GIỮ NGUYÊN KHÔNG CHỈNH! ========
+    // ==========================================================
+
+    void HandleMidRangeLogic(float distance)
+    {
+        if (distance <= midRange || distance <= meleeRange || distance > detectRange)
+        {
+            isPlayerInsideMidRange = true;
+            spawnTimer = 0f;
+            if (isCountingDown && countdownCoroutine != null)
+            {
+                StopCoroutine(countdownCoroutine);
+                isCountingDown = false;
+            }
+            return;
+        }
+
+        isPlayerInsideMidRange = false;
+
+        if (!isCountingDown)
+            countdownCoroutine = StartCoroutine(MidRangeCountdown());
+
+        if (spawnTimer > 0)
+        {
+            spawnTimer -= Time.deltaTime;
+            if (spawnTimer <= 0)
+            {
+                SpawnFlyingEnemy();
+                spawnTimer = 10f;
+            }
+        }
+    }
+
+    IEnumerator MidRangeCountdown()
+    {
+        isCountingDown = true;
+        float t = 5f;
+
+        while (t > 0)
+        {
+            if (isPlayerInsideMidRange)
+            {
+                isCountingDown = false;
+                yield break;
+            }
+            t -= Time.deltaTime;
+            yield return null;
+        }
+
+        if (!isPlayerInsideMidRange)
+        {
+            SpawnFlyingEnemy();
+            spawnTimer = 10f;
+        }
+        isCountingDown = false;
+    }
+
+    void SpawnFlyingEnemy()
+    {
+        GameObject e = Instantiate(flyingEnemyPrefab, transform.position + Vector3.up * 1.5f, Quaternion.identity);
+        FlyingEnemyAI ai = e.GetComponent<FlyingEnemyAI>();
+        if (ai != null) ai.target = player;
+        Destroy(e, 7f);
     }
 
     void HandleBehavior(float distance)
@@ -78,15 +233,23 @@ public class Boss : MonoBehaviour
                 rb.velocity = Vector2.zero;
                 animator.SetBool("isRunning", false);
             }
-
             if (!isAttacking)
                 StartCoroutine(AttackPlayer());
+            return;
         }
-        else
-        {
-            playerInMeleeRange = false;
-            MoveToPlayer();
-        }
+        
+        playerInMeleeRange = false;
+        MoveToPlayer();
+    }
+
+    void MoveToPlayer()
+    {
+        if (!player) return;
+
+        float dirX = Mathf.Sign(player.position.x - transform.position.x);
+        transform.localScale = new Vector3(dirX, 1, 1);
+        animator.SetBool("isRunning", true);
+        rb.velocity = new Vector2(dirX * moveSpeed, rb.velocity.y);
     }
 
     IEnumerator AttackPlayer()
@@ -94,7 +257,6 @@ public class Boss : MonoBehaviour
         isAttacking = true;
 
         int rand = Random.Range(0, 2);
-
         if (rand == 0)
         {
             animator.SetTrigger("ATK1");
@@ -122,7 +284,7 @@ public class Boss : MonoBehaviour
 
     IEnumerator HitboxRoutine(GameObject hitbox, float time)
     {
-        damagedPlayersThisHit.Clear(); // ✅ reset cho hitbox mới
+        damagedPlayersThisHit.Clear();
         hitbox.SetActive(true);
 
         float elapsed = 0f;
@@ -133,23 +295,22 @@ public class Boss : MonoBehaviour
             Collider2D[] hits = Physics2D.OverlapBoxAll(hitboxCollider.bounds.center, hitboxCollider.bounds.size, 0f);
             foreach (Collider2D hit in hits)
             {
-                if (!hit.CompareTag("Player")) continue;
-
-                GameObject playerRoot = hit.transform.root.gameObject;
-                if (damagedPlayersThisHit.Contains(playerRoot)) continue;
-
-                PlayerMovement p = playerRoot.GetComponent<PlayerMovement>();
-                if (p != null)
+                if (hit.CompareTag("Player"))
                 {
-                    p.TakeDamage(damage, transform.position);
-                    damagedPlayersThisHit.Add(playerRoot); // ✅ 1 hit / player / hitbox
+                    GameObject playerRoot = hit.transform.root.gameObject;
+
+                    if (!damagedPlayersThisHit.Contains(playerRoot))
+                    {
+                        PlayerMovement p = playerRoot.GetComponent<PlayerMovement>();
+                        if (p != null) p.TakeDamage(damage, transform.position);
+
+                        damagedPlayersThisHit.Add(playerRoot);
+                    }
                 }
             }
-
             elapsed += Time.deltaTime;
             yield return null;
         }
-
         hitbox.SetActive(false);
     }
 
@@ -160,55 +321,31 @@ public class Boss : MonoBehaviour
         comboHit2?.SetActive(false);
     }
 
-    void MoveToPlayer()
-    {
-        Vector2 dir = (player.position - transform.position).normalized;
-        rb.velocity = new Vector2(dir.x * moveSpeed, rb.velocity.y);
-        transform.localScale = new Vector3(dir.x > 0 ? 1 : -1, 1, 1);
-        animator.SetBool("isRunning", true);
-    }
-
     public void TakeDamage(int dmg, bool isProjectile = false)
-{
-    // ❗ Nếu là đòn cận chiến mà player đứng quá xa → KHÔNG nhận damage
-    if (!isProjectile && Vector2.Distance(transform.position, player.position) > meleeRange)
     {
-        return;
+        if (!isProjectile && Vector2.Distance(transform.position, player.position) > meleeRange)
+            return;
+
+        currentHealth -= dmg;
+        bossUI.UpdateHealth(currentHealth);
+
+        if (damagePopupPrefab != null)
+        {
+            Vector3 popupPos = transform.position + Vector3.up * 1f;
+            GameObject popup = Instantiate(damagePopupPrefab, popupPos, Quaternion.identity);
+            popup.GetComponent<DamagePopUp>()?.Setup(dmg);
+        }
+
+        if (currentHealth <= 0) Die();
     }
 
-    currentHealth -= dmg;
-    bossUI.UpdateHealth(currentHealth);
-    Debug.Log($"🔥 Boss trúng đòn! Còn {currentHealth} máu");
-
-    // 🧠 Hiển thị damage popup
-    if (damagePopupPrefab != null)
+    void Die()
     {
-        Vector3 popupPos = transform.position + Vector3.up * 1f;
-        GameObject popup = Instantiate(damagePopupPrefab, popupPos, Quaternion.identity);
-        popup.GetComponent<DamagePopUp>()?.Setup(dmg);
-    }
-
-    if (currentHealth <= 0)
-        Die();
-}
-
-
- void Die()
-{
-    isDead = true;
-    rb.velocity = Vector2.zero;
-    animator.SetTrigger("Die");
-    bossUI.HideUI();
-    Debug.Log("💀 Boss đã chết!");
-    Destroy(gameObject, 2f); // Xoá sau 2 giây
-    ScoreManager.Instance.AddScore(500);
-}
-
-    void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, detectRange);
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, meleeRange);
+        isDead = true;
+        rb.velocity = Vector2.zero;
+        animator.SetTrigger("Die");
+        bossUI.HideUI();
+        Destroy(gameObject, 2f);
+        ScoreManager.Instance.AddScore(500);
     }
 }

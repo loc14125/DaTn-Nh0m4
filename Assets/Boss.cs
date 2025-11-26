@@ -348,4 +348,24 @@ void ActivateBoss()
         Destroy(gameObject, 2f);
         ScoreManager.Instance.AddScore(500);
     }
+
+    void OnDrawGizmosSelected()
+    {
+        // Detect Range
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, detectRange);
+
+        // Melee Attack Range
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, meleeRange);
+
+        // Mid Range
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, midRange);
+
+        // OPTIONAL: Teleport condition range
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireSphere(transform.position, teleportDistance);
+    }
+
 }

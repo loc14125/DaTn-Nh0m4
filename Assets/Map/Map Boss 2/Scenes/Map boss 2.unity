@@ -4883,6 +4883,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5317223773174929805, guid: a8617a5117106604b95283cab1133cbe, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5910332373881935463, guid: a8617a5117106604b95283cab1133cbe, type: 3}
       propertyPath: m_SortingOrder
       value: 10
@@ -5119,7 +5123,7 @@ PrefabInstance:
     - target: {fileID: 2516680787436760735, guid: 49c25aaf653bd5346aebb0e27fb01d0e, type: 3}
       propertyPath: flyingEnemyPrefab
       value: 
-      objectReference: {fileID: 6534442023410948802, guid: 1685a68e0d125514eaec3bff7bcf51fe, type: 3}
+      objectReference: {fileID: 5279176588109503404, guid: 6da696a65b3aa004f991cee33116f9ec, type: 3}
     - target: {fileID: 4667587158058784318, guid: 49c25aaf653bd5346aebb0e27fb01d0e, type: 3}
       propertyPath: m_Mass
       value: 10

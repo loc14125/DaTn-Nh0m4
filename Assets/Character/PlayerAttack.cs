@@ -4,11 +4,11 @@ using System.Collections.Generic;
 public class PlayerAttack : MonoBehaviour
 {
     [SerializeField] private GameObject attackHitbox;
-    [SerializeField] private int damage = 20;
+    [SerializeField] public int damage = 20;
 
     private Collider2D hitboxCollider;
     private HashSet<GameObject> damagedEnemies = new HashSet<GameObject>();
-    private bool hitboxActiveThisSwing = false; // tránh bật nhiều lần trong 1 swing
+    private bool hitboxActiveThisSwing = false;
 
     void Start()
     {
@@ -17,17 +17,17 @@ public class PlayerAttack : MonoBehaviour
         attackHitbox.SetActive(false);
     }
 
-    // Animation Event: bắt đầu swing
     public void EnableHitbox()
     {
-        if (hitboxActiveThisSwing) return; // chỉ bật 1 lần
+         ApplyBuff();
+        if (hitboxActiveThisSwing) return;
         hitboxActiveThisSwing = true;
 
-        damagedEnemies.Clear();  // reset cho swing mới
+        damagedEnemies.Clear();
         attackHitbox.SetActive(true);
 
-        // Gây damage tất cả enemy trong hitbox ngay 1 lần
         Collider2D[] hits = Physics2D.OverlapBoxAll(hitboxCollider.bounds.center, hitboxCollider.bounds.size, 0f);
+
         foreach (Collider2D hit in hits)
         {
             if (!hit.CompareTag("Enemy")) continue;
@@ -35,47 +35,58 @@ public class PlayerAttack : MonoBehaviour
             GameObject enemyRoot = hit.transform.root.gameObject;
             if (damagedEnemies.Contains(enemyRoot)) continue;
 
+            // === BOSS ===
             Boss boss = enemyRoot.GetComponent<Boss>();
             if (boss != null)
             {
                 boss.TakeDamage(damage);
                 damagedEnemies.Add(enemyRoot);
+                continue;
             }
-            EnemyAI2 enemy = enemyRoot.GetComponent<EnemyAI2>();
-            if (enemy != null)
+
+            // === EnemyAI2 ===
+            EnemyAI2 enemy2 = enemyRoot.GetComponent<EnemyAI2>();
+            if (enemy2 != null)
             {
-                enemy.TakeDamage(damage);
+                enemy2.TakeDamage(damage);
                 damagedEnemies.Add(enemyRoot);
+                continue;
             }
+
+            // === EnemyAI (Golem / Slime / Zombie) ===
+            EnemyAI enemyAI = enemyRoot.GetComponent<EnemyAI>();
+            if (enemyAI != null)
+            {
+                enemyAI.TakeDamage(damage);
+                damagedEnemies.Add(enemyRoot);
+                continue;
+            }
+
+            // === Bat ===
             BatEnemy2D bat = enemyRoot.GetComponent<BatEnemy2D>();
             if (bat != null)
             {
                 bat.TakeDamage(damage);
                 damagedEnemies.Add(enemyRoot);
+                continue;
             }
-            EnemyAI Golem = enemyRoot.GetComponent<EnemyAI>();
-            if (Golem != null)
-            {
-                Golem.TakeDamage(damage);
-                damagedEnemies.Add(enemyRoot);
-            }
-            BatEnemy Bat = enemyRoot.GetComponent<BatEnemy>();
-            if (Bat != null)
-            {
-                Bat.TakeDamage(damage);
-                damagedEnemies.Add(enemyRoot);
-            }
+
+            
         }
     }
 
-    // Animation Event: kết thúc swing
     public void DisableHitbox()
     {
         attackHitbox.SetActive(false);
         hitboxActiveThisSwing = false;
     }
+
     public int GetDamage()
+    {
+        return damage;
+    }
+    public void ApplyBuff()
 {
-    return damage;
+    damage = 20 + BuffManager.Instance.bonusATK; 
 }
 }

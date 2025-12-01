@@ -54,12 +54,14 @@ public class PlayerMovement : MonoBehaviour
 
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
-        anim = GetComponent<Animator>();
-        originalGravity = rb.gravityScale;
+         rb = GetComponent<Rigidbody2D>();
+    anim = GetComponent<Animator>();
+    originalGravity = rb.gravityScale;
 
-        currentHealth = maxHealth;
-        if (healthUI != null) healthUI.Init(maxHealth);
+    maxHealth += BuffManager.Instance.bonusMaxHP;
+    currentHealth = maxHealth;
+
+
     }
 
     void Update()
@@ -278,6 +280,7 @@ private void EndDash()
     // Lấy script projectile và truyền hướng bắn
     BoltScript bp = bolt.GetComponent<BoltScript>();
     bp.SetDirection(facingDirection);
+    bp.damage += BuffManager.Instance.bonusBoltDamage;
 }
 
 private void TryShootBolt()

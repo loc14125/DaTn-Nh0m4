@@ -63,7 +63,7 @@ public class PlayerAttack : MonoBehaviour
             }
 
             // === Bat ===
-            BatEnemy2D bat = enemyRoot.GetComponent<BatEnemy2D>();
+            BatEnemy bat = enemyRoot.GetComponent<BatEnemy>();
             if (bat != null)
             {
                 bat.TakeDamage(damage);

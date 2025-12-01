@@ -16,6 +16,7 @@ public class BoltScript : MonoBehaviour
     private int direction = 1;
     private bool hasHit = false;        // đã va chạm rồi (tránh xử lý nhiều lần)
     private Animator anim = null;
+    
     private Rigidbody2D rb = null;
 
     private void Awake()
@@ -34,6 +35,7 @@ public class BoltScript : MonoBehaviour
     {
         direction = dir;
         transform.localScale = new Vector3(dir, 1, 1); // lật sprite theo hướng
+        
     }
 
     private void Update()
@@ -79,6 +81,7 @@ public class BoltScript : MonoBehaviour
         if (boss != null)
         {
             boss.TakeDamage(damage, true); // báo là projectile
+            
         }
 
         EnemyAI2 e2 = collision.transform.root.GetComponent<EnemyAI2>();
@@ -93,7 +96,7 @@ public class BoltScript : MonoBehaviour
             golem.TakeDamage(damage);
         }
 
-        BatEnemy2D bat = collision.transform.root.GetComponent<BatEnemy2D>();
+        BatEnemy bat = collision.transform.root.GetComponent<BatEnemy>();
         if (bat != null)
         {
             bat.TakeDamage(damage);

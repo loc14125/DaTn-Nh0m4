@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using System.Collections.Generic;
+using System.Linq;
 
 public class WinPanelUI : MonoBehaviour
 {
@@ -19,36 +21,87 @@ public class WinPanelUI : MonoBehaviour
         timeText.text = "Time: " + time;
         scoreText.text = "Score: " + score;
 
-        // reset UI khi mở win panel
+        // Reset UI mỗi lần hiện Win Panel
         saveButton.interactable = true;
     }
 
     public void SaveScore()
     {
-        // =======================
-        //  LƯU DỮ LIỆU
-        // =======================
+        // ===============================
+        //   1. LƯU LAST SCORE / TIME
+        // ===============================
         PlayerPrefs.SetInt("LastScore", latestScore);
         PlayerPrefs.SetString("LastTime", latestTime);
 
-        if (latestScore > PlayerPrefs.GetInt("BestScore", 0))
-            PlayerPrefs.SetInt("BestScore", latestScore);
+        // ===============================
+        //   2. LOAD TOP 5 HIỆN TẠI
+        // ===============================
+        List<ScoreEntry> list = new List<ScoreEntry>();
 
-        PlayerPrefs.SetString("BestTime", latestTime);
+        for (int i = 0; i < 5; i++)
+        {
+            int score = PlayerPrefs.GetInt($"Highscore_{i}_Score", -1);
+            string time = PlayerPrefs.GetString($"Highscore_{i}_Time", "99:99");
+
+            if (score >= 0)
+                list.Add(new ScoreEntry(score, time));
+        }
+
+        // ===============================
+        //   3. THÊM ENTRY MỚI
+        // ===============================
+        list.Add(new ScoreEntry(latestScore, latestTime));
+
+        // ===============================
+        //   4. SORT (score ↓, time ↑)
+        // ===============================
+        list = list
+            .OrderByDescending(s => s.score)
+            .ThenBy(s => s.GetSeconds())
+            .Take(5)
+            .ToList();
+
+        // ===============================
+        //   5. GHI LẠI TOP 5
+        // ===============================
+        for (int i = 0; i < list.Count; i++)
+        {
+            PlayerPrefs.SetInt($"Highscore_{i}_Score", list[i].score);
+            PlayerPrefs.SetString($"Highscore_{i}_Time", list[i].timeString);
+        }
 
         PlayerPrefs.Save();
 
-        // =======================
-        //  CẬP NHẬT UI
-        // =======================
-        saveButton.interactable = false;  // khóa nút save
-
-        // (tùy chọn) đổi text nút Save nếu muốn
+        // ===============================
+        //   6. UPDATE UI
+        // ===============================
+        saveButton.interactable = false;
         saveButton.GetComponentInChildren<TMP_Text>().text = "Saved";
     }
 
     public void ExitToMainMenu()
     {
         WinLoseManager.Instance.ExitGame();
+    }
+}
+
+public class ScoreEntry
+{
+    public int score;
+    public string timeString;
+
+    public ScoreEntry(int s, string t)
+    {
+        score = s;
+        timeString = t;
+    }
+
+    // chuyển "MM:SS" → tổng giây
+    public int GetSeconds()
+    {
+        string[] p = timeString.Split(':');
+        int m = int.Parse(p[0]);
+        int s = int.Parse(p[1]);
+        return m * 60 + s;
     }
 }

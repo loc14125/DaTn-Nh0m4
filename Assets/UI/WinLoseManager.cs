@@ -146,6 +146,6 @@ public class WinLoseManager : MonoBehaviour
         Destroy(gameObject);
         Destroy(GameObject.Find("GameManagerTimerScore"));
 
-        SceneManager.LoadScene("Map2");
+        SceneManager.LoadScene("MainMenu");
     }
 }

@@ -15,6 +15,7 @@ TagManager:
   - BossHit2_1
   - BossHit2_2
   - EnemyAttack
+  - Game Manager
   layers:
   - Default
   - TransparentFX

@@ -700,6 +700,7 @@ GameObject:
   - component: {fileID: 1376502419554577052}
   - component: {fileID: 7530563048030870613}
   - component: {fileID: 5568291365699258496}
+  - component: {fileID: 3168593229241113169}
   m_Layer: 0
   m_Name: PortalEnd
   m_TagString: Untagged
@@ -716,7 +717,7 @@ Transform:
   m_GameObject: {fileID: 3490874989107518181}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 41.6, y: 2.928, z: -5.358925}
+  m_LocalPosition: {x: 40.97, y: -1.94, z: -5.358925}
   m_LocalScale: {x: 6.7983, y: 6.7983, z: 6.7983}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -789,6 +790,7 @@ MonoBehaviour:
   uiPanel: {fileID: 4670417458382777330}
   cooldown: 5
   TransitionAnim: {fileID: 6060611293080745731}
+  animator: {fileID: 3168593229241113169}
 --- !u!60 &5568291365699258496
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -840,6 +842,27 @@ PolygonCollider2D:
       - {x: 0.16, y: 0.11}
       - {x: 0.099999994, y: 0.16}
   m_UseDelaunayMesh: 0
+--- !u!95 &3168593229241113169
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3490874989107518181}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 9a7f8ca12d55c2e4e9329342aae42d6a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &4670417458382777330
 GameObject:
   m_ObjectHideFlags: 0

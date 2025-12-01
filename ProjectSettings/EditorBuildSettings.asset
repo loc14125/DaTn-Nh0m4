@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Map/MainMenu/Menu/MainMenu/MainMenu.unity
+    guid: 4e5c9426e11d3c94bb833a282887bd22
+  - enabled: 1
     path: Assets/Map/Map 5/MAP/Scenes/MAP.unity
     guid: 01542b619b6debd4cad258966721d99c
   - enabled: 1
@@ -17,7 +20,4 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Map/Map Boss 2/Scenes/Map boss 2.unity
     guid: fe2bd063b4cfd0248892fedc23ae0730
-  - enabled: 1
-    path: Assets/Map/MainMenu/Menu/MainMenu/MainMenu.unity
-    guid: 4e5c9426e11d3c94bb833a282887bd22
   m_configObjects: {}

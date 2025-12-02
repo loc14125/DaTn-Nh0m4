@@ -14,7 +14,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Dash Settings")]
     [SerializeField] private float dashSpeed = 20f;
     [SerializeField] private float dashDuration = 0.2f;
-    [SerializeField] private float dashCooldown = 1f;
+    [SerializeField] public float dashCooldown = 1f;
 
      //skill bolt
     [SerializeField] private GameObject boltPrefab;
@@ -40,6 +40,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private GameObject bloodEffectPrefab;
     [SerializeField] private Vector2 bloodOffset = new Vector2(0.3f, 0.5f);
 
+    
+
+    
+
     private Rigidbody2D rb;
     private Animator anim;
     private bool isGrounded;
@@ -48,7 +52,7 @@ public class PlayerMovement : MonoBehaviour
     private int jumpCount;
     private float inputX;
     private string currentAnim;
-    private float lastDashTime;
+    public float lastDashTime;
     private float originalGravity;
     private int facingDirection = 1;
 
@@ -337,6 +341,11 @@ public void Heal(int amount)
 
     if (healthUI != null)
         healthUI.UpdateHealth(currentHealth);
+}
+
+public float GetLastBoltTime()
+{
+    return lastBoltTime;
 }
     
 

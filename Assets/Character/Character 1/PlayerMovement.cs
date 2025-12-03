@@ -21,7 +21,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform boltSpawnPoint;
 
     [Header("Health Settings")]
-    [SerializeField] private int maxHealth = 100;
+    [SerializeField]  public int maxHealth = 100;
     private int currentHealth;
     private bool isInvincible = false;
 
@@ -39,11 +39,12 @@ public class PlayerMovement : MonoBehaviour
     [Header("Hit Effect Settings")]
     [SerializeField] private GameObject bloodEffectPrefab;
     [SerializeField] private Vector2 bloodOffset = new Vector2(0.3f, 0.5f);
+    public int boltBonusDamage = 0;
 
     
 
     
-
+    public int boltDamage = 40;
     private Rigidbody2D rb;
     private Animator anim;
     private bool isGrounded;
@@ -64,6 +65,8 @@ public class PlayerMovement : MonoBehaviour
 
     maxHealth += BuffManager.Instance.bonusMaxHP;
     currentHealth = maxHealth;
+
+    BuffManager.Instance.ApplyBuffToPlayer(this);
 
 
     }
@@ -285,6 +288,7 @@ private void EndDash()
     BoltScript bp = bolt.GetComponent<BoltScript>();
     bp.SetDirection(facingDirection);
     bp.damage += BuffManager.Instance.bonusBoltDamage;
+    bp.damage = BuffManager.Instance.GetBoltDamage();
 }
 
 private void TryShootBolt()

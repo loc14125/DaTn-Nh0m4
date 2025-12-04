@@ -604,6 +604,7 @@ MonoBehaviour:
   boltCooldown: 4
   bloodEffectPrefab: {fileID: 7075741820497285860, guid: 3b7f876ed214e2a4c9188f789a1c7a2b, type: 3}
   bloodOffset: {x: 2, y: 2}
+  boltBonusDamage: 0
   boltDamage: 40
   lastDashTime: 0
 --- !u!114 &4731274454840541571

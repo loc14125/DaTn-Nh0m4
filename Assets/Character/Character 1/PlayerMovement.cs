@@ -57,19 +57,59 @@ public class PlayerMovement : MonoBehaviour
     private float originalGravity;
     private int facingDirection = 1;
 
-    void Start()
-    {
-         rb = GetComponent<Rigidbody2D>();
+ void Start()
+{
+    rb = GetComponent<Rigidbody2D>();
     anim = GetComponent<Animator>();
     originalGravity = rb.gravityScale;
 
-    maxHealth += BuffManager.Instance.bonusMaxHP;
-    currentHealth = maxHealth;
+    // TÌM UI NẾU CHƯA GÁN TRONG INSPECTOR
+    if (healthUI == null)
+        healthUI = FindObjectOfType<PlayerHealthUI>();
 
+    // --- LẤY MÁU TỪ GAME MANAGER ---
+    // Nếu GameManager chưa tồn tại (KHÔNG NÊN nhưng phòng lỗi)
+    if (GameManager.Instance == null)
+    {
+        GameObject gmObj = new GameObject("GameManager");
+        gmObj.AddComponent<GameManager>();
+    }
+
+    // Áp buff vào maxHealth (UI sẽ hiểu luôn)
+    maxHealth += BuffManager.Instance.bonusMaxHP;
+
+    // Nếu chưa có máu lưu → lần đầu chơi
+    if (GameManager.Instance.playerHealth <= 0)
+    {
+        currentHealth = maxHealth;
+        GameManager.Instance.playerHealth = currentHealth;
+    }
+    else
+    {
+        // Load máu lưu lại
+        currentHealth = GameManager.Instance.playerHealth;
+
+        // Nếu buff làm maxHealth tăng → clamp lại
+        if (currentHealth > maxHealth)
+            currentHealth = maxHealth;
+    }
+
+    // APPLY BUFF
     BuffManager.Instance.ApplyBuffToPlayer(this);
 
-
+    // CẬP NHẬT UI
+    if (healthUI != null)
+    {
+        healthUI.Init(maxHealth);           // Set max slider
+        healthUI.UpdateHealth(currentHealth); // Set value hiện tại
     }
+    else
+    {
+        Debug.LogWarning("⚠ Không tìm thấy PlayerHealthUI!");
+    }
+}
+
+
 
     void Update()
     {
@@ -209,18 +249,22 @@ private void EndDash()
 }
 
 
-    public void TakeDamage(int dmg, Vector3 attackerPos)
+  public void TakeDamage(int dmg, Vector3 attackerPos)
 {
     if (isInvincible) return;
 
-    // xác định hướng bị đánh
+    // spawn máu và hướng
     int hitDir = transform.position.x < attackerPos.x ? -1 : 1;
-
-    // spawn hiệu ứng máu đúng hướng
     SpawnBloodEffect(hitDir);
 
     currentHealth -= dmg;
-    if (healthUI != null) healthUI.UpdateHealth(currentHealth);
+
+    // Lưu máu vào GameManager
+    GameManager.Instance.playerHealth = currentHealth;
+
+    // Cập nhật UI
+    if (healthUI != null)
+        healthUI.UpdateHealth(currentHealth);
 
     if (currentHealth > 0)
     {
@@ -235,6 +279,7 @@ private void EndDash()
 
     StartCoroutine(InvincibleTime());
 }
+
 
     private IEnumerator InvincibleTime()
     {
@@ -343,9 +388,13 @@ public void Heal(int amount)
     if (currentHealth > maxHealth)
         currentHealth = maxHealth;
 
+    if (GameManager.Instance != null)
+        GameManager.Instance.playerHealth = currentHealth;
+
     if (healthUI != null)
         healthUI.UpdateHealth(currentHealth);
 }
+
 
 public float GetLastBoltTime()
 {

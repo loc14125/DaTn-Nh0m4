@@ -71,6 +71,16 @@ public class PlayerAttack : MonoBehaviour
                 continue;
             }
 
+            // === Snake ===
+            Snake snake = enemyRoot.GetComponent<Snake>();
+            if (snake != null)
+            {
+                snake.TakeDamage(damage);
+                damagedEnemies.Add(enemyRoot);
+                continue;
+            }
+
+
             
         }
     }

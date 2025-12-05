@@ -12,6 +12,9 @@ public class BuffManager : MonoBehaviour
 
     public int baseBoltDamage = 40;
 
+    public int thunderBonus = 0;         // tăng mỗi khi kill bằng thunder
+    public int thunderBaseDamage = 100;  // base thunder dmg (theo yêu cầu)
+
     
     
 
@@ -53,4 +56,16 @@ public int GetBoltDamage()
 {
     return baseBoltDamage + bonusBoltDamage;
 }
+
+public void OnThunderKill()
+{
+    thunderBonus += 10;
+    Debug.Log("[BuffManager] Thunder kill registered. thunderBonus = " + thunderBonus);
+}
+
+public int GetThunderDamage()
+{
+    return thunderBaseDamage + thunderBonus;
+}
+
 }

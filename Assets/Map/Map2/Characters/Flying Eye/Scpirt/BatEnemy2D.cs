@@ -27,6 +27,7 @@ public class BatEnemy2D : MonoBehaviour
     private bool isAttacking = false;
     private bool isDead = false;
     private float attackTimer;
+    private bool lastHitByThunder = false;
 
     void Start()
     {
@@ -90,12 +91,21 @@ public class BatEnemy2D : MonoBehaviour
             fb.speed = fireballSpeed;
         }
     }
+    public void MarkHitByThunder()
+    {
+        lastHitByThunder = true;
+    }
 
     public void TakeDamage(int amount)
     {
         if (isDead) return;
 
         currentHP -= amount;
+        if (lastHitByThunder && BuffManager.Instance != null)
+    {
+        BuffManager.Instance.OnThunderKill();
+    }
+
 
         if (currentHP > 0)
         {

@@ -15,14 +15,14 @@ public class UiBuff : MonoBehaviour
 
     public void ChooseHP()
     {
-        BuffManager.Instance.bonusMaxHP += 20;
+        BuffManager.Instance.bonusMaxHP += 30;
         BuffManager.Instance.ApplyBuffToPlayer(player);
         Close();
     }
 
     public void ChooseATK()
     {
-        BuffManager.Instance.bonusATK += 5;
+        BuffManager.Instance.bonusATK += 20;
         BuffManager.Instance.ApplyBuffToPlayer(player);
         
         Close();
@@ -30,7 +30,7 @@ public class UiBuff : MonoBehaviour
 
     public void ChooseBolt()
     {
-        BuffManager.Instance.bonusBoltDamage += 10;
+        BuffManager.Instance.bonusBoltDamage += 50;
         BuffManager.Instance.ApplyBuffToPlayer(player);
         Close();
     }

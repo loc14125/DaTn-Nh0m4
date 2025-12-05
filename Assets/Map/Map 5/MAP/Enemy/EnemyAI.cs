@@ -31,6 +31,7 @@ public class EnemyAI : MonoBehaviour
     private bool isIdle = false;
     private int moveDir = 1; // 1=right, -1=left
     private Vector2 startPos;
+    private bool lastHitByThunder = false;
 
     void Start()
     {
@@ -157,11 +158,15 @@ public class EnemyAI : MonoBehaviour
         }
     }
 }
-
+    public void MarkHitByThunder()
+{
+    lastHitByThunder = true;
+}
 
     public void TakeDamage(int dmg)
     {
         if (isDead) return;
+        
 
         currentHealth -= dmg;
         animator.SetTrigger("Hurt");
@@ -184,6 +189,10 @@ public class EnemyAI : MonoBehaviour
         animator.SetBool("isWalking", false);
 
         animator.SetTrigger("Die");
+        if (lastHitByThunder && BuffManager.Instance != null)
+    {
+        BuffManager.Instance.OnThunderKill();
+    }
 
         // destroy sau 1.1s — dư 0.1 giây để ensure animation play đủ
         Destroy(gameObject, 1.1f);

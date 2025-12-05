@@ -12,6 +12,7 @@ public class PlayerInforUi : MonoBehaviour
     public TMP_Text damageText;
     public TMP_Text healthText;
     public TMP_Text boltDamageText;  // ⭐ THÊM
+    public TMP_Text thunderText;
 
     [Header("Player Reference")]
     public PlayerMovement player;
@@ -56,5 +57,6 @@ public class PlayerInforUi : MonoBehaviour
 
         // ⭐ Damage Bolt — thêm vào UI
         boltDamageText.text =  $"Bolt Damage: {player.boltBonusDamage}";
+        thunderText.text = $"Thunder: {BuffManager.Instance.GetThunderDamage()}";
     }
 }

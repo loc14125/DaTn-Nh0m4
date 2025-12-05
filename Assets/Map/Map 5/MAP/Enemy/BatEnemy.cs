@@ -35,6 +35,8 @@ public class BatEnemy : MonoBehaviour
     private bool isReturning = false;
     private bool isDead = false;
 
+    private bool lastHitByThunder = false;
+
 
     void Start()
     {
@@ -181,13 +183,21 @@ public class BatEnemy : MonoBehaviour
             Die();
     }
 
+    public void MarkHitByThunder()
+{
+    lastHitByThunder = true;
+}
+
     void Die()
     {
         if (isDead) return;
 
         isDead = true;
         rb.velocity = Vector2.zero;
-
+        if (lastHitByThunder && BuffManager.Instance != null)
+    {
+        BuffManager.Instance.OnThunderKill();
+    }
         PlayDie();
         Destroy(gameObject, 1.2f);
         ScoreManager.Instance.AddScore(100);

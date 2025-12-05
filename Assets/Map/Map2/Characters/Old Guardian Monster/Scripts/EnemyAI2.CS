@@ -30,6 +30,7 @@ public class EnemyAI2 : MonoBehaviour
     private Collider2D col;
     private bool isIdle = false;
     private bool isChasing = false;
+    private bool lastHitByThunder = false;
 
     void Start()
     {
@@ -150,6 +151,10 @@ public class EnemyAI2 : MonoBehaviour
         }
     }
 }
+public void MarkHitByThunder()
+{
+    lastHitByThunder = true;
+}
 
     public void TakeDamage(int damage)
     {
@@ -157,6 +162,10 @@ public class EnemyAI2 : MonoBehaviour
 
         currentHealth -= damage;
         animator.SetTrigger("Hurt");
+        if (lastHitByThunder && BuffManager.Instance != null)
+    {
+        BuffManager.Instance.OnThunderKill();
+    }
 
         if (currentHealth <= 0)
             Die();

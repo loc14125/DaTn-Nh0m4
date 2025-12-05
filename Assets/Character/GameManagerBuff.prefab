@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6535016c05bb244ea712e36c0bc5eac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bonusMaxHP: 10
-  bonusATK: 10
-  bonusBoltDamage: 10
+  bonusMaxHP: 0
+  bonusATK: 0
+  bonusBoltDamage: 0
+  baseBoltDamage: 40

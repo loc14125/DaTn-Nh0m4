@@ -1,151 +1,170 @@
 using UnityEngine;
-using System.Collections;
 
-public class SnakeAI : MonoBehaviour
+public class Snake : MonoBehaviour
 {
-    [Header("Detect + Attack")]
-    public float detectRange = 6f;
-    public float attackRange = 1.6f;
+    [Header("Snake Stats")]
+    public int maxHP = 120;
+    public int currentHP;
+
+    [Header("Ranges")]
+    public float detectRange = 6f;   // player vào → bắt đầu đuổi
+    public float attackRange = 1.8f; // player vào → đánh gần
     public LayerMask playerLayer;
 
-    [Header("Move")]
+    [Header("Movement")]
     public float moveSpeed = 2.5f;
-
-    [Header("Cooldown")]
-    public float attackCooldown = 1.2f;
-    private float lastAttack = 0;
-
-    [Header("Hitbox từng đòn")]
-    public GameObject hitboxAtk1;
-    public GameObject hitboxAtk2;
-    public GameObject hitboxAtk3;
-    public float hitDuration = 0.25f;
-
-    [Header("HP + Damage")]
-    public int maxHP = 120;
-    public float damageAtk1 = 10;
-    public float damageAtk2 = 16;
-    public float damageAtk3 = 25;
-    int curHP;
-
     Rigidbody2D rb;
+
+    [Header("Attacks")]
+    public GameObject attack1Hitbox;
+    public GameObject attack2Hitbox;
+    public GameObject attack3Hitbox;
+    public float attackDuration = 0.35f;
+    public float attackCooldown = 1.2f;
+    float lastAttack;
+
     Animator anim;
     Transform player;
-    bool attacking = false, dead = false;
+
+    bool isDead = false;
+    bool isAttacking = false;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
-        curHP = maxHP;
 
-        hitboxAtk1.SetActive(false);
-        hitboxAtk2.SetActive(false);
-        hitboxAtk3.SetActive(false);
+        currentHP = maxHP;
+
+        // Tắt hết hitbox
+        attack1Hitbox.SetActive(false);
+        attack2Hitbox.SetActive(false);
+        attack3Hitbox.SetActive(false);
     }
 
     void Update()
     {
-        if (dead) return;
+        if (isDead) return;
 
         DetectPlayer();
 
-        if(player != null && !attacking)
+        if (player != null && !isAttacking)
         {
             float dist = Vector2.Distance(transform.position, player.position);
 
-            if (dist > attackRange) Move();
-            else Attack();
+            if (dist > attackRange)
+                MoveTowardPlayer();
+            else
+                TryAttack();
         }
-        else anim.SetBool("Run", false);
+        else
+        {
+            anim.SetBool("Run", false);
+        }
 
         FacePlayer();
     }
 
+    // -------------------------
+    // PLAYER DETECT
+    // -------------------------
     void DetectPlayer()
     {
         Collider2D hit = Physics2D.OverlapCircle(transform.position, detectRange, playerLayer);
-        if(hit) player = hit.transform;
+        if (hit) player = hit.transform;
     }
 
-    void Move()
+    // -------------------------
+    // MOVE
+    // -------------------------
+    void MoveTowardPlayer()
     {
         anim.SetBool("Run", true);
+
         Vector2 dir = (player.position - transform.position).normalized;
         rb.velocity = new Vector2(dir.x * moveSpeed, rb.velocity.y);
     }
 
     void FacePlayer()
     {
-        if(!player) return;
-        transform.localScale = new Vector3(player.position.x > transform.position.x ? 1 : -1, 1, 1);
+        if (!player) return;
+
+        float scaleX = (player.position.x > transform.position.x) ? 1 : -1;
+        transform.localScale = new Vector3(scaleX, 1, 1);
     }
 
-    void Attack()
+    // -------------------------
+    // ATTACK
+    // -------------------------
+    void TryAttack()
     {
-        if(Time.time < lastAttack + attackCooldown) return;
+        if (Time.time < lastAttack + attackCooldown) return;
 
         lastAttack = Time.time;
-        StartCoroutine(AttackFlow());
+
+        // Random trong 3 đòn
+        int atk = Random.Range(1, 3);
+        StartCoroutine(AttackRoutine(atk));
     }
 
-    IEnumerator AttackFlow()
-    {
-        attacking = true;
-        rb.velocity = Vector2.zero;
+    System.Collections.IEnumerator AttackRoutine(int attackType)
+{
+    isAttacking = true;
+    rb.velocity = Vector2.zero;
 
-        int atk = Random.Range(1,4); // 1 - 3
-        anim.SetTrigger("Atk" + atk);
+    // Gọi đúng trigger
+    if (attackType == 1) anim.SetTrigger("Atk1");
+    if (attackType == 2) anim.SetTrigger("Atk2");
+    if (attackType == 3) anim.SetTrigger("Atk3");
 
-        yield return new WaitForSeconds(0.35f);
-        ActivateHitbox(atk);
+    // Delay để khớp animation
+    yield return new WaitForSeconds(0.25f);
 
-        yield return new WaitForSeconds(0.6f);
-        attacking = false;
-    }
+    // Bật hitbox đúng
+    if (attackType == 1) attack1Hitbox.SetActive(true);
+    if (attackType == 2) attack2Hitbox.SetActive(true);
+    if (attackType == 3) attack3Hitbox.SetActive(true);
 
-    void ActivateHitbox(int id)
-    {
-        if(id == 1) StartCoroutine(EnableHitbox(hitboxAtk1));
-        if(id == 2) StartCoroutine(EnableHitbox(hitboxAtk2));
-        if(id == 3) StartCoroutine(EnableHitbox(hitboxAtk3));
-    }
+    yield return new WaitForSeconds(attackDuration);
 
-    IEnumerator EnableHitbox(GameObject hb)
-    {
-        hb.SetActive(true);
-        yield return new WaitForSeconds(hitDuration);
-        hb.SetActive(false);
-    }
+    attack1Hitbox.SetActive(false);
+    attack2Hitbox.SetActive(false);
+    attack3Hitbox.SetActive(false);
 
-    //================== DAMAGE RECEIVE ==================
+    isAttacking = false;
+}
 
+    // -------------------------
+    // DAMAGE RECEIVE
+    // -------------------------
     public void TakeDamage(int dmg)
     {
-        if (dead) return;
+        if (isDead) return;
 
-        curHP -= dmg;
+        currentHP -= dmg;
         anim.SetTrigger("Hurt");
 
-        if(curHP <= 0) Die();
+        if (currentHP <= 0)
+        {
+            Die();
+        }
     }
 
     void Die()
     {
-        dead = true;
+        isDead = true;
         rb.velocity = Vector2.zero;
-
         anim.SetTrigger("Die");
-        Destroy(gameObject, 1.3f);
+        Destroy(gameObject, 1.2f);
     }
 
-    // GIZMO
+    // DEBUG (vẽ range)
     void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.red;
+        Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, detectRange);
 
-        Gizmos.color = Color.yellow;
+        Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, attackRange);
     }
 }

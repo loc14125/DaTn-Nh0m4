@@ -3664,7 +3664,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5178924725189665775, guid: aef2d68c3f53bf14a9bd9efd9141c88d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 15.9
+      value: 265.9
       objectReference: {fileID: 0}
     - target: {fileID: 5178924725189665775, guid: aef2d68c3f53bf14a9bd9efd9141c88d, type: 3}
       propertyPath: m_LocalPosition.y
@@ -3968,6 +3968,14 @@ PrefabInstance:
     - target: {fileID: 6274812901538024566, guid: a8617a5117106604b95283cab1133cbe, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -20.383118
+      objectReference: {fileID: 0}
+    - target: {fileID: 7394074760977617143, guid: a8617a5117106604b95283cab1133cbe, type: 3}
+      propertyPath: cooldownHit
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 7394074760977617143, guid: a8617a5117106604b95283cab1133cbe, type: 3}
+      propertyPath: cooldownMiss
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7394074760977617143, guid: a8617a5117106604b95283cab1133cbe, type: 3}
       propertyPath: thunderPrefab
@@ -4988,11 +4996,11 @@ PrefabInstance:
       objectReference: {fileID: 385030563}
     - target: {fileID: 4961412873674911500, guid: 46a183eb9579ff5408d6972bc88f10e0, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.95
+      value: 57.9
       objectReference: {fileID: 0}
     - target: {fileID: 4961412873674911500, guid: 46a183eb9579ff5408d6972bc88f10e0, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.45
+      value: 0.59
       objectReference: {fileID: 0}
     - target: {fileID: 4961412873674911500, guid: 46a183eb9579ff5408d6972bc88f10e0, type: 3}
       propertyPath: m_LocalPosition.z

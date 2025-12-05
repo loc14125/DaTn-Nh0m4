@@ -35,6 +35,7 @@ public class BuffManager : MonoBehaviour
         bonusMaxHP = 0;
         bonusATK = 0;
         bonusBoltDamage = 0;
+        thunderBonus = 0;    //  reset thunder!
     }
 
     public void ApplyBuffToPlayer(PlayerMovement player)

@@ -56,6 +56,7 @@ public class Boss : MonoBehaviour
     float teleTimer = 0f;
     bool isTeleporting = false;
     bool canTeleportAgain = true;
+    public bool lastHitByThunder = false;
 
 
     void Start()
@@ -321,23 +322,30 @@ void ActivateBoss()
         comboHit2?.SetActive(false);
     }
 
-    public void TakeDamage(int dmg, bool isProjectile = false)
+  public void TakeDamage(int dmg, bool isProjectile = false, bool isThunder = false)
+{
+    // Nếu không phải projectile hoặc thunder → check melee
+    if (!isProjectile && !isThunder && Vector2.Distance(transform.position, player.position) > meleeRange)
+        return;
+
+    currentHealth -= dmg;
+
+    if (isThunder)
     {
-        if (!isProjectile && Vector2.Distance(transform.position, player.position) > meleeRange)
-            return;
-
-        currentHealth -= dmg;
-        bossUI.UpdateHealth(currentHealth);
-
-        if (damagePopupPrefab != null)
-        {
-            Vector3 popupPos = transform.position + Vector3.up * 1f;
-            GameObject popup = Instantiate(damagePopupPrefab, popupPos, Quaternion.identity);
-            popup.GetComponent<DamagePopUp>()?.Setup(dmg);
-        }
-
-        if (currentHealth <= 0) Die();
+        lastHitByThunder = true; // 🔥 để BuffManager tính kill
     }
+
+    bossUI.UpdateHealth(currentHealth);
+
+    if (damagePopupPrefab != null)
+    {
+        Vector3 popupPos = transform.position + Vector3.up * 1f;
+        GameObject popup = Instantiate(damagePopupPrefab, popupPos, Quaternion.identity);
+        popup.GetComponent<DamagePopUp>()?.Setup(dmg);
+    }
+
+    if (currentHealth <= 0) Die();
+}
 
     void Die()
     {

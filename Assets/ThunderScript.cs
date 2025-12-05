@@ -15,6 +15,7 @@ public class ThunderScript : MonoBehaviour
     public float effectSpawnHeight = 3f;
 
     private float nextUseTime = 0f;
+    
 
     void Update()
     {
@@ -62,7 +63,7 @@ public class ThunderScript : MonoBehaviour
             Boss boss = enemyRoot.GetComponent<Boss>();
             if (boss != null)
             {
-                boss.TakeDamage(totalDmg, true);  // <-- RẤT QUAN TRỌNG
+                boss.TakeDamage(totalDmg, false, true);    // <-- RẤT QUAN TRỌNG
                 continue;
             }
 

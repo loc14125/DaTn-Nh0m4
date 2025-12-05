@@ -57,6 +57,7 @@ public class Boss : MonoBehaviour
     bool isTeleporting = false;
     bool canTeleportAgain = true;
     public bool lastHitByThunder = false;
+    
 
 
     void Start()
@@ -324,7 +325,7 @@ void ActivateBoss()
 
   public void TakeDamage(int dmg, bool isProjectile = false, bool isThunder = false)
 {
-    // Nếu không phải projectile hoặc thunder → check melee
+    
     if (!isProjectile && !isThunder && Vector2.Distance(transform.position, player.position) > meleeRange)
         return;
 
@@ -332,7 +333,7 @@ void ActivateBoss()
 
     if (isThunder)
     {
-        lastHitByThunder = true; // 🔥 để BuffManager tính kill
+        lastHitByThunder = true; 
     }
 
     bossUI.UpdateHealth(currentHealth);
@@ -346,7 +347,6 @@ void ActivateBoss()
 
     if (currentHealth <= 0) Die();
 }
-
     void Die()
     {
         isDead = true;
@@ -375,5 +375,10 @@ void ActivateBoss()
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(transform.position, teleportDistance);
     }
+    public void MarkHitByThunder()
+{
+    lastHitByThunder = true;
+}
+
 
 }

@@ -782,8 +782,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   radius: 6
-  cooldownHit: 2
-  cooldownMiss: 3
+  cooldownHit: 20
+  cooldownMiss: 5
   enemyLayer:
     serializedVersion: 2
     m_Bits: 128

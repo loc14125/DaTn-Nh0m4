@@ -32,6 +32,10 @@ public class ThunderScript : MonoBehaviour
         }
 
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, radius, enemyLayer);
+        foreach (Collider2D col in hits)
+{
+    Debug.Log("FOUND ENEMY: " + col.name + "  | Layer: " + LayerMask.LayerToName(col.gameObject.layer));
+}
 
         if (hits.Length == 0)
         {
@@ -60,10 +64,10 @@ public class ThunderScript : MonoBehaviour
             enemyRoot.SendMessage("MarkHitByThunder", SendMessageOptions.DontRequireReceiver);
 
             // ======= GÂY DAMAGE CHUẨN TỪNG LOẠI ENEMY =======
-            Boss boss = enemyRoot.GetComponent<Boss>();
+           Boss boss = enemyRoot.GetComponent<Boss>();
             if (boss != null)
             {
-                boss.TakeDamage(totalDmg, false, true);    // <-- RẤT QUAN TRỌNG
+                boss.TakeDamage(totalDmg, false, true); // isProjectile = false, isThunder = true
                 continue;
             }
 

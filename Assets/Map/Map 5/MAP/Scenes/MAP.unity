@@ -3664,11 +3664,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5178924725189665775, guid: aef2d68c3f53bf14a9bd9efd9141c88d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 265.9
+      value: 10.1
       objectReference: {fileID: 0}
     - target: {fileID: 5178924725189665775, guid: aef2d68c3f53bf14a9bd9efd9141c88d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -2.01
       objectReference: {fileID: 0}
     - target: {fileID: 6395525316265895526, guid: aef2d68c3f53bf14a9bd9efd9141c88d, type: 3}
       propertyPath: m_SizeDelta.x
@@ -3859,10 +3859,10 @@ MonoBehaviour:
   m_LookAt: {fileID: 1912935982}
   m_Follow: {fileID: 1912935982}
   m_Lens:
-    FieldOfView: 60
+    FieldOfView: 40
     OrthographicSize: 5
-    NearClipPlane: 0.3
-    FarClipPlane: 1000
+    NearClipPlane: 0.1
+    FarClipPlane: 5000
     Dutch: 0
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
@@ -3905,10 +3905,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 2095919184485150642, guid: a8617a5117106604b95283cab1133cbe, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -308
-      objectReference: {fileID: 0}
     - target: {fileID: 4558007237371015932, guid: a8617a5117106604b95283cab1133cbe, type: 3}
       propertyPath: m_LocalPosition.x
       value: -15.14
@@ -3949,26 +3945,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4655202170447120626, guid: a8617a5117106604b95283cab1133cbe, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 6274812901538024566, guid: a8617a5117106604b95283cab1133cbe, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: -1093.6375
-      objectReference: {fileID: 0}
-    - target: {fileID: 6274812901538024566, guid: a8617a5117106604b95283cab1133cbe, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: -619.423
-      objectReference: {fileID: 0}
-    - target: {fileID: 6274812901538024566, guid: a8617a5117106604b95283cab1133cbe, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -5.3485107
-      objectReference: {fileID: 0}
-    - target: {fileID: 6274812901538024566, guid: a8617a5117106604b95283cab1133cbe, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -20.383118
-      objectReference: {fileID: 0}
     - target: {fileID: 7394074760977617143, guid: a8617a5117106604b95283cab1133cbe, type: 3}
       propertyPath: cooldownHit
       value: 20
@@ -3977,10 +3953,6 @@ PrefabInstance:
       propertyPath: cooldownMiss
       value: 5
       objectReference: {fileID: 0}
-    - target: {fileID: 7394074760977617143, guid: a8617a5117106604b95283cab1133cbe, type: 3}
-      propertyPath: thunderPrefab
-      value: 
-      objectReference: {fileID: 8717036423769371086, guid: b0b79ed47f1212c45b16227f4c064737, type: 3}
     - target: {fileID: 7425831266689594866, guid: a8617a5117106604b95283cab1133cbe, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -54516,9 +54488,9 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
-  field of view: 60
+  near clip plane: 0.1
+  far clip plane: 5000
+  field of view: 40
   orthographic: 1
   orthographic size: 5
   m_Depth: -1

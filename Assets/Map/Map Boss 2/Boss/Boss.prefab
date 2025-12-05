@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 49786779702855000}
   - component: {fileID: 6036335249121156515}
   - component: {fileID: 6501008002866184079}
-  m_Layer: 9
+  m_Layer: 7
   m_Name: BossHitBox2
   m_TagString: BossHit2_1
   m_Icon: {fileID: 0}
@@ -101,7 +101,7 @@ GameObject:
   - component: {fileID: 7019495512602571991}
   - component: {fileID: 4393334420433706763}
   - component: {fileID: 6207217915120425105}
-  m_Layer: 9
+  m_Layer: 7
   m_Name: BossHitBox1
   m_TagString: BossHit1
   m_Icon: {fileID: 0}
@@ -458,7 +458,7 @@ GameObject:
   - component: {fileID: 4869767854673152234}
   - component: {fileID: 7092086048792226932}
   - component: {fileID: 8220035621968070632}
-  m_Layer: 9
+  m_Layer: 7
   m_Name: BossHitBox3
   m_TagString: BossHit2_2
   m_Icon: {fileID: 0}
@@ -881,12 +881,19 @@ MonoBehaviour:
   comboHit1: {fileID: 298432701426262973}
   comboHit2: {fileID: 5585710168713565659}
   detectRange: 10
+  midRange: 8
   meleeRange: 2
   moveSpeed: 3
   attackCooldown: 2
   maxHealth: 500
   damage: 10
+  flyingEnemyPrefab: {fileID: 0}
   damagePopupPrefab: {fileID: 764722398817924463, guid: adc423bcc0a3f734eadd85d6fc02cab3, type: 3}
+  teleportDistance: 18
+  verticalLimit: 7
+  teleportDelay: 5
+  teleportCooldown: 30
+  lastHitByThunder: 0
 --- !u!50 &4667587158058784318
 Rigidbody2D:
   serializedVersion: 4

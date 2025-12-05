@@ -299,3 +299,4 @@ MonoBehaviour:
   attackTrigger: {fileID: 2164352984445402156}
   attackDuration: 0.3
   maxHealth: 50
+  damagePopupPrefab: {fileID: 764722398817924463, guid: adc423bcc0a3f734eadd85d6fc02cab3, type: 3}

@@ -208,6 +208,12 @@ MonoBehaviour:
   pointB: {fileID: 0}
   speed: 2
   idleTime: 2
+  attackPoint: {fileID: 0}
+  attackRange: 0.6
+  damage: 10
+  attackCooldown: 1
+  maxHealth: 3
+  damagePopupPrefab: {fileID: 764722398817924463, guid: adc423bcc0a3f734eadd85d6fc02cab3, type: 3}
 --- !u!95 &-1928860688421119807
 Animator:
   serializedVersion: 5

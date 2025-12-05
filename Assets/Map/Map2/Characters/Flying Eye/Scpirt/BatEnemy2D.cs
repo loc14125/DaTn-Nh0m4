@@ -28,6 +28,7 @@ public class BatEnemy2D : MonoBehaviour
     private bool isDead = false;
     private float attackTimer;
     private bool lastHitByThunder = false;
+    [SerializeField] private GameObject damagePopupPrefab;
 
     void Start()
     {
@@ -97,25 +98,35 @@ public class BatEnemy2D : MonoBehaviour
     }
 
     public void TakeDamage(int amount)
-    {
-        if (isDead) return;
+{
+    if (isDead) return;
 
-        currentHP -= amount;
-        if (lastHitByThunder && BuffManager.Instance != null)
+    currentHP -= amount;
+
+    // ⭐ Hiển thị Damage Popup
+    if (damagePopupPrefab != null)
+    {
+        Vector3 pos = transform.position + Vector3.up * 1f;
+        GameObject pop = Instantiate(damagePopupPrefab, pos, Quaternion.identity);
+        pop.GetComponent<DamagePopUp>()?.Setup(amount);
+    }
+
+    // ⭐ Thunder kill bonus
+    if (lastHitByThunder && BuffManager.Instance != null)
     {
         BuffManager.Instance.OnThunderKill();
     }
 
-
-        if (currentHP > 0)
-        {
-            animator.SetTrigger("Hurt");
-        }
-        else
-        {
-            Die();
-        }
+    // ⭐ Nếu còn sống → phát animation Hurt
+    if (currentHP > 0)
+    {
+        animator.SetTrigger("Hurt");
     }
+    else
+    {
+        Die();
+    }
+}
 
     void Die()
     {

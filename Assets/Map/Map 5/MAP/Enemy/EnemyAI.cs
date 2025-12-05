@@ -32,6 +32,7 @@ public class EnemyAI : MonoBehaviour
     private int moveDir = 1; // 1=right, -1=left
     private Vector2 startPos;
     private bool lastHitByThunder = false;
+    [SerializeField] private GameObject damagePopupPrefab;
 
     void Start()
     {
@@ -170,6 +171,13 @@ public class EnemyAI : MonoBehaviour
 
         currentHealth -= dmg;
         animator.SetTrigger("Hurt");
+        if (damagePopupPrefab != null)
+    {
+        Vector3 pos = transform.position + Vector3.up * 1f;
+        Instantiate(damagePopupPrefab, pos, Quaternion.identity)
+            .GetComponent<DamagePopUp>()?
+            .Setup(dmg);
+    }
 
         if (currentHealth <= 0)
             Die();

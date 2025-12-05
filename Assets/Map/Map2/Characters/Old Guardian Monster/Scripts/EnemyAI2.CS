@@ -31,6 +31,7 @@ public class EnemyAI2 : MonoBehaviour
     private bool isIdle = false;
     private bool isChasing = false;
     private bool lastHitByThunder = false;
+    [SerializeField] private GameObject damagePopupPrefab;
 
     void Start()
     {
@@ -157,20 +158,29 @@ public void MarkHitByThunder()
 }
 
     public void TakeDamage(int damage)
-    {
-        if (isDead) return;
+{
+    if (isDead) return;
 
-        currentHealth -= damage;
-        animator.SetTrigger("Hurt");
-        if (lastHitByThunder && BuffManager.Instance != null)
+    currentHealth -= damage;
+
+    animator.SetTrigger("Hurt");
+
+    // ⭐ Hiện Damage Popup ⭐
+    if (damagePopupPrefab != null)
+    {
+        GameObject pop = Instantiate(damagePopupPrefab, transform.position + Vector3.up * 1f, Quaternion.identity);
+        pop.GetComponent<DamagePopUp>()?.Setup(damage);
+    }
+
+    // ⭐ Nếu lần đánh này là từ Thunder → kiểm tra kill để tăng damage
+    if (lastHitByThunder && BuffManager.Instance != null)
     {
         BuffManager.Instance.OnThunderKill();
     }
 
-        if (currentHealth <= 0)
-            Die();
-    }
-
+    if (currentHealth <= 0)
+        Die();
+}
     void Die()
     {
         isDead = true;

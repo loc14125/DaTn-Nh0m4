@@ -239,6 +239,7 @@ MonoBehaviour:
   damage: 10
   attackCooldown: 1.5
   maxHealth: 100
+  damagePopupPrefab: {fileID: 764722398817924463, guid: adc423bcc0a3f734eadd85d6fc02cab3, type: 3}
 --- !u!1 &3503424586336701888
 GameObject:
   m_ObjectHideFlags: 0

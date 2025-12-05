@@ -36,6 +36,7 @@ public class BatEnemy : MonoBehaviour
     private bool isDead = false;
 
     private bool lastHitByThunder = false;
+    [SerializeField] private GameObject damagePopupPrefab;
 
 
     void Start()
@@ -177,7 +178,13 @@ public class BatEnemy : MonoBehaviour
         if (isDead) return;
 
         currentHealth -= amount;
+        
         PlayHurt();
+        if (damagePopupPrefab != null)
+{
+    GameObject pop = Instantiate(damagePopupPrefab, transform.position + Vector3.up * 1f, Quaternion.identity);
+    pop.GetComponent<DamagePopUp>()?.Setup(amount);
+}
 
         if (currentHealth <= 0)
             Die();

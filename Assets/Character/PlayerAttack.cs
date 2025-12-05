@@ -70,6 +70,13 @@ public class PlayerAttack : MonoBehaviour
                 damagedEnemies.Add(enemyRoot);
                 continue;
             }
+            BatEnemy2D bat2D = enemyRoot.GetComponent<BatEnemy2D>();
+            if (bat2D != null)
+            {
+                bat2D.TakeDamage(damage);
+                damagedEnemies.Add(enemyRoot);
+                continue;
+            }
 
             
         }

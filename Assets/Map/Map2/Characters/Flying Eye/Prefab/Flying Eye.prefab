@@ -234,3 +234,4 @@ MonoBehaviour:
   fireballSpeed: 5
   maxHP: 3
   animator: {fileID: 0}
+  damagePopupPrefab: {fileID: 764722398817924463, guid: adc423bcc0a3f734eadd85d6fc02cab3, type: 3}

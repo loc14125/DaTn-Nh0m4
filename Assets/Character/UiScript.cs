@@ -11,20 +11,29 @@ public class UiScript : MonoBehaviour
     [Header("Bolt UI")]
     public Image boltCooldownFill;
 
+    [Header("Thunder UI")]
+    public Image thunderCooldownFill;
+
     private PlayerMovement player;
+    private ThunderScript thunder;
 
     void Start()
     {
         player = FindFirstObjectByType<PlayerMovement>();
+        thunder = FindFirstObjectByType<ThunderScript>();
 
         dashCooldownFill.fillAmount = 0;
         boltCooldownFill.fillAmount = 0;
+
+        if (thunderCooldownFill != null)
+            thunderCooldownFill.fillAmount = 0;
     }
 
     void Update()
     {
         UpdateDashUI();
         UpdateBoltUI();
+        UpdateThunderUI();
     }
 
     void UpdateDashUI()
@@ -41,5 +50,15 @@ public class UiScript : MonoBehaviour
         float used = Time.time - player.GetLastBoltTime();
 
         boltCooldownFill.fillAmount = 1 - Mathf.Clamp01(used / cd);
+    }
+
+    void UpdateThunderUI()
+    {
+        if (thunder == null) return;
+
+        // phần trăm hồi chiêu (0 = sẵn sàng, 1 = đang hồi)
+        float p = thunder.GetCooldownPercent();
+
+        thunderCooldownFill.fillAmount = p;
     }
 }

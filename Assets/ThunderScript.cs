@@ -110,4 +110,8 @@ public class ThunderScript : MonoBehaviour
     {
         return Mathf.Max(0f, nextUseTime - Time.time);
     }
+    public float GetCooldownMax()
+    {
+    return cooldownHit;
+    }
 }

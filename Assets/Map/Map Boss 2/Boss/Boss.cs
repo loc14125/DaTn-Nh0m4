@@ -25,13 +25,25 @@ public class Boss : MonoBehaviour
     public int maxHealth = 200;
     public int damage = 15;
 
+    [Header("Phase 2 Settings")]
+    public bool isPhase2 = false; 
+    public bool isTransforming = false; // khóa di chuyển + attack + tele
+    public float hpDrainPerSecond = 3f; 
+    public float phase2MoveSpeed = 4f;  
+    public int phase2Damage = 25;       
+
     [Header("Flying Enemy")]
     public GameObject flyingEnemyPrefab;
 
     [Header("Popup Damage")]
     [SerializeField] private GameObject damagePopupPrefab;
 
-    private int currentHealth;
+    // --- HEALTH ---
+    // currentHealthInt dùng cho các API cũ (TakeDamage, UI expects int)
+    private int currentHealthInt;
+    // currentHealthF để giảm mượt theo deltaTime
+    private float currentHealthF;
+
     private bool isActivated;
     private bool isDead;
     private bool isAttacking;
@@ -58,21 +70,30 @@ public class Boss : MonoBehaviour
     bool canTeleportAgain = true;
     public bool lastHitByThunder = false;
     
-
-
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         DisableAllHitboxes();
-        currentHealth = maxHealth;
+
+        // khởi tạo health: dùng float để xử lý giảm mượt
+        currentHealthInt = maxHealth;
+        currentHealthF = maxHealth;
+
         bossUI = GetComponent<BossHealthUI>();
-        bossUI.InitHealth(maxHealth);
+        if (bossUI != null)
+        {
+            bossUI.InitHealth(maxHealth);
+        }
+        else
+        {
+            Debug.LogWarning("BossHealthUI not found on Boss GameObject!");
+        }
 
         rb.freezeRotation = true;
         rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
     }
 
-void ActivateBoss()
+    void ActivateBoss()
     {
         isActivated = true;
 
@@ -89,16 +110,52 @@ void ActivateBoss()
         Debug.Log("BOSS ĐÃ ĐƯỢC KÍCH HOẠT");
     }
 
-
     void Update()
     {
         if (isDead) return;
+
+        // ⛔ Khi đang biến hình phase 2 → đứng yên, khóa logic
+        if (isTransforming)
+        {
+            rb.velocity = Vector2.zero;
+            if (animator != null) animator.SetBool("isRunning", false);
+            return;
+        }
+
+        // Tự giảm máu khi phase 2 (DÙNG float để giảm mượt, rồi cập nhật UI bằng int)
+        if (isPhase2 && !isDead)
+        {
+            // giảm theo deltaTime -> dùng float để tránh RoundToInt(thấp) thành 0
+            currentHealthF -= hpDrainPerSecond * Time.deltaTime;
+            if (currentHealthF < 0f) currentHealthF = 0f;
+
+            // cập nhật biến int và UI từng frame nếu giảm đủ 1 HP (hoặc giảm liên tục)
+            int newInt = Mathf.CeilToInt(currentHealthF); // Ceil để UI giảm ngay khi float xuống dưới ngưỡng
+            if (newInt != currentHealthInt)
+            {
+                currentHealthInt = newInt;
+                if (bossUI != null) bossUI.UpdateHealth(currentHealthInt);
+            }
+
+            // nếu cạn máu thì chết
+            if (currentHealthF <= 0f)
+            {
+                Die();
+                return;
+            }
+        }
 
         if (!isActivated)
         {
             if (player && Vector2.Distance(transform.position, player.position) <= detectRange)
                 ActivateBoss();
             return;
+        }
+
+        // ⭐ Kích hoạt Phase 2 khi còn 1/3 máu (so sánh float cho chính xác)
+        if (!isPhase2 && currentHealthF <= (maxHealth / 3f))
+        {
+            StartCoroutine(EnterPhase2());
         }
 
         float distance = Vector2.Distance(transform.position, player.position);
@@ -233,7 +290,7 @@ void ActivateBoss()
             {
                 playerInMeleeRange = true;
                 rb.velocity = Vector2.zero;
-                animator.SetBool("isRunning", false);
+                if (animator != null) animator.SetBool("isRunning", false);
             }
             if (!isAttacking)
                 StartCoroutine(AttackPlayer());
@@ -250,7 +307,7 @@ void ActivateBoss()
 
         float dirX = Mathf.Sign(player.position.x - transform.position.x);
         transform.localScale = new Vector3(dirX, 1, 1);
-        animator.SetBool("isRunning", true);
+        if (animator != null) animator.SetBool("isRunning", true);
         rb.velocity = new Vector2(dirX * moveSpeed, rb.velocity.y);
     }
 
@@ -261,13 +318,13 @@ void ActivateBoss()
         int rand = Random.Range(0, 2);
         if (rand == 0)
         {
-            animator.SetTrigger("ATK1");
+            if (animator != null) animator.SetTrigger("ATK1");
             yield return new WaitForSeconds(0.3f);
             StartCoroutine(HitboxRoutine(hitboxNormal, 0.25f));
         }
         else
         {
-            animator.SetTrigger("ATK2");
+            if (animator != null) animator.SetTrigger("ATK2");
             yield return StartCoroutine(ComboAttack());
         }
 
@@ -323,36 +380,68 @@ void ActivateBoss()
         comboHit2?.SetActive(false);
     }
 
-  public void TakeDamage(int dmg, bool isProjectile = false, bool isThunder = false)
-{
-    
-    if (!isProjectile && !isThunder && Vector2.Distance(transform.position, player.position) > meleeRange)
-        return;
-
-    currentHealth -= dmg;
-
-    if (isThunder)
+    // public TakeDamage - đồng bộ int/float và cập nhật UI
+    public void TakeDamage(int dmg, bool isProjectile = false, bool isThunder = false)
     {
-        lastHitByThunder = true; 
+        if (!isProjectile && !isThunder && Vector2.Distance(transform.position, player.position) > meleeRange)
+            return;
+
+        // trừ cả float và int
+        currentHealthF -= dmg;
+        if (currentHealthF < 0f) currentHealthF = 0f;
+
+        currentHealthInt = Mathf.CeilToInt(currentHealthF);
+
+        if (isThunder)
+        {
+            lastHitByThunder = true; 
+        }
+
+        if (bossUI != null) bossUI.UpdateHealth(currentHealthInt);
+
+        if (damagePopupPrefab != null)
+        {
+            Vector3 popupPos = transform.position + Vector3.up * 1f;
+            GameObject popup = Instantiate(damagePopupPrefab, popupPos, Quaternion.identity);
+            popup.GetComponent<DamagePopUp>()?.Setup(dmg);
+        }
+
+        if (currentHealthF <= 0f) Die();
     }
 
-    bossUI.UpdateHealth(currentHealth);
-
-    if (damagePopupPrefab != null)
+    IEnumerator EnterPhase2()
     {
-        Vector3 popupPos = transform.position + Vector3.up * 1f;
-        GameObject popup = Instantiate(damagePopupPrefab, popupPos, Quaternion.identity);
-        popup.GetComponent<DamagePopUp>()?.Setup(dmg);
+        isPhase2 = true;
+        isTransforming = true; // khóa toàn bộ
+
+        rb.velocity = Vector2.zero;
+        if (animator != null) animator.SetBool("isRunning", false);
+
+        // Trigger animation biến hình
+        if (animator != null) animator.SetTrigger("Phase2");
+
+        Debug.Log("🔥 BOSS START TRANSFORM PHASE 2");
+
+        // Đợi animation kết thúc (chỉnh đúng thời gian animation)
+        yield return new WaitForSeconds(2.5f);
+
+        // ⭐ Buff stats sau animation
+        moveSpeed = phase2MoveSpeed;
+        damage = phase2Damage;
+
+        isTransforming = false;
+
+        Debug.Log("🔥 BOSS COMPLETE PHASE 2");
     }
 
-    if (currentHealth <= 0) Die();
-}
     void Die()
     {
+        if (isDead) return;
+
         isDead = true;
         rb.velocity = Vector2.zero;
-        animator.SetTrigger("Die");
-        bossUI.HideUI();
+        if (animator != null) animator.SetTrigger("Die");
+        if (bossUI != null) bossUI.HideUI();
         Destroy(gameObject, 2f);
         ScoreManager.Instance.AddScore(500);
     }
@@ -375,10 +464,9 @@ void ActivateBoss()
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(transform.position, teleportDistance);
     }
+
     public void MarkHitByThunder()
-{
-    lastHitByThunder = true;
-}
-
-
+    {
+        lastHitByThunder = true;
+    }
 }

@@ -11,20 +11,22 @@ public class SettingUIManager : MonoBehaviour
     [Header("VFX Volume")]
     public Slider vfxSlider;
     public TextMeshProUGUI vfxText;
-    public GameObject vfxIconOn;
-    public GameObject vfxIconOff;
+    public Button vfxOnButton;     // dùng khi VFX đang bật
+    public Button vfxOffButton;    // dùng khi VFX đang tắt
     public AudioSource vfxAudio;
 
-    [Header("Scene Names")]
-    public string mainMenuScene = "MainMenu";   // đặt tên theo scene của bạn
-    public string levelScene = "LevelSelect";   // scene chọn màn chơi
-
+    private float lastVolume = 1f; // lưu volume trước khi tắt
     bool isOpen = false;
 
     private void Start()
     {
         settingPanel.SetActive(false);
+
+        // Gán sự kiện Slider + nút On/Off
         vfxSlider.onValueChanged.AddListener(OnVFXVolumeChange);
+        vfxOnButton.onClick.AddListener(OnVFXOff);
+        vfxOffButton.onClick.AddListener(OnVFXOn);
+
         OnVFXVolumeChange(vfxSlider.value);
     }
 
@@ -34,7 +36,6 @@ public class SettingUIManager : MonoBehaviour
             ToggleSetting();
     }
 
-    // =============== Toggle ESC ===============
     public void ToggleSetting()
     {
         isOpen = !isOpen;
@@ -42,33 +43,46 @@ public class SettingUIManager : MonoBehaviour
         Time.timeScale = isOpen ? 0 : 1;
     }
 
-    // =============== Back Button ===============
-    public void OnBackButton()
-    {
-        ToggleSetting(); // chỉ đóng panel
-    }
+    // Nhấn BACK chỉ tắt UI
+    public void OnBackButton() => ToggleSetting();
 
-    // =============== Home Button ===============
+    // Home
     public void OnHomeButton()
     {
         Time.timeScale = 1;
-        SceneManager.LoadScene(mainMenuScene);
+        SceneManager.LoadScene("MainMenu");
     }
 
-    // =============== Level Button ===============
+    // Level Select
     public void OnLevelButton()
     {
         Time.timeScale = 1;
-        SceneManager.LoadScene(levelScene);
+        SceneManager.LoadScene("Level");
     }
 
-    // =============== Slider Volume VFX ===============
+    // ——— SLIDER VFX ———
     void OnVFXVolumeChange(float v)
     {
-        vfxAudio.volume = v;
+        if (vfxAudio) vfxAudio.volume = v;
+
         vfxText.text = Mathf.RoundToInt(v * 100f) + "%";
 
-        vfxIconOn.SetActive(v > 0.01f);
-        vfxIconOff.SetActive(v <= 0.01f);
+        // Hiện nút tương ứng
+        vfxOnButton.gameObject.SetActive(v > 0.01f);  // volume còn → hiện nút OFF
+        vfxOffButton.gameObject.SetActive(v <= 0.01f);
+    }
+
+    // ——— NÚT OFF ———
+    void OnVFXOff()
+    {
+        lastVolume = vfxSlider.value; // lưu âm lượng cũ
+        vfxSlider.value = 0;
+    }
+
+    // ——— NÚT ON ———
+    void OnVFXOn()
+    {
+        if (lastVolume < 0.1f) lastVolume = 1f; // nếu lần đầu => set mặc định 100%
+        vfxSlider.value = lastVolume;
     }
 }

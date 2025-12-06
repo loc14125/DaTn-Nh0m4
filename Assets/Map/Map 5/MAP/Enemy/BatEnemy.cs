@@ -19,13 +19,13 @@ public class BatEnemy : MonoBehaviour
     public float shakeIntensity = 0.05f;
 
     [Header("Attack Settings")]
-    public GameObject attackTrigger;       // child trigger collider
-    public float attackDuration = 0.30f;   // thời gian bật collider
+    public GameObject attackTrigger;
+    public float attackDuration = 0.30f;
 
     [Header("Health")]
     public int maxHealth = 50;
     private int currentHealth;
-    public EnemyUI healthUI;
+    public EnemyHealUI healthUI;
 
     private Animator anim;
     private Rigidbody2D rb;
@@ -46,19 +46,19 @@ public class BatEnemy : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
 
         currentHealth = maxHealth;
-        if (healthUI == null)
-            healthUI = FindObjectOfType<EnemyUI>();
-        startPos = rb.position;
 
+        if (healthUI == null)
+            healthUI = FindObjectOfType<EnemyHealUI>();
+
+        startPos = rb.position;
         rb.gravityScale = 0;
 
-        // tắt collider tấn công
         if (attackTrigger != null)
             attackTrigger.SetActive(false);
 
-        // chạy hover idle
         SetRun(true);
     }
+
 
     void Update()
     {
@@ -68,13 +68,11 @@ public class BatEnemy : MonoBehaviour
             healthUI.Init(maxHealth);           // Set max slider
             healthUI.UpdateHealth(currentHealth); // Set value hiện tại
         }
-        else
-        {
-            Debug.LogWarning("⚠ Không tìm thấy PlayerHealthUI!");
-        }
+        // idle hover
         if (!isCharging && !isReturning)
             HoverEffect();
 
+        // detect player
         if (!isCharging && !isReturning)
         {
             Collider2D hit = Physics2D.OverlapCircle(transform.position, detectRange, playerLayer);
@@ -84,24 +82,30 @@ public class BatEnemy : MonoBehaviour
                 StartCoroutine(ChargeAttack());
             }
         }
+
+        // look at player
         if (!isDead && player != null)
             LookAtPlayer();
     }
+
+
     void LookAtPlayer()
     {
         if (player == null) return;
 
-        // ĐẢO NGƯỢC: nếu player bên phải thì enemy quay sang TRÁI (tuỳ sprite của bạn)
         if (player.position.x > transform.position.x)
-            transform.localScale = new Vector3(-1, 1, 1);   // quay sang phải (sprite của bạn đang ngược)
+            transform.localScale = new Vector3(-1, 1, 1);
         else
-            transform.localScale = new Vector3(1, 1, 1);    // quay sang trái
+            transform.localScale = new Vector3(1, 1, 1);
     }
+
+
     void HoverEffect()
     {
         float newY = startPos.y + Mathf.Sin(Time.time * hoverFrequency) * hoverAmplitude;
         rb.MovePosition(new Vector2(transform.position.x, newY));
     }
+
 
     IEnumerator ChargeAttack()
     {
@@ -110,7 +114,6 @@ public class BatEnemy : MonoBehaviour
         SetRun(false);
         yield return StartCoroutine(PreChargeShake());
 
-        // CHARGE
         SetRun(true);
         while (Vector2.Distance(rb.position, player.position) > stopDistance)
         {
@@ -121,7 +124,7 @@ public class BatEnemy : MonoBehaviour
 
         rb.velocity = Vector2.zero;
 
-        // ATTACK
+        // Attack
         SetRun(false);
         PlayAttack();
         yield return StartCoroutine(AttackRoutine());
@@ -131,6 +134,7 @@ public class BatEnemy : MonoBehaviour
 
         StartCoroutine(ReturnToStart());
     }
+
 
     IEnumerator PreChargeShake()
     {
@@ -143,7 +147,6 @@ public class BatEnemy : MonoBehaviour
             float oy = Random.Range(-shakeIntensity, shakeIntensity);
 
             rb.MovePosition(originalPos + new Vector2(ox, oy));
-
             t += Time.deltaTime;
             yield return null;
         }
@@ -151,12 +154,14 @@ public class BatEnemy : MonoBehaviour
         rb.MovePosition(originalPos);
     }
 
+
     IEnumerator AttackRoutine()
     {
         attackTrigger.SetActive(true);
         yield return new WaitForSeconds(attackDuration);
         attackTrigger.SetActive(false);
     }
+
 
     IEnumerator ReturnToStart()
     {
@@ -174,56 +179,62 @@ public class BatEnemy : MonoBehaviour
         isReturning = false;
     }
 
-    // ----------- Animation helpers ----------------
 
+    // ----------- Anim -----------
     void SetRun(bool value) => anim.SetBool("isRun", value);
     void PlayAttack() => anim.SetTrigger("Attack");
     void PlayHurt() => anim.SetTrigger("Hurt");
     void PlayDie() => anim.SetTrigger("Die");
 
 
-    // ------------- Damage / HP ---------------------
-
+    // ----------- Damage -----------
     public void TakeDamage(int amount)
     {
         if (isDead) return;
 
         currentHealth -= amount;
+
+        // Update UI HP
         if (healthUI != null)
             healthUI.UpdateHealth(currentHealth);
 
         PlayHurt();
+
         if (damagePopupPrefab != null)
-{
-    GameObject pop = Instantiate(damagePopupPrefab, transform.position + Vector3.up * 1f, Quaternion.identity);
-    pop.GetComponent<DamagePopUp>()?.Setup(amount);
-}
+        {
+            GameObject pop = Instantiate(damagePopupPrefab, transform.position + Vector3.up * 1f, Quaternion.identity);
+            pop.GetComponent<DamagePopUp>()?.Setup(amount);
+        }
 
         if (currentHealth <= 0)
             Die();
     }
 
+
     public void MarkHitByThunder()
-{
-    lastHitByThunder = true;
-}
+    {
+        lastHitByThunder = true;
+    }
+
 
     void Die()
     {
         if (isDead) return;
-
         isDead = true;
         rb.velocity = Vector2.zero;
+
         if (lastHitByThunder && BuffManager.Instance != null)
-    {
-        BuffManager.Instance.OnThunderKill();
-    }
+        {
+            BuffManager.Instance.OnThunderKill();
+        }
+
         PlayDie();
-        Destroy(gameObject, 1f);
         ScoreManager.Instance.AddScore(100);
+
+        Destroy(gameObject, 1f);
     }
 
-    // -------- Gizmo --------
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;

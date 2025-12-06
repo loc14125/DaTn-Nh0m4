@@ -98,6 +98,12 @@ public class ThunderScript : MonoBehaviour
                 bat.TakeDamage(totalDmg);
                 continue;
             }
+            EnemyCode enemyCode = enemyRoot.GetComponent<EnemyCode>();
+            if (enemyCode != null)
+            {
+                enemyCode.TakeDamage(totalDmg);
+                continue;
+            }
         }
 
         Debug.Log($"Thunder struck {hits.Length} enemies, dmg {totalDmg}, cooldown {cooldownHit}s");

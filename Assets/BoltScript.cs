@@ -101,6 +101,12 @@ public class BoltScript : MonoBehaviour
         {
             bat.TakeDamage(damage);
         }
+        EnemyCode enemyCode = collision.transform.root.GetComponent<EnemyCode>();
+        if (enemyCode != null)
+        {
+            enemyCode.TakeDamage(damage);
+        }
+        
 
         // Huỷ bolt sau khi animation/hiệu ứng hit kết thúc
         StartCoroutine(DestroyAfterHitAnimation());

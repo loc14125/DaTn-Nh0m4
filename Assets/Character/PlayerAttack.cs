@@ -80,6 +80,14 @@ public class PlayerAttack : MonoBehaviour
                 continue;
             }
 
+            EnemyCode enemyCode = enemyRoot.GetComponent<EnemyCode>();
+            if (enemyCode != null)
+            {
+                enemyCode.TakeDamage(damage);
+                damagedEnemies.Add(enemyRoot);
+                continue;
+            }
+
 
             
         }

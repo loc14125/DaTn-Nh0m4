@@ -662,6 +662,11 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!1 &51214723 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8809625390507643516, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+  m_PrefabInstance: {fileID: 5379712851481313060}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &146710010
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -710,9 +715,29 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1164593280039540506, guid: b616424f0f22db243a0310823210ec8a, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1164593280039540506, guid: b616424f0f22db243a0310823210ec8a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5279176588109503404, guid: b616424f0f22db243a0310823210ec8a, type: 3}
       propertyPath: m_Name
       value: Bat-IdleFly_0 (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6186234386556328987, guid: b616424f0f22db243a0310823210ec8a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6996099120434652904, guid: b616424f0f22db243a0310823210ec8a, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6996099120434652904, guid: b616424f0f22db243a0310823210ec8a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -767,9 +792,29 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1164593280039540506, guid: b616424f0f22db243a0310823210ec8a, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1164593280039540506, guid: b616424f0f22db243a0310823210ec8a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5279176588109503404, guid: b616424f0f22db243a0310823210ec8a, type: 3}
       propertyPath: m_Name
       value: Bat-IdleFly_0 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6186234386556328987, guid: b616424f0f22db243a0310823210ec8a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6996099120434652904, guid: b616424f0f22db243a0310823210ec8a, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6996099120434652904, guid: b616424f0f22db243a0310823210ec8a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3477,6 +3522,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: UiBuff
       objectReference: {fileID: 0}
+    - target: {fileID: 1380701722012148751, guid: 2429d8042fd9f514d8bf69d92ece6db9, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1423154507244144278, guid: 2429d8042fd9f514d8bf69d92ece6db9, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -3609,6 +3658,10 @@ PrefabInstance:
     - target: {fileID: 3338468330881936746, guid: aef2d68c3f53bf14a9bd9efd9141c88d, type: 3}
       propertyPath: m_Name
       value: GameManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 3338468330881936746, guid: aef2d68c3f53bf14a9bd9efd9141c88d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3720027038902232492, guid: aef2d68c3f53bf14a9bd9efd9141c88d, type: 3}
       propertyPath: m_Camera
@@ -3756,6 +3809,10 @@ PrefabInstance:
       value: GameManagerTimerScore
       objectReference: {fileID: 0}
     - target: {fileID: 4184386209203645315, guid: b09d3c70a202560498b5b03ce9e2cca0, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4184386209203645315, guid: b09d3c70a202560498b5b03ce9e2cca0, type: 3}
       propertyPath: m_TagString
       value: Untagged
       objectReference: {fileID: 0}
@@ -3812,9 +3869,29 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1164593280039540506, guid: b616424f0f22db243a0310823210ec8a, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1164593280039540506, guid: b616424f0f22db243a0310823210ec8a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5279176588109503404, guid: b616424f0f22db243a0310823210ec8a, type: 3}
       propertyPath: m_Name
       value: Bat-IdleFly_0 (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6186234386556328987, guid: b616424f0f22db243a0310823210ec8a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6996099120434652904, guid: b616424f0f22db243a0310823210ec8a, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6996099120434652904, guid: b616424f0f22db243a0310823210ec8a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3905,6 +3982,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 1887697472300489737, guid: a8617a5117106604b95283cab1133cbe, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4558007237371015932, guid: a8617a5117106604b95283cab1133cbe, type: 3}
       propertyPath: m_LocalPosition.x
       value: -15.14
@@ -3966,6 +4047,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a8617a5117106604b95283cab1133cbe, type: 3}
+--- !u!1 &595119957 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 285064272200033708, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+  m_PrefabInstance: {fileID: 5379712851481313060}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &624766990
 GameObject:
   m_ObjectHideFlags: 0
@@ -4884,15 +4970,46 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1164593280039540506, guid: b616424f0f22db243a0310823210ec8a, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1164593280039540506, guid: b616424f0f22db243a0310823210ec8a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5279176588109503404, guid: b616424f0f22db243a0310823210ec8a, type: 3}
       propertyPath: m_Name
       value: Bat-IdleFly_0 (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6186234386556328987, guid: b616424f0f22db243a0310823210ec8a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6996099120434652904, guid: b616424f0f22db243a0310823210ec8a, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6996099120434652904, guid: b616424f0f22db243a0310823210ec8a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b616424f0f22db243a0310823210ec8a, type: 3}
+--- !u!114 &707149186 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3518934339651651163, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+  m_PrefabInstance: {fileID: 5379712851481313060}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84b118bd16e51ae409bb56f89371fedf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &719850690
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4904,6 +5021,10 @@ PrefabInstance:
     - target: {fileID: 2429561974555625021, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
       propertyPath: m_Name
       value: Golem_1_idle_0 (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3680509708394093311, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4595197501462181254, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4943,6 +5064,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4595197501462181254, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5851219991721473458, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5851219991721473458, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
+      propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -5010,6 +5139,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ChooseBuff
       objectReference: {fileID: 0}
+    - target: {fileID: 6393095613450092933, guid: 46a183eb9579ff5408d6972bc88f10e0, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5063,9 +5196,29 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1164593280039540506, guid: b616424f0f22db243a0310823210ec8a, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1164593280039540506, guid: b616424f0f22db243a0310823210ec8a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5279176588109503404, guid: b616424f0f22db243a0310823210ec8a, type: 3}
       propertyPath: m_Name
       value: Bat-IdleFly_0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6186234386556328987, guid: b616424f0f22db243a0310823210ec8a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6996099120434652904, guid: b616424f0f22db243a0310823210ec8a, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6996099120434652904, guid: b616424f0f22db243a0310823210ec8a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5083,6 +5236,10 @@ PrefabInstance:
     - target: {fileID: 2429561974555625021, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
       propertyPath: m_Name
       value: Golem_1_idle_0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3680509708394093311, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4595197501462181254, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5122,6 +5279,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4595197501462181254, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5851219991721473458, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5851219991721473458, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
+      propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -5188,9 +5353,29 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1164593280039540506, guid: b616424f0f22db243a0310823210ec8a, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1164593280039540506, guid: b616424f0f22db243a0310823210ec8a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5279176588109503404, guid: b616424f0f22db243a0310823210ec8a, type: 3}
       propertyPath: m_Name
       value: Bat-IdleFly_0 (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6186234386556328987, guid: b616424f0f22db243a0310823210ec8a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6996099120434652904, guid: b616424f0f22db243a0310823210ec8a, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6996099120434652904, guid: b616424f0f22db243a0310823210ec8a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5208,6 +5393,10 @@ PrefabInstance:
     - target: {fileID: 2429561974555625021, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
       propertyPath: m_Name
       value: Golem_1_idle_0 (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3680509708394093311, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4595197501462181254, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5247,6 +5436,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4595197501462181254, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5851219991721473458, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5851219991721473458, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
+      propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -53991,6 +54188,17 @@ TilemapCollider2D:
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0
   m_UseDelaunayMesh: 0
+--- !u!114 &1043102667 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2555029597320008678, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+  m_PrefabInstance: {fileID: 5379712851481313060}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1044797043
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -54002,6 +54210,10 @@ PrefabInstance:
     - target: {fileID: 2429561974555625021, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
       propertyPath: m_Name
       value: Golem_1_idle_0 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3680509708394093311, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4595197501462181254, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
       propertyPath: m_LocalPosition.x
@@ -54041,6 +54253,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4595197501462181254, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5851219991721473458, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5851219991721473458, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
+      propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -54909,6 +55129,11 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!1 &1315955206 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 735691611469311764, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+  m_PrefabInstance: {fileID: 5379712851481313060}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1334491110
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -54920,6 +55145,10 @@ PrefabInstance:
     - target: {fileID: 2429561974555625021, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
       propertyPath: m_Name
       value: Golem_1_idle_0 (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3680509708394093311, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4595197501462181254, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
       propertyPath: m_LocalPosition.x
@@ -54959,6 +55188,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4595197501462181254, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5851219991721473458, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5851219991721473458, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
+      propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -55348,6 +55585,11 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!1 &1630045724 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5043823149920622344, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+  m_PrefabInstance: {fileID: 5379712851481313060}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1759568197
 GameObject:
   m_ObjectHideFlags: 0
@@ -56257,15 +56499,46 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1164593280039540506, guid: b616424f0f22db243a0310823210ec8a, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1164593280039540506, guid: b616424f0f22db243a0310823210ec8a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5279176588109503404, guid: b616424f0f22db243a0310823210ec8a, type: 3}
       propertyPath: m_Name
       value: Bat-IdleFly_0 (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6186234386556328987, guid: b616424f0f22db243a0310823210ec8a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6996099120434652904, guid: b616424f0f22db243a0310823210ec8a, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6996099120434652904, guid: b616424f0f22db243a0310823210ec8a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b616424f0f22db243a0310823210ec8a, type: 3}
+--- !u!114 &1949985044 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1565037418729551324, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+  m_PrefabInstance: {fileID: 5379712851481313060}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1951101819
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -56354,6 +56627,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: WinLoseManager
       objectReference: {fileID: 0}
+    - target: {fileID: 4614838165702067742, guid: c85d90b5a36bbac45ad3e90918cf5c86, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4851461830106140403, guid: c85d90b5a36bbac45ad3e90918cf5c86, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -56399,6 +56676,215 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c85d90b5a36bbac45ad3e90918cf5c86, type: 3}
+--- !u!1001 &5379712851481313060
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1504028159998257704, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1504028159998257704, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1504028159998257704, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 595119957}
+    - target: {fileID: 1504028159998257704, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2555029597320008678, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_fontStyle
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3452803783412744763, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3452803783412744763, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3452803783412744763, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 707149186}
+    - target: {fileID: 3452803783412744763, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3452803783412744763, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnLevelButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 3452803783412744763, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: SettingUIManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 3452803783412744763, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 3518934339651651163, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: vfxText
+      value: 
+      objectReference: {fileID: 1043102667}
+    - target: {fileID: 3518934339651651163, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: vfxIconOn
+      value: 
+      objectReference: {fileID: 1315955206}
+    - target: {fileID: 3518934339651651163, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: vfxSlider
+      value: 
+      objectReference: {fileID: 1949985044}
+    - target: {fileID: 3518934339651651163, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: vfxIconOff
+      value: 
+      objectReference: {fileID: 1630045724}
+    - target: {fileID: 3518934339651651163, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: volumeText
+      value: 
+      objectReference: {fileID: 1043102667}
+    - target: {fileID: 3518934339651651163, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: settingPanel
+      value: 
+      objectReference: {fileID: 51214723}
+    - target: {fileID: 3518934339651651163, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: volumeSlider
+      value: 
+      objectReference: {fileID: 1949985044}
+    - target: {fileID: 3820902402726779704, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_Name
+      value: GameObject
+      objectReference: {fileID: 0}
+    - target: {fileID: 3822005789399348158, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3822005789399348158, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5616962005033299754, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 828.15735
+      objectReference: {fileID: 0}
+    - target: {fileID: 5616962005033299754, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 476.10428
+      objectReference: {fileID: 0}
+    - target: {fileID: 5616962005033299754, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 4.7939496
+      objectReference: {fileID: 0}
+    - target: {fileID: 5616962005033299754, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5616962005033299754, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5616962005033299754, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5616962005033299754, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5616962005033299754, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5616962005033299754, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5616962005033299754, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6275245990053960925, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 53
+      objectReference: {fileID: 0}
+    - target: {fileID: 6514025595572203947, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6514025595572203947, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6514025595572203947, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 707149186}
+    - target: {fileID: 6514025595572203947, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6514025595572203947, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnHomeButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 6514025595572203947, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: SettingUIManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6514025595572203947, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 6691190271486652021, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6691190271486652021, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6691190271486652021, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 707149186}
+    - target: {fileID: 6691190271486652021, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6691190271486652021, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnBackButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 6691190271486652021, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: SettingUIManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6691190271486652021, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 8809625390507643516, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_Name
+      value: PanelSetting
+      objectReference: {fileID: 0}
+    - target: {fileID: 8809625390507643516, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -56426,3 +56912,4 @@ SceneRoots:
   - {fileID: 581886133}
   - {fileID: 807791888}
   - {fileID: 405271098}
+  - {fileID: 5379712851481313060}

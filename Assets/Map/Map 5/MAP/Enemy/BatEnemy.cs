@@ -25,6 +25,7 @@ public class BatEnemy : MonoBehaviour
     [Header("Health")]
     public int maxHealth = 50;
     private int currentHealth;
+    public EnemyUI healthUI;
 
     private Animator anim;
     private Rigidbody2D rb;
@@ -45,6 +46,8 @@ public class BatEnemy : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
 
         currentHealth = maxHealth;
+        if (healthUI == null)
+            healthUI = FindObjectOfType<EnemyUI>();
         startPos = rb.position;
 
         rb.gravityScale = 0;
@@ -60,7 +63,15 @@ public class BatEnemy : MonoBehaviour
     void Update()
     {
         if (isDead) return;
-
+        if (healthUI != null)
+        {
+            healthUI.Init(maxHealth);           // Set max slider
+            healthUI.UpdateHealth(currentHealth); // Set value hiện tại
+        }
+        else
+        {
+            Debug.LogWarning("⚠ Không tìm thấy PlayerHealthUI!");
+        }
         if (!isCharging && !isReturning)
             HoverEffect();
 
@@ -178,7 +189,9 @@ public class BatEnemy : MonoBehaviour
         if (isDead) return;
 
         currentHealth -= amount;
-        
+        if (healthUI != null)
+            healthUI.UpdateHealth(currentHealth);
+
         PlayHurt();
         if (damagePopupPrefab != null)
 {
@@ -206,7 +219,7 @@ public class BatEnemy : MonoBehaviour
         BuffManager.Instance.OnThunderKill();
     }
         PlayDie();
-        Destroy(gameObject, 1.2f);
+        Destroy(gameObject, 1f);
         ScoreManager.Instance.AddScore(100);
     }
 

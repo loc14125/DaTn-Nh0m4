@@ -22,6 +22,7 @@ public class EnemyAI : MonoBehaviour
     public int maxHealth = 3;
     private int currentHealth;
     private bool isDead = false;
+    public EnemyUI healthUI;
 
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
@@ -43,6 +44,8 @@ public class EnemyAI : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
         currentHealth = maxHealth;
+        if (healthUI == null)
+            healthUI = FindObjectOfType<EnemyUI>();
 
         player = GameObject.FindGameObjectWithTag("Player").transform;
         startPos = transform.position;
@@ -51,6 +54,15 @@ public class EnemyAI : MonoBehaviour
     void Update()
     {
         if (isDead) return;
+        if (healthUI != null)
+        {
+            healthUI.Init(maxHealth);           // Set max slider
+            healthUI.UpdateHealth(currentHealth); // Set value hiện tại
+        }
+        else
+        {
+            Debug.LogWarning("⚠ Không tìm thấy PlayerHealthUI!");
+        }
 
         float distanceToPlayer = Vector2.Distance(transform.position, player.position);
 
@@ -178,7 +190,8 @@ public class EnemyAI : MonoBehaviour
             .GetComponent<DamagePopUp>()?
             .Setup(dmg);
     }
-
+        if (healthUI != null)
+            healthUI.UpdateHealth(currentHealth);
         if (currentHealth <= 0)
             Die();
     }
@@ -203,7 +216,7 @@ public class EnemyAI : MonoBehaviour
     }
 
         // destroy sau 1.1s — dư 0.1 giây để ensure animation play đủ
-        Destroy(gameObject, 1.1f);
+        Destroy(gameObject, 1f);
         ScoreManager.Instance.AddScore(100);
     }
     private void OnDrawGizmosSelected()

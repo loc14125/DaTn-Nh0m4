@@ -5017,7 +5017,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3518934339651651163, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
   m_PrefabInstance: {fileID: 5379712851481313060}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1340648015}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 84b118bd16e51ae409bb56f89371fedf, type: 3}
@@ -55216,6 +55216,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 735691611469311764, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
   m_PrefabInstance: {fileID: 5379712851481313060}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1315955208 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1504028159998257704, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+  m_PrefabInstance: {fileID: 5379712851481313060}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1315955206}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1334491110
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -55285,6 +55296,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
+--- !u!1 &1340648015 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3820902402726779704, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+  m_PrefabInstance: {fileID: 5379712851481313060}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1431857201
 GameObject:
   m_ObjectHideFlags: 0
@@ -55672,6 +55688,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 5043823149920622344, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
   m_PrefabInstance: {fileID: 5379712851481313060}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1630045725 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1259223276568069231, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+  m_PrefabInstance: {fileID: 5379712851481313060}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1630045724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1759568197
 GameObject:
   m_ObjectHideFlags: 0
@@ -56787,6 +56814,26 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 1565037418729551324, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1565037418729551324, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1565037418729551324, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1340648015}
+    - target: {fileID: 1565037418729551324, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1565037418729551324, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: UnityEngine.GameObject, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 2555029597320008678, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
       propertyPath: m_fontStyle
       value: 1
@@ -56840,9 +56887,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1043102667}
     - target: {fileID: 3518934339651651163, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: vfxOnButton
+      value: 
+      objectReference: {fileID: 1315955208}
+    - target: {fileID: 3518934339651651163, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
       propertyPath: settingPanel
       value: 
       objectReference: {fileID: 51214723}
+    - target: {fileID: 3518934339651651163, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
+      propertyPath: vfxOffButton
+      value: 
+      objectReference: {fileID: 1630045725}
     - target: {fileID: 3518934339651651163, guid: 82705c2e613cf3a4d918e44abaa68f9d, type: 3}
       propertyPath: volumeSlider
       value: 

@@ -1,9 +1,9 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class EnemyHealUI : MonoBehaviour
+public class EnemyHealthUIs : MonoBehaviour
 {
     public Slider EnemySlider;
     public void Init(int maxHP)

@@ -53,12 +53,6 @@ public class SettingUIManager : MonoBehaviour
         SceneManager.LoadScene("MainMenu");
     }
 
-    // Level Select
-    public void OnLevelButton()
-    {
-        Time.timeScale = 1;
-        SceneManager.LoadScene("Level");
-    }
 
     // ——— SLIDER VFX ———
     void OnVFXVolumeChange(float v)

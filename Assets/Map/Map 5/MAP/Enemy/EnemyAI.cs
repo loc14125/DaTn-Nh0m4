@@ -22,7 +22,7 @@ public class EnemyAI : MonoBehaviour
     public int maxHealth = 3;
     private int currentHealth;
     private bool isDead = false;
-    public EnemyUI healthUI;
+    public EnemyHealthUIs healthUI;
 
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
@@ -45,7 +45,7 @@ public class EnemyAI : MonoBehaviour
         animator = GetComponent<Animator>();
         currentHealth = maxHealth;
         if (healthUI == null)
-            healthUI = FindObjectOfType<EnemyUI>();
+            healthUI = FindObjectOfType<EnemyHealthUIs>();
 
         player = GameObject.FindGameObjectWithTag("Player").transform;
         startPos = transform.position;

@@ -211,4 +211,5 @@ public class Snake : MonoBehaviour
             Gizmos.DrawWireSphere(attackPoint.position, attackRange);
         }
     }
+    
 }

@@ -1,11 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
 public class TutorialUI : MonoBehaviour
 {
+    public PlayerMovement player;
+
     public TextMeshProUGUI tutorialText;
     public Button nextButton;
     public Button backButton;
@@ -17,11 +17,19 @@ public class TutorialUI : MonoBehaviour
 
     void Start()
     {
+        if (player != null)
+            player.canControl = false; // khóa player lúc đầu
+
         UpdateUI();
     }
 
     public void Next()
     {
+        // ✅ LUÔN mở player khi bấm Next
+        if (player != null)
+            player.canControl = true;
+
+        // nếu còn trang → sang trang tiếp
         if (index < tutorialContents.Length - 1)
         {
             index++;
@@ -39,24 +47,35 @@ public class TutorialUI : MonoBehaviour
         {
             index--;
             UpdateUI();
+
+            // (tuỳ chọn) Back thì lại khóa player
+            if (player != null)
+                player.canControl = false;
         }
     }
 
     void UpdateUI()
     {
+        if (tutorialContents == null || tutorialContents.Length == 0)
+        {
+            Debug.LogError("❌ tutorialContents đang rỗng!");
+            return;
+        }
+
+        index = Mathf.Clamp(index, 0, tutorialContents.Length - 1);
         tutorialText.text = tutorialContents[index];
 
         backButton.gameObject.SetActive(index > 0);
 
-        if (index == tutorialContents.Length - 1)
-            nextButton.GetComponentInChildren<TextMeshProUGUI>().text = "Hoàn thành";
-        else
-            nextButton.GetComponentInChildren<TextMeshProUGUI>().text = "Tiếp";
+        nextButton.GetComponentInChildren<TextMeshProUGUI>().text =
+            (index == tutorialContents.Length - 1) ? "Hoàn thành" : "Tiếp";
     }
 
     void FinishTutorial()
     {
-        gameObject.SetActive(false);
-        // ở đây bạn load map hoặc cho player điều khiển
+        if (player != null)
+            player.canControl = true;
+
+        gameObject.SetActive(false); // tắt UI
     }
 }

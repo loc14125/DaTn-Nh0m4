@@ -4213,7 +4213,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4529613250087584299, guid: aef2d68c3f53bf14a9bd9efd9141c88d, type: 3}
       propertyPath: m_Text
-      value: 'Level 1: Ancient Forest'
+      value: "Level 1: R\u1EEBng nguy\xEAn sinh"
       objectReference: {fileID: 0}
     - target: {fileID: 4592476322801772711, guid: aef2d68c3f53bf14a9bd9efd9141c88d, type: 3}
       propertyPath: m_AnchoredPosition.y

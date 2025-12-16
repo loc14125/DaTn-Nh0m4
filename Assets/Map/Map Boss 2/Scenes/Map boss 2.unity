@@ -4483,7 +4483,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4529613250087584299, guid: aef2d68c3f53bf14a9bd9efd9141c88d, type: 3}
       propertyPath: m_Text
-      value: 'Boss Fight: Wicked Swordmaster'
+      value: "Boss Fight: H\u1EAFc Ki\u1EBFm S\u0129"
       objectReference: {fileID: 0}
     - target: {fileID: 5178924725189665775, guid: aef2d68c3f53bf14a9bd9efd9141c88d, type: 3}
       propertyPath: m_LocalPosition.x

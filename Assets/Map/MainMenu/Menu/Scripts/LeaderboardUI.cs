@@ -21,8 +21,8 @@ public class LeaderboardUI : MonoBehaviour
         int lastScore = PlayerPrefs.GetInt("LastScore", 0);
         string lastTime = PlayerPrefs.GetString("LastTime", "00:00");
 
-        lastScoreText.text = "Last Score: " + lastScore;
-        lastTimeText.text = "Last Time: " + lastTime;
+        lastScoreText.text = "Điểm gần nhất: " + lastScore;
+        lastTimeText.text = "Thời gian: " + lastTime;
     }
 
     void LoadHighscore()
@@ -38,7 +38,7 @@ public class LeaderboardUI : MonoBehaviour
             }
             else
             {
-                rowTexts[i].text = $"{i + 1}. Score: {score}   Time: {time}";
+                rowTexts[i].text = $"{i + 1}. Điểm: {score}   Thời gian: {time}";
             }
         }
     }

@@ -81,6 +81,7 @@ public class BoltScript : MonoBehaviour
         if (boss != null)
         {
             boss.TakeDamage(damage, true); // báo là projectile
+            QuestManager.Instance.AddBoltDamage(damage);
             
         }
 
@@ -88,23 +89,27 @@ public class BoltScript : MonoBehaviour
         if (e2 != null)
         {
             e2.TakeDamage(damage);
+            QuestManager.Instance.AddBoltDamage(damage);
         }
 
         EnemyAI golem = collision.transform.root.GetComponent<EnemyAI>();
         if (golem != null)
         {
             golem.TakeDamage(damage);
+            QuestManager.Instance.AddBoltDamage(damage);
         }
 
         BatEnemy bat = collision.transform.root.GetComponent<BatEnemy>();
         if (bat != null)
         {
             bat.TakeDamage(damage);
+            QuestManager.Instance.AddBoltDamage(damage);
         }
         EnemyCode enemyCode = collision.transform.root.GetComponent<EnemyCode>();
         if (enemyCode != null)
         {
             enemyCode.TakeDamage(damage);
+            QuestManager.Instance.AddBoltDamage(damage);
         }
         
 

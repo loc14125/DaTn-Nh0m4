@@ -230,6 +230,12 @@ public class BatEnemy : MonoBehaviour
 
         PlayDie();
         ScoreManager.Instance.AddScore(100);
+        QuestManager.Instance.AddKill_BatEnemy();
+         PlayerLevelSystem playerLevel =
+        FindObjectOfType<PlayerLevelSystem>();
+
+    if (playerLevel != null)
+        playerLevel.AddExp(20); // mỗi quái 20 exp
 
         Destroy(gameObject, 1f);
     }

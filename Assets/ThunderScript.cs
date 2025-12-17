@@ -68,6 +68,7 @@ public class ThunderScript : MonoBehaviour
             if (boss != null)
             {
                 boss.TakeDamage(totalDmg, false, true); // isProjectile = false, isThunder = true
+                QuestManager.Instance.AddThunderDamage(totalDmg);              
                 continue;
             }
 
@@ -75,6 +76,7 @@ public class ThunderScript : MonoBehaviour
             if (e2 != null)
             {
                 e2.TakeDamage(totalDmg);
+                QuestManager.Instance.AddThunderDamage(totalDmg);
                 continue;
             }
 
@@ -82,6 +84,7 @@ public class ThunderScript : MonoBehaviour
             if (e != null)
             {
                 e.TakeDamage(totalDmg);
+                QuestManager.Instance.AddThunderDamage(totalDmg);
                 continue;
             }
 
@@ -89,6 +92,7 @@ public class ThunderScript : MonoBehaviour
             if (bat2D != null)
             {
                 bat2D.TakeDamage(totalDmg);
+                QuestManager.Instance.AddThunderDamage(totalDmg);
                 continue;
             }
 
@@ -96,12 +100,14 @@ public class ThunderScript : MonoBehaviour
             if (bat != null)
             {
                 bat.TakeDamage(totalDmg);
+                QuestManager.Instance.AddThunderDamage(totalDmg);
                 continue;
             }
             EnemyCode enemyCode = enemyRoot.GetComponent<EnemyCode>();
             if (enemyCode != null)
             {
                 enemyCode.TakeDamage(totalDmg);
+                QuestManager.Instance.AddThunderDamage(totalDmg);
                 continue;
             }
         }

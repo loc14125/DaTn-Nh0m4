@@ -18,7 +18,7 @@ public class Boss : MonoBehaviour
 
     [Header("Stats")]
     public float detectRange = 15f;
-    public float midRange = 8f;
+    public float midRange = 6f;
     public float meleeRange = 2f;
     public float moveSpeed = 2f;
     public float attackCooldown = 3f;

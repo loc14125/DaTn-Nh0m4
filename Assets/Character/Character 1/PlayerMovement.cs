@@ -41,9 +41,13 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Vector2 bloodOffset = new Vector2(0.3f, 0.5f);
     public int boltBonusDamage = 0;
 
-    
+    [Header("Tutorial Lock")]
+    public bool canControl = true;
+
 
     
+
+    public PlayerMovement player;
     public int boltDamage = 40;
     private Rigidbody2D rb;
     private Animator anim;
@@ -94,8 +98,17 @@ public class PlayerMovement : MonoBehaviour
             currentHealth = maxHealth;
     }
 
-    // APPLY BUFF
-    BuffManager.Instance.ApplyBuffToPlayer(this);
+    // APPLY BUFF (AN TOÀN)
+    if (BuffManager.Instance != null)
+    {
+        maxHealth += BuffManager.Instance.bonusMaxHP;
+        BuffManager.Instance.ApplyBuffToPlayer(this);
+    }
+    else
+    {
+        Debug.Log("Tutorial scene: không có BuffManager (OK)");
+    }
+
 
     // CẬP NHẬT UI
     if (healthUI != null)
@@ -113,6 +126,13 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        if (!canControl)
+        {
+            rb.velocity = Vector2.zero;
+            ChangeAnimation("Idle");
+            return;
+        }
+
         inputX = Input.GetAxisRaw("Horizontal");
         bool wasGrounded = isGrounded;
         isGrounded = CheckGround();
@@ -126,14 +146,12 @@ public class PlayerMovement : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.J) && !isDashing) Attack();
-
         if (Input.GetKeyDown(KeyCode.L)) TryDash();
-      if (Input.GetKeyDown(KeyCode.U))
-{
-    TryShootBolt();
-}
+        if (Input.GetKeyDown(KeyCode.U)) TryShootBolt();
+
         HandleAirAnimations();
     }
+
 
     private void Move()
 {

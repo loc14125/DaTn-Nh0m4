@@ -44,6 +44,15 @@ public class PlayerAttack : MonoBehaviour
                 continue;
             }
 
+            // === EnemyFly ===
+            FlyingEnemyAI flyingAI = enemyRoot.GetComponent<FlyingEnemyAI>();
+            if (flyingAI != null)
+            {
+                flyingAI.TakeDamage(damage);
+                damagedEnemies.Add(enemyRoot);
+                continue;
+            }
+
             // === EnemyAI2 ===
             EnemyAI2 enemy2 = enemyRoot.GetComponent<EnemyAI2>();
             if (enemy2 != null)

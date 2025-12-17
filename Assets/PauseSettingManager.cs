@@ -8,29 +8,39 @@ public class SettingUIManager : MonoBehaviour
     [Header("Setting Panel")]
     public GameObject settingPanel;
 
-    [Header("VFX Volume")]
-    public Slider vfxSlider;
-    public TextMeshProUGUI vfxText;
-    public Button vfxOnButton;     // dùng khi VFX đang bật
-    public Button vfxOffButton;    // dùng khi VFX đang tắt
-    public AudioSource vfxAudio;
+    [Header("Music Volume")]
+    public Slider musicSlider;
+    public TextMeshProUGUI musicText;
+    public Button musicOnButton;
+    public Button musicOffButton;
 
-    private float lastVolume = 1f; // lưu volume trước khi tắt
-    bool isOpen = false;
+    private float lastVolume = 1f;
+    private bool isOpen = false;
 
-    private void Start()
+    void Start()
     {
         settingPanel.SetActive(false);
-
-        // Gán sự kiện Slider + nút On/Off
-        vfxSlider.onValueChanged.AddListener(OnVFXVolumeChange);
-        vfxOnButton.onClick.AddListener(OnVFXOff);
-        vfxOffButton.onClick.AddListener(OnVFXOn);
-
-        OnVFXVolumeChange(vfxSlider.value);
     }
 
-    private void Update()
+    void OnEnable()
+    {
+        // sync từ AudioManager
+        float v = AudioManager.instance.GetVolume();
+        musicSlider.value = v;
+        UpdateUI(v);
+
+        // reset listener
+        musicSlider.onValueChanged.RemoveAllListeners();
+        musicOnButton.onClick.RemoveAllListeners();
+        musicOffButton.onClick.RemoveAllListeners();
+
+        // add listener
+        musicSlider.onValueChanged.AddListener(OnMusicVolumeChange);
+        musicOnButton.onClick.AddListener(OnMusicOff);
+        musicOffButton.onClick.AddListener(OnMusicOn);
+    }
+
+    void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
             ToggleSetting();
@@ -43,40 +53,40 @@ public class SettingUIManager : MonoBehaviour
         Time.timeScale = isOpen ? 0 : 1;
     }
 
-    // Nhấn BACK chỉ tắt UI
-    public void OnBackButton() => ToggleSetting();
+    public void OnBackButton()
+    {
+        ToggleSetting();
+    }
 
-    // Home
     public void OnHomeButton()
     {
         Time.timeScale = 1;
         SceneManager.LoadScene("MainMenu");
     }
 
-
-    // ——— SLIDER VFX ———
-    void OnVFXVolumeChange(float v)
+    // ===== MUSIC =====
+    void OnMusicVolumeChange(float v)
     {
-        if (vfxAudio) vfxAudio.volume = v;
-
-        vfxText.text = Mathf.RoundToInt(v * 100f) + "%";
-
-        // Hiện nút tương ứng
-        vfxOnButton.gameObject.SetActive(v > 0.01f);  // volume còn → hiện nút OFF
-        vfxOffButton.gameObject.SetActive(v <= 0.01f);
+        AudioManager.instance.SetVolume(v);
+        UpdateUI(v);
     }
 
-    // ——— NÚT OFF ———
-    void OnVFXOff()
+    void UpdateUI(float v)
     {
-        lastVolume = vfxSlider.value; // lưu âm lượng cũ
-        vfxSlider.value = 0;
+        musicText.text = Mathf.RoundToInt(v * 100f) + "%";
+        musicOnButton.gameObject.SetActive(v > 0.01f);
+        musicOffButton.gameObject.SetActive(v <= 0.01f);
     }
 
-    // ——— NÚT ON ———
-    void OnVFXOn()
+    void OnMusicOff()
     {
-        if (lastVolume < 0.1f) lastVolume = 1f; // nếu lần đầu => set mặc định 100%
-        vfxSlider.value = lastVolume;
+        lastVolume = musicSlider.value;
+        musicSlider.value = 0;
+    }
+
+    void OnMusicOn()
+    {
+        if (lastVolume < 0.1f) lastVolume = 1f;
+        musicSlider.value = lastVolume;
     }
 }

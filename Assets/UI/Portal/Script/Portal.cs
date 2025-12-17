@@ -7,19 +7,31 @@ public class Portal : MonoBehaviour
 {
     public GameObject uiPanel;          // Panel UI Yes/No
     public float cooldown = 5f;         // Thời gian cooldown
-    private bool canUse = true;
+    //private bool canUse = true;
     public MonoBehaviour movementScript;
     [SerializeField] Animator TransitionAnim;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (!canUse) return;
+        //if (!canUse) return;
 
         if (other.CompareTag("Player"))
         {
-            // Pause game
-            Time.timeScale = 0f;
+            //// Pause game
+            //Time.timeScale = 0f;
             uiPanel.SetActive(true);
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        //if (!canUse) return;
+
+        if (other.CompareTag("Player"))
+        {
+            //// Pause game
+            //Time.timeScale = 0f;
+            uiPanel.SetActive(false);
         }
     }
 
@@ -29,8 +41,8 @@ public class Portal : MonoBehaviour
         // Đóng UI
         uiPanel.SetActive(false);
 
-        //Resume game trước khi load scene
-        Time.timeScale = 1f;
+        ////Resume game trước khi load scene
+        //Time.timeScale = 1f;
 
         movementScript.enabled = false;
 
@@ -38,25 +50,25 @@ public class Portal : MonoBehaviour
         StartCoroutine(LoadLevel());
     }
 
-    // Gọi khi chọn "No"
-    public void OnNoClicked()
-    {
-        // Đóng UI
-        uiPanel.SetActive(false);
+    //// Gọi khi chọn "No"
+    //public void OnNoClicked()
+    //{
+    //    // Đóng UI
+    //    uiPanel.SetActive(false);
 
-        // Resume game
-        Time.timeScale = 1f;
+    //    // Resume game
+    //    Time.timeScale = 1f;
 
-        // Bắt đầu cooldown
-        StartCoroutine(StartCooldown());
-    }
+    //    // Bắt đầu cooldown
+    //    StartCoroutine(StartCooldown());
+    //}
 
-    private IEnumerator StartCooldown()
-    {
-        canUse = false;
-        yield return new WaitForSeconds(cooldown);
-        canUse = true;
-    }
+    //private IEnumerator StartCooldown()
+    //{
+    //    canUse = false;
+    //    yield return new WaitForSeconds(cooldown);
+    //    canUse = true;
+    //}
 
     IEnumerator LoadLevel()
     {

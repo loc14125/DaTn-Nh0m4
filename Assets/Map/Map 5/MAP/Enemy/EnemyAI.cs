@@ -1,8 +1,16 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class EnemyAI : MonoBehaviour
+public class EnemyAI : MonoBehaviour, ITimeStopable
 {
+    private bool isStopped = false;
+
+    public void OnTimeStop(bool stop)
+    {
+        isStopped = stop;
+        rb.simulated = !stop;
+        animator.speed = stop ? 0 : 1;
+    }
     [Header("Movement Settings")]
     public float speed = 2f;
     public float moveDistance = 2f;
@@ -54,6 +62,7 @@ public class EnemyAI : MonoBehaviour
     void Update()
     {
         if (isDead) return;
+        if (isStopped) return;
         if (healthUI != null)
         {
             healthUI.Init(maxHealth);           // Set max slider

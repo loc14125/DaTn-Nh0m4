@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class NewBehaviourScript : MonoBehaviour
 {
     public float cooldown = 30f;
-    private float nextUse = 0f;
+    public float stopDuration = 5f;
+
+    private float nextUseTime = 0f;
 
     void Update()
     {
@@ -17,26 +20,26 @@ public class NewBehaviourScript : MonoBehaviour
 
     void TryTimeStop()
     {
-        if (Time.time < nextUse)
+        if (Time.time < nextUseTime)
         {
-            Debug.Log("Time stop cooldown!");
+            Debug.Log("⏳ Skill đang hồi chiêu");
             return;
         }
 
-        nextUse = Time.time + cooldown;
-        StartCoroutine(FreezeAllEnemies(5f)); // thời gian dừng 5 giây
+        StartCoroutine(TimeStopCoroutine());
+        nextUseTime = Time.time + cooldown;
     }
 
-    IEnumerator FreezeAllEnemies(float duration)
-    {
-        EnemyAI[] enemies = FindObjectsOfType<EnemyAI>();
+IEnumerator TimeStopCoroutine()
+{
+    ITimeStopable[] targets =
+        FindObjectsOfType<MonoBehaviour>().OfType<ITimeStopable>().ToArray();
 
-        foreach (var e in enemies)
-            e.enabled = false;
+    foreach (var t in targets)
+        t.OnTimeStop(true);
 
-        yield return new WaitForSeconds(duration);
+    yield return new WaitForSeconds(stopDuration);
 
-        foreach (var e in enemies)
-            e.enabled = true;
-    }
-}
+    foreach (var t in targets)
+        t.OnTimeStop(false);
+}}

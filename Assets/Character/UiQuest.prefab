@@ -357,7 +357,6 @@ GameObject:
   - component: {fileID: 3351592415575338584}
   - component: {fileID: 5056873430902115345}
   - component: {fileID: 8953171025177414754}
-  - component: {fileID: 8923156482917481041}
   m_Layer: 5
   m_Name: UiQuest
   m_TagString: Untagged
@@ -448,19 +447,3 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &8923156482917481041
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8199340771821193562}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 588f63439f8eecc47b0f803168312aae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  questText: {fileID: 0}
-  fragmentText: {fileID: 0}
-  rewardText: {fileID: 0}
-  panel: {fileID: 0}

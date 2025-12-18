@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BatEnemy : MonoBehaviour
+public class BatEnemy : MonoBehaviour, ITimeStopable
 {
+    private bool isTimeStopped = false;
     [Header("Detection")]
     public float detectRange = 5f;
     public LayerMask playerLayer;
@@ -239,6 +240,22 @@ public class BatEnemy : MonoBehaviour
 
         Destroy(gameObject, 1f);
     }
+    public void OnTimeStop(bool stop)
+{
+    isTimeStopped = stop;
+
+    if (stop)
+    {
+        rb.velocity = Vector2.zero;
+        rb.simulated = false;     
+        anim.speed = 0;           
+    }
+    else
+    {
+        rb.simulated = true;      
+        anim.speed = 1;           
+    }
+}
 
 
     private void OnDrawGizmosSelected()

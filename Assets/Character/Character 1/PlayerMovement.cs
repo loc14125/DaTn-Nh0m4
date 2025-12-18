@@ -10,6 +10,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform groundCheck;
     [SerializeField] private float groundCheckRadius = 0.2f;
     [SerializeField] private int maxJumps = 2;
+    
 
     [Header("Dash Settings")]
     [SerializeField] private float dashSpeed = 20f;

@@ -1,49 +1,30 @@
-using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class PlayerLevelSystem : MonoBehaviour
 {
-    [Header("Level")]
-    public int level = 1;
-    public int currentExp = 0;
-    public int expToNextLevel = 100;
-
     [Header("UI")]
     public Slider expSlider;
     public TextMeshProUGUI levelText;
 
     [Header("Buff UI")]
-    public UiBuff uiBuff; // UI chọn buff khi lên cấp
+    public UiBuff uiBuff;
+
+    PlayerLevelData data;
 
     void Start()
     {
+        data = PlayerLevelData.Instance;
         UpdateUI();
     }
 
     public void AddExp(int amount)
     {
-        currentExp += amount;
-
-        while (currentExp >= expToNextLevel)
-        {
-            currentExp -= expToNextLevel;
-            LevelUp();
-        }
-
+        data.AddExp(amount);
         UpdateUI();
-    }
 
-    void LevelUp()
-    {
-        level++;
-        expToNextLevel += 50; // mỗi level cần nhiều exp hơn
-
-        Debug.Log("LEVEL UP! → Lv " + level);
-
-        // Hiện UI buff
+        // Nếu vừa lên cấp thì show buff
         if (uiBuff != null)
             uiBuff.ShowBuffs();
     }
@@ -51,17 +32,12 @@ public class PlayerLevelSystem : MonoBehaviour
     void UpdateUI()
     {
         if (levelText != null)
-            levelText.text = "Lv " + level;
+            levelText.text = "Lv " + data.level;
 
         if (expSlider != null)
         {
-            expSlider.maxValue = expToNextLevel;
-            expSlider.value = currentExp;
+            expSlider.maxValue = data.expToNextLevel;
+            expSlider.value = data.currentExp;
         }
     }
-    void Awake()
-{
-    DontDestroyOnLoad(gameObject);
-}
-
 }

@@ -36000,6 +36000,11 @@ Animator:
   m_CorrespondingSourceObject: {fileID: 1727489032357629544, guid: a56feebe61e217b499ca14b0dec86cc1, type: 3}
   m_PrefabInstance: {fileID: 778691827}
   m_PrefabAsset: {fileID: 0}
+--- !u!95 &811439938 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 1727489032357629544, guid: a56feebe61e217b499ca14b0dec86cc1, type: 3}
+  m_PrefabInstance: {fileID: 1687880177}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &967338625
 GameObject:
   m_ObjectHideFlags: 0
@@ -36767,6 +36772,10 @@ PrefabInstance:
       propertyPath: maxHP
       value: 60
       objectReference: {fileID: 0}
+    - target: {fileID: 3141138866616854076, guid: a56feebe61e217b499ca14b0dec86cc1, type: 3}
+      propertyPath: animator
+      value: 
+      objectReference: {fileID: 811439938}
     - target: {fileID: 3141138866616854076, guid: a56feebe61e217b499ca14b0dec86cc1, type: 3}
       propertyPath: firePoint
       value: 

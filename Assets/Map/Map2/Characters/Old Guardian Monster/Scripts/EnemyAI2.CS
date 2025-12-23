@@ -190,6 +190,11 @@ public void MarkHitByThunder()
         animator.SetTrigger("Die");
         Destroy(gameObject, 2f);
         ScoreManager.Instance.AddScore(100);
+         PlayerLevelSystem playerLevel =
+        FindObjectOfType<PlayerLevelSystem>();
+
+    if (playerLevel != null)
+        playerLevel.AddExp(20); // mỗi quái 20 exp
     }
 
     private void OnDrawGizmosSelected()

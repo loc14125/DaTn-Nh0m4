@@ -138,6 +138,11 @@ public class BatEnemy2D : MonoBehaviour, ITimeStopable
         StopAllCoroutines();
         Destroy(gameObject, 1.5f); // chờ animation chết
         ScoreManager.Instance.AddScore(100);
+         PlayerLevelSystem playerLevel =
+        FindObjectOfType<PlayerLevelSystem>();
+
+    if (playerLevel != null)
+        playerLevel.AddExp(20); // mỗi quái 20 exp
     }
 
     // Khi bị chém (ví dụ weapon có tag "Weapon" và collider trigger)

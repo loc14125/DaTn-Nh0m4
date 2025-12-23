@@ -8,7 +8,9 @@ public class NewBehaviourScript : MonoBehaviour
     public float cooldown = 30f;
     public float stopDuration = 5f;
 
-    private float nextUseTime = 0f;
+    public StaffCooldownUI cooldownUI; // 👈 GẮN UI VÀO ĐÂY
+
+    private bool canUse = true;
 
     void Update()
     {
@@ -20,26 +22,33 @@ public class NewBehaviourScript : MonoBehaviour
 
     void TryTimeStop()
     {
-        if (Time.time < nextUseTime)
-        {
-            Debug.Log("⏳ Skill đang hồi chiêu");
-            return;
-        }
+        if (!canUse) return;
+
+        canUse = false;
+
+        if (cooldownUI != null)
+            cooldownUI.StartCooldown(cooldown);
 
         StartCoroutine(TimeStopCoroutine());
-        nextUseTime = Time.time + cooldown;
+        Invoke(nameof(ResetCooldown), cooldown);
     }
 
-IEnumerator TimeStopCoroutine()
-{
-    ITimeStopable[] targets =
-        FindObjectsOfType<MonoBehaviour>().OfType<ITimeStopable>().ToArray();
+    void ResetCooldown()
+    {
+        canUse = true;
+    }
 
-    foreach (var t in targets)
-        t.OnTimeStop(true);
+    IEnumerator TimeStopCoroutine()
+    {
+        ITimeStopable[] targets =
+            FindObjectsOfType<MonoBehaviour>().OfType<ITimeStopable>().ToArray();
 
-    yield return new WaitForSeconds(stopDuration);
+        foreach (var t in targets)
+            t.OnTimeStop(true);
 
-    foreach (var t in targets)
-        t.OnTimeStop(false);
-}}
+        yield return new WaitForSeconds(stopDuration);
+
+        foreach (var t in targets)
+            t.OnTimeStop(false);
+    }
+}

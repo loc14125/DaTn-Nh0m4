@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class EnemyAI2 : MonoBehaviour
+public class EnemyAI2 : MonoBehaviour, ITimeStopable
 {
     [Header("Patrol Points")]
     public Transform pointA;
     public Transform pointB;
+    private bool isTimeStopped = false;
 
     [Header("Movement Settings")]
     public float speed = 2f;
@@ -47,6 +48,7 @@ public class EnemyAI2 : MonoBehaviour
     void Update()
     {
         if (isDead) return;
+        if (isDead || isTimeStopped) return;
 
         float distanceToPlayer = Vector2.Distance(attackPoint.position, player.position);
 
@@ -198,4 +200,17 @@ public void MarkHitByThunder()
             Gizmos.DrawWireSphere(attackPoint.position, attackRange);
         }
     }
+    public void OnTimeStop(bool stop)
+{
+    isTimeStopped = stop;
+
+    if (stop)
+    {
+        animator.speed = 0;
+    }
+    else
+    {
+        animator.speed = 1;
+    }
+}
 }

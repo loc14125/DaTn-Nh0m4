@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class Boss : MonoBehaviour
+public class Boss : MonoBehaviour, ITimeStopable
 {
     [Header("References")]
     public Transform player;
@@ -10,6 +10,8 @@ public class Boss : MonoBehaviour
     public GameObject bossModel;
     private Rigidbody2D rb;
     private BossHealthUI bossUI;
+    private bool isTimeStopped = false;
+    private float originalSpeed;
 
     [Header("Hitboxes")]
     public GameObject hitboxNormal;
@@ -469,4 +471,20 @@ public class Boss : MonoBehaviour
     {
         lastHitByThunder = true;
     }
+    public void OnTimeStop(bool stop)
+{
+    if (stop)
+    {
+        isTimeStopped = true;
+        originalSpeed = moveSpeed;
+        moveSpeed *= 0.3f;       // boss chỉ chậm
+        animator.speed = 0.5f;
+    }
+    else
+    {
+        isTimeStopped = false;
+        moveSpeed = originalSpeed;
+        animator.speed = 1f;
+    }
+}
 }

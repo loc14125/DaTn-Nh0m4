@@ -110,6 +110,13 @@ public class ThunderScript : MonoBehaviour
                 QuestManager.Instance.AddThunderDamage(totalDmg);
                 continue;
             }
+            Snake snake = enemyRoot.GetComponent<Snake>();
+            if (snake != null)
+            {
+                snake.TakeDamage(totalDmg);
+                QuestManager.Instance.AddThunderDamage(totalDmg);
+                continue;
+            }
         }
 
         Debug.Log($"Thunder struck {hits.Length} enemies, dmg {totalDmg}, cooldown {cooldownHit}s");

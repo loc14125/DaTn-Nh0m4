@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BatEnemy2D : MonoBehaviour
+public class BatEnemy2D : MonoBehaviour, ITimeStopable
 {
     [Header("Hover Settings")]
     public float hoverAmplitude = 0.25f;
     public float hoverFrequency = 2f;
+    private bool isTimeStopped = false;
 
     [Header("Attack Settings")]
     public GameObject fireballPrefab;
@@ -46,6 +47,7 @@ public class BatEnemy2D : MonoBehaviour
         //}
 
         if (isDead) return;
+        if (isDead || isTimeStopped) return;
 
         // Hover effect
         float y = Mathf.Sin(Time.time * hoverFrequency) * hoverAmplitude;
@@ -146,4 +148,17 @@ public class BatEnemy2D : MonoBehaviour
             TakeDamage(3); // chém chết ngay
         }
     }
+    public void OnTimeStop(bool stop)
+{
+    isTimeStopped = stop;
+
+    if (stop)
+    {
+        animator.speed = 0;
+    }
+    else
+    {
+        animator.speed = 1;
+    }
+}
 }

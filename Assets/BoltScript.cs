@@ -111,6 +111,12 @@ public class BoltScript : MonoBehaviour
             enemyCode.TakeDamage(damage);
             QuestManager.Instance.AddBoltDamage(damage);
         }
+        Snake snake = collision.transform.root.GetComponent<Snake>();
+        if (snake != null)
+        {
+            snake.TakeDamage(damage);
+            QuestManager.Instance.AddBoltDamage(damage);
+        }
         
 
         // Huỷ bolt sau khi animation/hiệu ứng hit kết thúc

@@ -117,6 +117,24 @@ public class BoltScript : MonoBehaviour
             snake.TakeDamage(damage);
             QuestManager.Instance.AddBoltDamage(damage);
         }
+        ENEMYAI3 enmyai3 = collision.transform.root.GetComponent<ENEMYAI3>();
+        if (enmyai3 != null)
+        {
+            enmyai3.TakeDamage(damage);
+            QuestManager.Instance.AddBoltDamage(damage);
+        }
+        BatEnemy2Ds bat2D = collision.transform.root.GetComponent<BatEnemy2Ds>();
+        if (bat2D != null)
+        {
+            bat2D.TakeDamage(damage);
+            QuestManager.Instance.AddBoltDamage(damage);
+        }
+        ENEMYAI4 enmyai4 = collision.transform.root.GetComponent<ENEMYAI4>();
+        if (enmyai4 != null)
+        {
+            enmyai4.TakeDamage(damage);
+            QuestManager.Instance.AddBoltDamage(damage);
+        }
         
 
         // Huỷ bolt sau khi animation/hiệu ứng hit kết thúc

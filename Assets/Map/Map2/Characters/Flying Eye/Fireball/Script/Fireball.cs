@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Fireball : MonoBehaviour
+public class Fireballs : MonoBehaviour
 {
     public float speed = 5f;
     public float lifetime = 3f;

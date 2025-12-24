@@ -96,6 +96,20 @@ public class PlayerAttack : MonoBehaviour
                 damagedEnemies.Add(enemyRoot);
                 continue;
             }
+            ENEMYAI3 enmyai3 = enemyRoot.GetComponent<ENEMYAI3>();
+            if (enmyai3 != null)
+            {
+                enmyai3.TakeDamage(damage);
+                damagedEnemies.Add(enemyRoot);
+                continue;
+            }
+            ENEMYAI4 enmyai4 = enemyRoot.GetComponent<ENEMYAI4>();
+            if (enmyai4 != null)
+            {
+                enmyai4.TakeDamage(damage);
+                damagedEnemies.Add(enemyRoot);
+                continue;
+            }
 
 
             

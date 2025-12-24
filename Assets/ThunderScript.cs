@@ -88,7 +88,7 @@ public class ThunderScript : MonoBehaviour
                 continue;
             }
 
-            BatEnemy2D bat2D = enemyRoot.GetComponent<BatEnemy2D>();
+            BatEnemy2Ds bat2D = enemyRoot.GetComponent<BatEnemy2Ds>();
             if (bat2D != null)
             {
                 bat2D.TakeDamage(totalDmg);
@@ -114,6 +114,20 @@ public class ThunderScript : MonoBehaviour
             if (snake != null)
             {
                 snake.TakeDamage(totalDmg);
+                QuestManager.Instance.AddThunderDamage(totalDmg);
+                continue;
+            }
+            ENEMYAI3 enmyai3 = enemyRoot.GetComponent<ENEMYAI3>();
+            if (enmyai3 != null)
+            {
+                enmyai3.TakeDamage(totalDmg);
+                QuestManager.Instance.AddThunderDamage(totalDmg);
+                continue;
+            }
+            ENEMYAI4 enmyai4 = enemyRoot.GetComponent<ENEMYAI4>();
+            if (enmyai4 != null)
+            {
+                enmyai4.TakeDamage(totalDmg);
                 QuestManager.Instance.AddThunderDamage(totalDmg);
                 continue;
             }

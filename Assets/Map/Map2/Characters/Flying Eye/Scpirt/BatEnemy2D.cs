@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BatEnemy2D : MonoBehaviour, ITimeStopable
+public class BatEnemy2Ds : MonoBehaviour, ITimeStopable
 {
     [Header("Hover Settings")]
     public float hoverAmplitude = 0.25f;

@@ -77,7 +77,9 @@ public class QuestManager : MonoBehaviour
             $" Bat: {killBatEnemy}/{killBat_Target}\n\n" +
             $" Bolt Damage: {boltDamage}/{boltTarget}\n" +
             $"Thunder Damage: {thunderDamage}/{thunderTarget}\n\n" +
-            $" Mảnh đã có: {totalFragments}/{fragmentsNeeded}";
+            $" Mảnh đã có: {totalFragments}/{fragmentsNeeded}\n\n" +
+            $" Khi đủ mảnh hãy nhấn F để chế tạo ra quyền trượng thời gian , nó giúp đóng băng quái trong 5 giây";
+
     }
 
     // ======================================================

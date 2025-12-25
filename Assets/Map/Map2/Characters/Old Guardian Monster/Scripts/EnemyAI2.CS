@@ -47,7 +47,7 @@ public class EnemyAI2 : MonoBehaviour, ITimeStopable
 
     void Update()
     {
-        if (isDead) return;
+        
         if (isDead || isTimeStopped) return;
 
         float distanceToPlayer = Vector2.Distance(attackPoint.position, player.position);
@@ -184,18 +184,24 @@ public void MarkHitByThunder()
         Die();
 }
     void Die()
-    {
-        isDead = true;
-        animator.SetBool("isWalking", false);
-        animator.SetTrigger("Die");
-        Destroy(gameObject, 2f);
-        ScoreManager.Instance.AddScore(100);
-         PlayerLevelSystem playerLevel =
-        FindObjectOfType<PlayerLevelSystem>();
+{
+    isDead = true;
 
+    // ⭐ FIX TIME STOP BUG
+    isTimeStopped = false;
+    animator.speed = 1f;
+
+    animator.SetBool("isWalking", false);
+    animator.SetTrigger("Die");
+
+    Destroy(gameObject, 2f);
+
+    ScoreManager.Instance.AddScore(100);
+
+    PlayerLevelSystem playerLevel = FindObjectOfType<PlayerLevelSystem>();
     if (playerLevel != null)
-        playerLevel.AddExp(20); // mỗi quái 20 exp
-    }
+        playerLevel.AddExp(20);
+}
 
     private void OnDrawGizmosSelected()
     {

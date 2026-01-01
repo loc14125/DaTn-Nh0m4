@@ -27,8 +27,23 @@ public class Boss : MonoBehaviour, ITimeStopable
     public int maxHealth = 200;
     public int damage = 15;
 
+    [Header("Teleport Trap")]
+    public GameObject teleportTrapPrefab;
+    private GameObject currentTrap;
+    private float trapStayTimer = 0f;
+
+
+    [Header("Teleport Trap Timing")]
+    public float trapLifeTime = 2f;
+    private float trapSpawnTimer = 0f;
+    private float nextTrapTime = 5f;
+    private float trapLifeTimer = 0f;
+
+
+
     [Header("Phase 2 Settings")]
     public bool isPhase2 = false; 
+    public float phase2DamageTakenMultiplier = 1.5f;
     public bool isTransforming = false; // khóa di chuyển + attack + tele
     public float hpDrainPerSecond = 3f; 
     public float phase2MoveSpeed = 4f;  
@@ -45,7 +60,7 @@ public class Boss : MonoBehaviour, ITimeStopable
     private int currentHealthInt;
     // currentHealthF để giảm mượt theo deltaTime
     private float currentHealthF;
-
+    private PlayerMovement playerMovement;
     private bool isActivated;
     private bool isDead;
     private bool isAttacking;
@@ -90,7 +105,8 @@ public class Boss : MonoBehaviour, ITimeStopable
         {
             Debug.LogWarning("BossHealthUI not found on Boss GameObject!");
         }
-
+        
+        playerMovement = player.GetComponent<PlayerMovement>();
         rb.freezeRotation = true;
         rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
     }
@@ -124,35 +140,84 @@ public class Boss : MonoBehaviour, ITimeStopable
             return;
         }
 
-        // Tự giảm máu khi phase 2 (DÙNG float để giảm mượt, rồi cập nhật UI bằng int)
-        if (isPhase2 && !isDead)
-        {
-            // giảm theo deltaTime -> dùng float để tránh RoundToInt(thấp) thành 0
-            currentHealthF -= hpDrainPerSecond * Time.deltaTime;
-            if (currentHealthF < 0f) currentHealthF = 0f;
-
-            // cập nhật biến int và UI từng frame nếu giảm đủ 1 HP (hoặc giảm liên tục)
-            int newInt = Mathf.CeilToInt(currentHealthF); // Ceil để UI giảm ngay khi float xuống dưới ngưỡng
-            if (newInt != currentHealthInt)
-            {
-                currentHealthInt = newInt;
-                if (bossUI != null) bossUI.UpdateHealth(currentHealthInt);
-            }
-
-            // nếu cạn máu thì chết
-            if (currentHealthF <= 0f)
-            {
-                Die();
-                return;
-            }
-        }
-
         if (!isActivated)
         {
             if (player && Vector2.Distance(transform.position, player.position) <= detectRange)
                 ActivateBoss();
             return;
         }
+
+       if (isActivated && !isAttacking && !isTransforming)
+        {
+            // ⏱ Spawn trap mỗi 3–5s
+            trapSpawnTimer += Time.deltaTime;
+
+            if (currentTrap == null
+            && trapSpawnTimer >= nextTrapTime
+            && playerMovement != null
+            && playerMovement.isGrounded)
+            {
+                Collider2D playerCol = player.GetComponent<Collider2D>();
+
+                float footY = playerCol.bounds.min.y; // ⭐ CHÂN PLAYER
+
+                Vector2 spawnPos = new Vector2(
+                    player.position.x,
+                    footY + 0.05f // tránh lọt đất
+                );
+
+                currentTrap = Instantiate(
+                    teleportTrapPrefab,
+                    spawnPos,
+                    Quaternion.identity
+                );
+
+                trapStayTimer = 0f;
+                trapLifeTimer = 0f;
+                trapSpawnTimer = 0f;
+                if (isPhase2)
+                    nextTrapTime = Random.Range(3f, 5f);   // Phase 2: nhanh
+                else
+                    nextTrapTime = Random.Range(7f, 10f);  // Phase 1: chậm
+            }
+
+
+            // ⏳ Trap tồn tại tối đa 2s
+            if (currentTrap != null)
+            {
+                trapLifeTimer += Time.deltaTime;
+
+                if (trapLifeTimer >= trapLifeTime)
+                {
+                    Destroy(currentTrap);
+                    currentTrap = null;
+                    trapStayTimer = 0f;
+                    return;
+                }
+
+                // 📍 Player đứng trong vùng
+                if (Vector2.Distance(player.position, currentTrap.transform.position) < 0.6f)
+                {
+                    trapStayTimer += Time.deltaTime;
+
+                    if (trapStayTimer >= 1f)
+                    {
+                        TeleportToPlayer();
+                        StartCoroutine(AttackPlayer());
+
+                        Destroy(currentTrap);
+                        currentTrap = null;
+                        trapStayTimer = 0f;
+                    }
+                }
+                else
+                {
+                    trapStayTimer = 0f;
+                }
+            }
+        }
+
+
 
         // ⭐ Kích hoạt Phase 2 khi còn 1/3 máu (so sánh float cho chính xác)
         if (!isPhase2 && currentHealthF <= (maxHealth / 3f))
@@ -163,8 +228,16 @@ public class Boss : MonoBehaviour, ITimeStopable
         float distance = Vector2.Distance(transform.position, player.position);
         HandleBehavior(distance);
         HandleMidRangeLogic(distance);
-        HandleTeleport(distance); // <-- ⭐ thêm vào đúng yêu cầu
     }
+
+    public void TeleportAndStrike()
+    {
+        if (isAttacking || isTransforming) return;
+
+        TeleportToPlayer();
+        StartCoroutine(AttackPlayer());
+    }
+
 
     // ==========================================================
     // 🔥 TELEPORT CONTROLLER
@@ -388,28 +461,36 @@ public class Boss : MonoBehaviour, ITimeStopable
         if (!isProjectile && !isThunder && Vector2.Distance(transform.position, player.position) > meleeRange)
             return;
 
-        // trừ cả float và int
-        currentHealthF -= dmg;
+        float finalDamage = dmg;
+
+        // ⭐ Phase 2: nhận nhiều sát thương hơn
+        if (isPhase2)
+        {
+            finalDamage *= phase2DamageTakenMultiplier;
+        }
+
+        currentHealthF -= finalDamage;
         if (currentHealthF < 0f) currentHealthF = 0f;
 
         currentHealthInt = Mathf.CeilToInt(currentHealthF);
 
         if (isThunder)
-        {
-            lastHitByThunder = true; 
-        }
+            lastHitByThunder = true;
 
-        if (bossUI != null) bossUI.UpdateHealth(currentHealthInt);
+        if (bossUI != null)
+            bossUI.UpdateHealth(currentHealthInt);
 
         if (damagePopupPrefab != null)
         {
             Vector3 popupPos = transform.position + Vector3.up * 1f;
             GameObject popup = Instantiate(damagePopupPrefab, popupPos, Quaternion.identity);
-            popup.GetComponent<DamagePopUp>()?.Setup(dmg);
+            popup.GetComponent<DamagePopUp>()?.Setup(Mathf.RoundToInt(finalDamage));
         }
 
-        if (currentHealthF <= 0f) Die();
+        if (currentHealthF <= 0f)
+            Die();
     }
+
 
     IEnumerator EnterPhase2()
     {

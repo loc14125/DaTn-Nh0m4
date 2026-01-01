@@ -52,7 +52,7 @@ public class PlayerMovement : MonoBehaviour
     public int boltDamage = 40;
     private Rigidbody2D rb;
     private Animator anim;
-    private bool isGrounded;
+    public bool isGrounded;
     private bool isAttacking;
     private bool isDashing;
     private int jumpCount;

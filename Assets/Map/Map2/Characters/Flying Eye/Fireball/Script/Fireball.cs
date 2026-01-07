@@ -25,7 +25,7 @@ public class Fireballs : MonoBehaviour
     {
         if (!exploded)
         {
-            transform.Translate(direction * speed * Time.deltaTime);
+            transform.position += (Vector3)(direction * speed * Time.deltaTime);
         }
     }
 

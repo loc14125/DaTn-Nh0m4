@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8919578411082339085}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Fire Point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45,9 +45,9 @@ GameObject:
   - component: {fileID: 1727489032357629544}
   - component: {fileID: 653663871621658713}
   - component: {fileID: 3141138866616854076}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Flying Eye
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -228,10 +228,10 @@ MonoBehaviour:
   hoverAmplitude: 0.25
   hoverFrequency: 2
   fireballPrefab: {fileID: 1049014206303355008, guid: dfa9070a1958ea5448861cdae2fe6bec, type: 3}
-  firePoint: {fileID: 0}
+  firePoint: {fileID: 8919578411082339085}
   attackCooldown: 1
   attackDelay: 0.5
   fireballSpeed: 5
   maxHP: 3
-  animator: {fileID: 0}
+  animator: {fileID: 1727489032357629544}
   damagePopupPrefab: {fileID: 764722398817924463, guid: adc423bcc0a3f734eadd85d6fc02cab3, type: 3}

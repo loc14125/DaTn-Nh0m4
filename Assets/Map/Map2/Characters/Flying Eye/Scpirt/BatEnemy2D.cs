@@ -87,7 +87,7 @@ public class BatEnemy2Ds : MonoBehaviour, ITimeStopable
         Vector2 dir = sr.flipX ? Vector2.left : Vector2.right;
 
         // Gửi hướng cho fireball
-        Fireball fb = fireball.GetComponent<Fireball>();
+        Fireballs fb = fireball.GetComponent<Fireballs>();
         if (fb != null)
         {
             fb.SetDirection(dir);

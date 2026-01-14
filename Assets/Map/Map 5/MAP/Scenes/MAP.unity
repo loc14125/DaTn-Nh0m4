@@ -3590,6 +3590,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Golem_1_idle_0
       objectReference: {fileID: 0}
+    - target: {fileID: 2429561974555625021, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4595197501462181254, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
       propertyPath: m_LocalPosition.x
       value: 32.901634
@@ -3632,11 +3636,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5851219991721473458, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5851219991721473458, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3780,13 +3784,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: IDLE_0
       objectReference: {fileID: 0}
-    - target: {fileID: 8840225671745783193, guid: 05e2c153f32eef6459be8dca5a54ed7b, type: 3}
-      propertyPath: m_AnchorMax.x
+    - target: {fileID: 8594434067876809474, guid: 05e2c153f32eef6459be8dca5a54ed7b, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8840225671745783193, guid: 05e2c153f32eef6459be8dca5a54ed7b, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8840225671745783193, guid: 05e2c153f32eef6459be8dca5a54ed7b, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5883,6 +5891,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Golem_1_idle_0 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 2429561974555625021, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4595197501462181254, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
       propertyPath: m_LocalPosition.x
       value: 89.33
@@ -5925,11 +5937,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5851219991721473458, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5851219991721473458, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5988,13 +6000,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bat-IdleFly_0 (3)
       objectReference: {fileID: 0}
-    - target: {fileID: 7583863902531251308, guid: b616424f0f22db243a0310823210ec8a, type: 3}
-      propertyPath: m_AnchorMax.x
+    - target: {fileID: 5279176588109503404, guid: b616424f0f22db243a0310823210ec8a, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7583863902531251308, guid: b616424f0f22db243a0310823210ec8a, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7583863902531251308, guid: b616424f0f22db243a0310823210ec8a, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -54883,6 +54899,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Golem_1_idle_0 (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 2429561974555625021, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4595197501462181254, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
       propertyPath: m_LocalPosition.x
       value: 144.34
@@ -54925,11 +54945,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5851219991721473458, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5851219991721473458, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -55053,7 +55073,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7088281913674551501, guid: f6c3dff112194714ca8ffadab98a83f7, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7146277330096748879, guid: f6c3dff112194714ca8ffadab98a83f7, type: 3}
       propertyPath: m_Size.y
@@ -56215,13 +56235,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bat-IdleFly_0 (2)
       objectReference: {fileID: 0}
-    - target: {fileID: 7583863902531251308, guid: b616424f0f22db243a0310823210ec8a, type: 3}
-      propertyPath: m_AnchorMax.x
+    - target: {fileID: 5279176588109503404, guid: b616424f0f22db243a0310823210ec8a, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7583863902531251308, guid: b616424f0f22db243a0310823210ec8a, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7583863902531251308, guid: b616424f0f22db243a0310823210ec8a, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -56280,13 +56304,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bat-IdleFly_0 (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 7583863902531251308, guid: b616424f0f22db243a0310823210ec8a, type: 3}
-      propertyPath: m_AnchorMax.x
+    - target: {fileID: 5279176588109503404, guid: b616424f0f22db243a0310823210ec8a, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7583863902531251308, guid: b616424f0f22db243a0310823210ec8a, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7583863902531251308, guid: b616424f0f22db243a0310823210ec8a, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -58186,6 +58214,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Golem_1_idle_0 (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 2429561974555625021, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4595197501462181254, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
       propertyPath: m_LocalPosition.x
       value: 201.63994
@@ -58228,11 +58260,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5851219991721473458, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5851219991721473458, guid: 9dd80c511105e914198ad1384cca7fa1, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

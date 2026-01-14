@@ -5,70 +5,57 @@ using System.Collections;
 
 public class Portal : MonoBehaviour
 {
-    public GameObject uiPanel;          // Panel UI Yes/No
-    public float cooldown = 5f;         // Thời gian cooldown
-    //private bool canUse = true;
+    public GameObject uiPanel;              // Panel Yes/No
+    public GameObject uiPanelEnemy;         // Panel báo còn quái
+    public Text enemyCountText;             // Text hiển thị số quái
+
+    public float cooldown = 5f;
     public MonoBehaviour movementScript;
     [SerializeField] Animator TransitionAnim;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        //if (!canUse) return;
-
         if (other.CompareTag("Player"))
         {
-            //// Pause game
-            //Time.timeScale = 0f;
-            uiPanel.SetActive(true);
+            int enemyCount = GetEnemyCount();
+
+            if (enemyCount > 0)
+            {
+                // Còn quái → hiện panel enemy
+                uiPanel.SetActive(false);
+                uiPanelEnemy.SetActive(true);
+                enemyCountText.text = "Còn lại " + enemyCount + " kẻ địch";
+            }
+            else
+            {
+                // Hết quái → hiện panel Yes/No
+                uiPanelEnemy.SetActive(false);
+                uiPanel.SetActive(true);
+            }
         }
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        //if (!canUse) return;
-
         if (other.CompareTag("Player"))
         {
-            //// Pause game
-            //Time.timeScale = 0f;
             uiPanel.SetActive(false);
+            uiPanelEnemy.SetActive(false);
         }
     }
 
     // Gọi khi chọn "Yes"
     public void OnYesClicked()
     {
-        // Đóng UI
         uiPanel.SetActive(false);
-
-        ////Resume game trước khi load scene
-        //Time.timeScale = 1f;
-
         movementScript.enabled = false;
-
-        //Load scene tiếp theo
         StartCoroutine(LoadLevel());
     }
 
-    //// Gọi khi chọn "No"
-    //public void OnNoClicked()
-    //{
-    //    // Đóng UI
-    //    uiPanel.SetActive(false);
-
-    //    // Resume game
-    //    Time.timeScale = 1f;
-
-    //    // Bắt đầu cooldown
-    //    StartCoroutine(StartCooldown());
-    //}
-
-    //private IEnumerator StartCooldown()
-    //{
-    //    canUse = false;
-    //    yield return new WaitForSeconds(cooldown);
-    //    canUse = true;
-    //}
+    int GetEnemyCount()
+    {
+        return GameObject.FindGameObjectsWithTag("Enemy").Length;
+    }
 
     IEnumerator LoadLevel()
     {

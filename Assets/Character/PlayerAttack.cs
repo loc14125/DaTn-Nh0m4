@@ -80,6 +80,15 @@ public class PlayerAttack : MonoBehaviour
                 continue;
             }
 
+            // === Flying Eye ===
+            BatEnemy2Ds bat2 = enemyRoot.GetComponent<BatEnemy2Ds>();
+            if (bat2 != null)
+            {
+                bat2.TakeDamage(damage);
+                damagedEnemies.Add(enemyRoot);
+                continue;
+            }
+
             // === Snake ===
             Snake snake = enemyRoot.GetComponent<Snake>();
             if (snake != null)

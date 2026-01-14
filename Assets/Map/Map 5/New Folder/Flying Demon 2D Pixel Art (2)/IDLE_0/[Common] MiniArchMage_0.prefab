@@ -453,11 +453,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd8b2bb82831d72499f6732170c513ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  expReward: 20
   hoverAmplitude: 0.25
   hoverFrequency: 2
   fireballPrefab: {fileID: 1049014206303355008, guid: dfa9070a1958ea5448861cdae2fe6bec, type: 3}
   firePoint: {fileID: 4486597268711065275}
-  attackCooldown: 1
+  attackCooldown: 5
   attackDelay: 0.5
   fireballSpeed: 5
   maxHealth: 60

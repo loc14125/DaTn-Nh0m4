@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class EnemyCode : MonoBehaviour
+public class EnemyCode : EnemyBase
 {
     [Header("Movement Settings")]
     public float speed = 2f;
@@ -199,7 +199,7 @@ if (col == null)
             Die();
     }
 
-    void Die()
+    protected override void Die()
 {
     if (isDead) return;
     isDead = true;
@@ -219,11 +219,7 @@ if (col == null)
 
     Destroy(gameObject, 2f);
     ScoreManager.Instance.AddScore(100);
-     PlayerLevelSystem playerLevel =
-        FindObjectOfType<PlayerLevelSystem>();
-
-    if (playerLevel != null)
-        playerLevel.AddExp(20); // mỗi quái 20 exp
+base.Die();
 }
 
     void Flip(int dir)

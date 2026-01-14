@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class BatEnemy2Ds : MonoBehaviour, ITimeStopable
+public class BatEnemy2Ds : EnemyBase, ITimeStopable
 {
     [Header("Hover Settings")]
     public float hoverAmplitude = 0.25f;
@@ -130,7 +131,7 @@ public class BatEnemy2Ds : MonoBehaviour, ITimeStopable
     }
 }
 
-    void Die()
+    protected override void Die()
     {
         isDead = true;
         animator.SetTrigger("Die");
@@ -138,12 +139,7 @@ public class BatEnemy2Ds : MonoBehaviour, ITimeStopable
         StopAllCoroutines();
         Destroy(gameObject, 1.5f); // chờ animation chết
         ScoreManager.Instance.AddScore(100);
-         PlayerLevelSystem playerLevel =
-        FindObjectOfType<PlayerLevelSystem>();
-
-    if (playerLevel != null)
-        playerLevel.AddExp(20); // mỗi quái 20 exp
-    }
+base.Die();}
 
     // Khi bị chém (ví dụ weapon có tag "Weapon" và collider trigger)
     private void OnTriggerEnter2D(Collider2D collision)

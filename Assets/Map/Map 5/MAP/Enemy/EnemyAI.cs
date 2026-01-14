@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class EnemyAI : MonoBehaviour, ITimeStopable
+public class EnemyAI : EnemyBase, ITimeStopable
 {
     private bool isStopped = false;
 
@@ -205,7 +205,7 @@ public class EnemyAI : MonoBehaviour, ITimeStopable
             Die();
     }
 
-    void Die()
+    protected override void Die()
     {
         if (isDead) return;
         isDead = true;
@@ -224,12 +224,7 @@ public class EnemyAI : MonoBehaviour, ITimeStopable
         BuffManager.Instance.OnThunderKill();
     }
      QuestManager.Instance.AddKill_EnemyAI();
-      PlayerLevelSystem playerLevel =
-        FindObjectOfType<PlayerLevelSystem>();
-
-    if (playerLevel != null)
-        playerLevel.AddExp(20); // mỗi quái 20 exp
-     
+base.Die();
 
         // destroy sau 1.1s — dư 0.1 giây để ensure animation play đủ
         Destroy(gameObject, 1f);

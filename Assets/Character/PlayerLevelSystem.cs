@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class PlayerLevelSystem : MonoBehaviour
 {
@@ -16,15 +17,35 @@ public class PlayerLevelSystem : MonoBehaviour
     void Start()
     {
         data = PlayerLevelData.Instance;
+
+        // ✅ lắng nghe sự kiện lên cấp
+        data.OnLevelUp += HandleLevelUp;
+
         UpdateUI();
+    }
+
+    void OnDestroy()
+    {
+        if (data != null)
+            data.OnLevelUp -= HandleLevelUp;
     }
 
     public void AddExp(int amount)
     {
         data.AddExp(amount);
-        UpdateUI();
+        UpdateUI(); // ✅ luôn cập nhật thanh EXP
+    }
 
-        // Nếu vừa lên cấp thì show buff
+    void HandleLevelUp()
+    {
+        UpdateUI();
+        StartCoroutine(ShowBuffDelay());
+    }
+
+    IEnumerator ShowBuffDelay()
+    {
+        yield return new WaitForSeconds(1f); // ⏱ delay 1 giây
+
         if (uiBuff != null)
             uiBuff.ShowBuffs();
     }

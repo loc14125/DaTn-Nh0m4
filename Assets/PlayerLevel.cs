@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 
 public class PlayerLevelData : MonoBehaviour
 {
@@ -7,6 +8,8 @@ public class PlayerLevelData : MonoBehaviour
     public int level = 1;
     public int currentExp = 0;
     public int expToNextLevel = 100;
+
+    public event Action OnLevelUp; // ✅ báo lên cấp
 
     private void Awake()
     {
@@ -35,6 +38,9 @@ public class PlayerLevelData : MonoBehaviour
     {
         level++;
         expToNextLevel += 50;
-        Debug.Log("LEVEL UP! → Lv " + level);
+
+        Debug.Log("LEVEL UP → Lv " + level);
+
+        OnLevelUp?.Invoke(); // ✅ báo cho UI
     }
 }

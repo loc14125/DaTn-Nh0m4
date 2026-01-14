@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BatEnemy : MonoBehaviour, ITimeStopable
+public class BatEnemy : EnemyBase, ITimeStopable
 {
     private bool isTimeStopped = false;
     [Header("Detection")]
@@ -218,7 +218,7 @@ public class BatEnemy : MonoBehaviour, ITimeStopable
     }
 
 
-    void Die()
+    protected override void Die()
     {
         if (isDead) return;
         isDead = true;
@@ -232,14 +232,8 @@ public class BatEnemy : MonoBehaviour, ITimeStopable
         PlayDie();
         ScoreManager.Instance.AddScore(100);
         QuestManager.Instance.AddKill_BatEnemy();
-         PlayerLevelSystem playerLevel =
-        FindObjectOfType<PlayerLevelSystem>();
-
-    if (playerLevel != null)
-        playerLevel.AddExp(20); // mỗi quái 20 exp
-
         Destroy(gameObject, 1f);
-    }
+        base.Die();}
     public void OnTimeStop(bool stop)
 {
     isTimeStopped = stop;

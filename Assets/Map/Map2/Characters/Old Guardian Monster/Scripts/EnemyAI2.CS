@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class EnemyAI2 : MonoBehaviour, ITimeStopable
+public class EnemyAI2 : EnemyBase, ITimeStopable
 {
     [Header("Patrol Points")]
     public Transform pointA;
@@ -183,7 +183,7 @@ public void MarkHitByThunder()
     if (currentHealth <= 0)
         Die();
 }
-    void Die()
+    protected override void Die()
 {
     isDead = true;
 
@@ -198,9 +198,7 @@ public void MarkHitByThunder()
 
     ScoreManager.Instance.AddScore(100);
 
-    PlayerLevelSystem playerLevel = FindObjectOfType<PlayerLevelSystem>();
-    if (playerLevel != null)
-        playerLevel.AddExp(20);
+base.Die();
 }
 
     private void OnDrawGizmosSelected()

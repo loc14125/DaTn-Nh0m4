@@ -25,6 +25,12 @@ public class ThunderScript : MonoBehaviour
 
     public void TryCastThunder()
     {
+         if (!SkillUnlockData.Instance.thunderUnlocked)
+    {
+        Debug.Log("Thunder chưa được mở khóa");
+        return;
+    }
+
         if (Time.time < nextUseTime)
         {
             Debug.Log("Thunder on cooldown");

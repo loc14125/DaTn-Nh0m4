@@ -173,6 +173,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 5
   zigZagRadius: 2
-  zigZagSpeed: 8
-  lifeTime: 3
+  zigZagSpeed: 4
+  lifeTime: 2
   damage: 30

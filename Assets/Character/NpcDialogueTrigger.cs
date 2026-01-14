@@ -7,10 +7,13 @@ public class NpcDialogueTrigger : MonoBehaviour
 {
     public DialogueUI dialogueUI;
 
+    private bool hasTalked = false;
+
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && !hasTalked)
         {
+            hasTalked = true;
             dialogueUI.StartDialogue();
         }
     }

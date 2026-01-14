@@ -356,6 +356,8 @@ private void EndDash()
     
     private void ShootBolt()
 {
+        if (!SkillUnlockData.Instance.boltUnlocked)
+        return;
     GameObject bolt = Instantiate(boltPrefab, boltSpawnPoint.position, Quaternion.identity);
 
     // Lấy script projectile và truyền hướng bắn

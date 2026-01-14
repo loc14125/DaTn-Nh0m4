@@ -2,7 +2,8 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System.Collections;
-public class DialogueUI : MonoBehaviour
+
+public class Dia2 : MonoBehaviour
 {
     [Header("UI")]
     public GameObject panel;
@@ -117,8 +118,8 @@ public class DialogueUI : MonoBehaviour
         choiceAButton.gameObject.SetActive(true);
         choiceBButton.gameObject.SetActive(true);
 
-        choiceAText.text = "Cậu biết cách nào để khôi phục không.";
-        choiceBText.text = "Không sao ta vẫn chiến được.";
+        choiceAText.text = "Có thể sao ?.";
+        choiceBText.text = "Nah I'd win.";
 
         choiceAButton.onClick.RemoveAllListeners();
         choiceBButton.onClick.RemoveAllListeners();
@@ -132,7 +133,7 @@ void ChooseLearnSkill()
     waitingForChoice = false;
     dialogueFinished = true;
 
-    dialogueText.text = "Sức mạnh của ngài được rải rác quang vùng đất này , ngài hãy lên đường và tìm kiếm lại sức mạnh của mình để có thể đánh bại được 'The One' kẻ cai trị vùng đất này";
+    dialogueText.text = "Đúng rồi sức mạnh của hắn là 1 tầm cao mới , hắn đã chinh phục cả vùng đất này mà , mong ngài sẽ chiến thắng";
 }
 
     void ChooseLeave()
@@ -141,7 +142,7 @@ void ChooseLearnSkill()
     waitingForChoice = false;
     dialogueFinished = true;
 
-    dialogueText.text = "Không được đâu với thể trạng hiện tại này cơ hội thắng trong 1 trận sòng phẳng với The One là không thể , ngài hãy đi tìm kiếm lại sức mạnh đã bị rơi rải rác quanh vùng đất này";
+    dialogueText.text = "Haha, ngài tự tin thế chắc tôi chỉ có thể chúc ngài sẽ chiến thắng trận đấu này";
 }
 
     void HideChoices()

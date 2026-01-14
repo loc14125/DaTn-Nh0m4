@@ -10,14 +10,28 @@ public class SkillUnlockData : MonoBehaviour
     public bool boltUnlocked = false;
 
     private void Awake()
+{
+    if (Instance != null)
     {
-        if (Instance != null)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        Instance = this;
-        DontDestroyOnLoad(gameObject);
+        Destroy(gameObject);
+        return;
     }
+
+    Instance = this;
+    DontDestroyOnLoad(gameObject);
+
+    LoadData(); 
+}
+    public void SaveData()
+{
+    PlayerPrefs.SetInt("BoltUnlocked", boltUnlocked ? 1 : 0);
+    PlayerPrefs.SetInt("ThunderUnlocked", thunderUnlocked ? 1 : 0);
+    PlayerPrefs.Save();
+}
+
+public void LoadData()
+{
+    boltUnlocked = PlayerPrefs.GetInt("BoltUnlocked", 0) == 1;
+    thunderUnlocked = PlayerPrefs.GetInt("ThunderUnlocked", 0) == 1;
+}
 }

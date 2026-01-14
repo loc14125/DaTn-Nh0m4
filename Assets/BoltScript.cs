@@ -40,8 +40,7 @@ public class BoltScript : MonoBehaviour
 
     private void Update()
     {
-        if (!SkillUnlockData.Instance.boltUnlocked)
-    return;
+       
         // Nếu đã va chạm thì không di chuyển nữa
         if (hasHit) return;
 

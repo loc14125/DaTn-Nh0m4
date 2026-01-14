@@ -10,6 +10,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform groundCheck;
     [SerializeField] private float groundCheckRadius = 0.2f;
     [SerializeField] private int maxJumps = 2;
+    [SerializeField] private float secondJumpForce = 9f; // lực nhảy lần 2
     
 
     [Header("Dash Settings")]
@@ -173,14 +174,23 @@ public class PlayerMovement : MonoBehaviour
 }
 
     private void Jump()
+{
+    if (jumpCount >= maxJumps) return;
+
+    if (jumpCount == 0)
     {
-        if (jumpCount < maxJumps)
-        {
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
-            ChangeAnimation("Jump");
-            jumpCount++;
-        }
+        // Nhảy lần 1
+        rb.velocity = new Vector2(rb.velocity.x, jumpForce);
     }
+    else if (jumpCount == 1)
+    {
+        // Nhảy lần 2 (double jump)
+        rb.velocity = new Vector2(rb.velocity.x, secondJumpForce);
+    }
+
+    ChangeAnimation("Jump");
+    jumpCount++;
+}
 
     private void Attack()
     {
